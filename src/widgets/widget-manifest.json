@@ -7,6 +7,210 @@
       "description": "Compares Uber, Ola, and Rapido ride options for a search with fares, pickup ETAs, and a top recommendation",
       "examples": [
         {
+          "name": "Luggage on a budget",
+          "description": "Budget relaxed so luggage can be honoured; A* road-graph route",
+          "data": {
+            "searchId": "example-search-1",
+            "origin": {
+              "query": "Amrita University",
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "destination": {
+              "query": "Coimbatore Airport",
+              "formattedAddress": "Coimbatore International Airport",
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "route": {
+              "distanceKm": 41.4,
+              "durationMinutes": 59,
+              "source": "road_graph",
+              "polyline": [
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.959,
+                  10.904
+                ],
+                [
+                  76.999,
+                  10.906
+                ],
+                [
+                  77.033,
+                  10.918
+                ],
+                [
+                  77.083,
+                  10.996
+                ],
+                [
+                  77.088,
+                  11.056
+                ],
+                [
+                  77.058,
+                  11.04
+                ],
+                [
+                  77.0434,
+                  11.03
+                ],
+                [
+                  77.0434,
+                  11.03
+                ]
+              ],
+              "via": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Madukkarai",
+                "Malumichampatti",
+                "Chettipalayam",
+                "Chintamanipudur",
+                "Neelambur",
+                "Chinniyampalayam",
+                "Coimbatore International Airport"
+              ],
+              "search": {
+                "strategy": "astar",
+                "objective": "time",
+                "hour": 9,
+                "nodesExpanded": 13,
+                "nodesGenerated": 21
+              }
+            },
+            "rankingMode": "best_value",
+            "rankingExplanation": "Balanced utility: fare 45%, pickup ETA 35%, rating 20% (weights adapt to the rides you book).",
+            "preferencesApplied": {
+              "luggageRequired": true,
+              "budgetLimit": 350
+            },
+            "totalOptionsFound": 11,
+            "constraints": {
+              "satisfied": [
+                "luggageRequired"
+              ],
+              "relaxed": [
+                "budgetLimit"
+              ],
+              "unsatisfiableHard": null,
+              "note": "No ride met every preference, so the lowest-priority ones were relaxed: budgetLimit."
+            },
+            "utilityWeights": {
+              "fare": 0.45,
+              "pickupEta": 0.35,
+              "rating": 0.2
+            },
+            "paretoOptimalCount": 3,
+            "options": [
+              {
+                "optionId": "uber-sedan-2",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "sedan",
+                "fare": 855,
+                "currency": "INR",
+                "pickupEtaMinutes": 4,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.4,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": true,
+                "surgeMultiplier": 1.01,
+                "dataSource": "simulation",
+                "rank": 1,
+                "score": 0.57,
+                "scoreReason": "Balances ₹855 fare, 4 min pickup, and 4.4★ rating",
+                "paretoOptimal": true
+              },
+              {
+                "optionId": "ola-sedan-3",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "sedan",
+                "fare": 865,
+                "currency": "INR",
+                "pickupEtaMinutes": 8,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": true,
+                "surgeMultiplier": 1.1,
+                "dataSource": "simulation",
+                "rank": 2,
+                "score": 0.75,
+                "scoreReason": "Balances ₹865 fare, 8 min pickup, and 4.5★ rating",
+                "paretoOptimal": true
+              },
+              {
+                "optionId": "uber-suv-3",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "suv",
+                "fare": 1030,
+                "currency": "INR",
+                "pickupEtaMinutes": 7,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.8,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": true,
+                "surgeMultiplier": 0.96,
+                "dataSource": "simulation",
+                "rank": 3,
+                "score": 0.76,
+                "scoreReason": "Balances ₹1030 fare, 7 min pickup, and 4.8★ rating",
+                "paretoOptimal": true
+              }
+            ],
+            "recommendation": {
+              "optionId": "uber-sedan-2",
+              "provider": "uber",
+              "providerName": "Uber",
+              "vehicleType": "sedan",
+              "fare": 855,
+              "currency": "INR",
+              "pickupEtaMinutes": 4,
+              "tripDurationMinutes": 59,
+              "distanceKm": 41.4,
+              "availability": true,
+              "isSimulated": true,
+              "rating": 4.4,
+              "hasFemaleDriverOption": true,
+              "luggageFriendly": true,
+              "surgeMultiplier": 1.01,
+              "dataSource": "simulation",
+              "rank": 1,
+              "score": 0.57,
+              "scoreReason": "Balances ₹855 fare, 4 min pickup, and 4.4★ rating",
+              "paretoOptimal": true
+            }
+          }
+        },
+        {
           "name": "Amrita to Coimbatore Airport",
           "description": "Ranked ride comparison for a campus-to-airport trip",
           "data": {
@@ -390,6 +594,119 @@
       "description": "Route visualization with pickup, destination, and any intermediate stops, showing per-leg distance/time/fare and totals",
       "examples": [
         {
+          "name": "Reordered errands",
+          "description": "A* reorders four stops to save time",
+          "data": {
+            "stops": [
+              {
+                "query": "Amrita University",
+                "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "coordinates": {
+                  "lat": 10.9046,
+                  "lng": 76.8993
+                },
+                "source": "estimated",
+                "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+              },
+              {
+                "query": "Coimbatore Airport",
+                "formattedAddress": "Coimbatore International Airport",
+                "coordinates": {
+                  "lat": 11.03,
+                  "lng": 77.0434
+                },
+                "source": "estimated",
+                "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+              },
+              {
+                "query": "Gandhipuram",
+                "formattedAddress": "Gandhipuram",
+                "coordinates": {
+                  "lat": 11.0177,
+                  "lng": 76.9674
+                },
+                "source": "estimated",
+                "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+              },
+              {
+                "query": "Ukkadam",
+                "formattedAddress": "Ukkadam",
+                "coordinates": {
+                  "lat": 10.988,
+                  "lng": 76.9617
+                },
+                "source": "estimated",
+                "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+              },
+              {
+                "query": "Coimbatore Junction",
+                "formattedAddress": "Coimbatore Junction",
+                "coordinates": {
+                  "lat": 10.9966,
+                  "lng": 76.9647
+                },
+                "source": "estimated",
+                "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+              }
+            ],
+            "legs": [
+              {
+                "from": "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "to": "Coimbatore International Airport",
+                "distanceKm": 41.4,
+                "durationMinutes": 52,
+                "fare": 260
+              },
+              {
+                "from": "Coimbatore International Airport",
+                "to": "Gandhipuram",
+                "distanceKm": 10.8,
+                "durationMinutes": 25,
+                "fare": 80
+              },
+              {
+                "from": "Gandhipuram",
+                "to": "Ukkadam",
+                "distanceKm": 4.3,
+                "durationMinutes": 11,
+                "fare": 45
+              },
+              {
+                "from": "Ukkadam",
+                "to": "Coimbatore Junction",
+                "distanceKm": 1.5,
+                "durationMinutes": 4,
+                "fare": 25
+              }
+            ],
+            "totalDistanceKm": 58,
+            "totalDurationMinutes": 92,
+            "estimatedFare": 410,
+            "routeDisplay": "Amrita Vishwa Vidyapeetham, Ettimadai → Coimbatore International Airport → Gandhipuram → Ukkadam → Coimbatore Junction",
+            "optimization": {
+              "algorithm": "A* over (current stop, visited-set) states",
+              "originalOrder": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Coimbatore International Airport",
+                "Ukkadam",
+                "Gandhipuram",
+                "Coimbatore Junction"
+              ],
+              "optimizedOrder": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Coimbatore International Airport",
+                "Gandhipuram",
+                "Ukkadam",
+                "Coimbatore Junction"
+              ],
+              "originalEstimateMinutes": 102,
+              "optimizedEstimateMinutes": 92,
+              "savedMinutes": 10,
+              "statesExpanded": 4
+            }
+          }
+        },
+        {
           "name": "Campus to airport via Gandhipuram",
           "description": "Multi-stop route with two legs",
           "data": {
@@ -585,7 +902,1581 @@
         "sos",
         "emergency"
       ]
+    },
+    {
+      "uri": "/search-comparison",
+      "name": "Search Strategy Comparison",
+      "description": "BFS, UCS, greedy best-first, and A* over the Coimbatore road graph: explored nodes, returned path, cost, and optimality",
+      "examples": [
+        {
+          "name": "Amrita to the airport at 9 AM",
+          "description": "Time-optimal routing in rush hour",
+          "data": {
+            "origin": {
+              "query": "Amrita University",
+              "node": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "snappedKm": 0
+            },
+            "destination": {
+              "query": "Coimbatore Airport",
+              "node": "Coimbatore International Airport",
+              "snappedKm": 0
+            },
+            "objective": "time",
+            "time": "9:00 AM",
+            "results": [
+              {
+                "strategy": "bfs",
+                "label": "Breadth-first search",
+                "found": true,
+                "via": [
+                  "Amrita Vishwa Vidyapeetham, Ettimadai",
+                  "Madukkarai",
+                  "Malumichampatti",
+                  "Sundarapuram",
+                  "Podanur",
+                  "Ramanathapuram",
+                  "Singanallur",
+                  "Coimbatore International Airport"
+                ],
+                "nodeIds": [
+                  "amrita",
+                  "madukkarai",
+                  "malumichampatti",
+                  "sundarapuram",
+                  "podanur",
+                  "ramanathapuram",
+                  "singanallur",
+                  "airport"
+                ],
+                "distanceKm": 35.5,
+                "durationMinutes": 94,
+                "cost": 94.3,
+                "optimal": false,
+                "nodesExpanded": 27,
+                "nodesGenerated": 30,
+                "maxFrontierSize": 7,
+                "expandedOrder": [
+                  "amrita",
+                  "madukkarai",
+                  "kuniyamuthur",
+                  "malumichampatti",
+                  "ukkadam",
+                  "kovaipudur",
+                  "sundarapuram",
+                  "chettipalayam",
+                  "perur",
+                  "town_hall",
+                  "podanur",
+                  "chintamanipudur",
+                  "vadavalli",
+                  "coimbatore_junction",
+                  "rs_puram",
+                  "ramanathapuram",
+                  "ondipudur",
+                  "neelambur",
+                  "saibaba_colony",
+                  "gandhipuram",
+                  "race_course",
+                  "singanallur",
+                  "chinniyampalayam",
+                  "thudiyalur",
+                  "ganapathy",
+                  "lakshmi_mills",
+                  "peelamedu"
+                ]
+              },
+              {
+                "strategy": "ucs",
+                "label": "Uniform-cost search",
+                "found": true,
+                "via": [
+                  "Amrita Vishwa Vidyapeetham, Ettimadai",
+                  "Madukkarai",
+                  "Malumichampatti",
+                  "Chettipalayam",
+                  "Chintamanipudur",
+                  "Neelambur",
+                  "Chinniyampalayam",
+                  "Coimbatore International Airport"
+                ],
+                "nodeIds": [
+                  "amrita",
+                  "madukkarai",
+                  "malumichampatti",
+                  "chettipalayam",
+                  "chintamanipudur",
+                  "neelambur",
+                  "chinniyampalayam",
+                  "airport"
+                ],
+                "distanceKm": 41.4,
+                "durationMinutes": 59,
+                "cost": 58.5,
+                "optimal": true,
+                "nodesExpanded": 19,
+                "nodesGenerated": 29,
+                "maxFrontierSize": 10,
+                "expandedOrder": [
+                  "amrita",
+                  "madukkarai",
+                  "malumichampatti",
+                  "chettipalayam",
+                  "kuniyamuthur",
+                  "chintamanipudur",
+                  "sundarapuram",
+                  "ukkadam",
+                  "podanur",
+                  "neelambur",
+                  "ondipudur",
+                  "town_hall",
+                  "kovaipudur",
+                  "coimbatore_junction",
+                  "chinniyampalayam",
+                  "race_course",
+                  "rs_puram",
+                  "singanallur",
+                  "gandhipuram"
+                ]
+              },
+              {
+                "strategy": "greedy",
+                "label": "Greedy best-first",
+                "found": true,
+                "via": [
+                  "Amrita Vishwa Vidyapeetham, Ettimadai",
+                  "Madukkarai",
+                  "Kuniyamuthur",
+                  "Ukkadam",
+                  "Town Hall",
+                  "Coimbatore Junction",
+                  "Race Course",
+                  "Ramanathapuram",
+                  "Singanallur",
+                  "Coimbatore International Airport"
+                ],
+                "nodeIds": [
+                  "amrita",
+                  "madukkarai",
+                  "kuniyamuthur",
+                  "ukkadam",
+                  "town_hall",
+                  "coimbatore_junction",
+                  "race_course",
+                  "ramanathapuram",
+                  "singanallur",
+                  "airport"
+                ],
+                "distanceKm": 33.6,
+                "durationMinutes": 93,
+                "cost": 92.8,
+                "optimal": false,
+                "nodesExpanded": 9,
+                "nodesGenerated": 20,
+                "maxFrontierSize": 11,
+                "expandedOrder": [
+                  "amrita",
+                  "madukkarai",
+                  "kuniyamuthur",
+                  "ukkadam",
+                  "town_hall",
+                  "coimbatore_junction",
+                  "race_course",
+                  "ramanathapuram",
+                  "singanallur"
+                ]
+              },
+              {
+                "strategy": "astar",
+                "label": "A* search",
+                "found": true,
+                "via": [
+                  "Amrita Vishwa Vidyapeetham, Ettimadai",
+                  "Madukkarai",
+                  "Malumichampatti",
+                  "Chettipalayam",
+                  "Chintamanipudur",
+                  "Neelambur",
+                  "Chinniyampalayam",
+                  "Coimbatore International Airport"
+                ],
+                "nodeIds": [
+                  "amrita",
+                  "madukkarai",
+                  "malumichampatti",
+                  "chettipalayam",
+                  "chintamanipudur",
+                  "neelambur",
+                  "chinniyampalayam",
+                  "airport"
+                ],
+                "distanceKm": 41.4,
+                "durationMinutes": 59,
+                "cost": 58.5,
+                "optimal": true,
+                "nodesExpanded": 13,
+                "nodesGenerated": 21,
+                "maxFrontierSize": 8,
+                "expandedOrder": [
+                  "amrita",
+                  "madukkarai",
+                  "malumichampatti",
+                  "chettipalayam",
+                  "chintamanipudur",
+                  "kuniyamuthur",
+                  "ondipudur",
+                  "sundarapuram",
+                  "neelambur",
+                  "chinniyampalayam",
+                  "ukkadam",
+                  "podanur",
+                  "town_hall"
+                ]
+              }
+            ],
+            "alternativeObjective": {
+              "objective": "distance",
+              "via": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Madukkarai",
+                "Kuniyamuthur",
+                "Ukkadam",
+                "Town Hall",
+                "Coimbatore Junction",
+                "Race Course",
+                "Lakshmi Mills",
+                "Peelamedu",
+                "Hope College",
+                "Coimbatore International Airport"
+              ],
+              "distanceKm": 31.9,
+              "durationMinutes": 85
+            },
+            "insight": "A* found the optimal fastest route (59 min) expanding 13 nodes, 32% fewer than uniform-cost search (19). Greedy best-first expanded only 9 but its route is 58% worse — it chases straight-line closeness and ignores congestion.",
+            "heuristic": "h(n) = straight-line km to goal ÷ 55 km/h (fastest free-flow speed) — never overestimates, so A* is optimal.",
+            "graph": {
+              "nodes": [
+                {
+                  "id": "amrita",
+                  "name": "Amrita Vishwa Vidyapeetham, Ettimadai",
+                  "lat": 10.9046,
+                  "lng": 76.8993
+                },
+                {
+                  "id": "madukkarai",
+                  "name": "Madukkarai",
+                  "lat": 10.904,
+                  "lng": 76.959
+                },
+                {
+                  "id": "kuniyamuthur",
+                  "name": "Kuniyamuthur",
+                  "lat": 10.9622,
+                  "lng": 76.9536
+                },
+                {
+                  "id": "kovaipudur",
+                  "name": "Kovaipudur",
+                  "lat": 10.9437,
+                  "lng": 76.9298
+                },
+                {
+                  "id": "perur",
+                  "name": "Perur",
+                  "lat": 10.9754,
+                  "lng": 76.9139
+                },
+                {
+                  "id": "ukkadam",
+                  "name": "Ukkadam",
+                  "lat": 10.988,
+                  "lng": 76.9617
+                },
+                {
+                  "id": "town_hall",
+                  "name": "Town Hall",
+                  "lat": 10.9946,
+                  "lng": 76.9614
+                },
+                {
+                  "id": "coimbatore_junction",
+                  "name": "Coimbatore Junction",
+                  "lat": 10.9966,
+                  "lng": 76.9647
+                },
+                {
+                  "id": "rs_puram",
+                  "name": "RS Puram",
+                  "lat": 11.0057,
+                  "lng": 76.9498
+                },
+                {
+                  "id": "race_course",
+                  "name": "Race Course",
+                  "lat": 11.0006,
+                  "lng": 76.9774
+                },
+                {
+                  "id": "gandhipuram",
+                  "name": "Gandhipuram",
+                  "lat": 11.0177,
+                  "lng": 76.9674
+                },
+                {
+                  "id": "saibaba_colony",
+                  "name": "Saibaba Colony",
+                  "lat": 11.0256,
+                  "lng": 76.9449
+                },
+                {
+                  "id": "vadavalli",
+                  "name": "Vadavalli",
+                  "lat": 11.0245,
+                  "lng": 76.903
+                },
+                {
+                  "id": "thudiyalur",
+                  "name": "Thudiyalur",
+                  "lat": 11.08,
+                  "lng": 76.944
+                },
+                {
+                  "id": "ganapathy",
+                  "name": "Ganapathy",
+                  "lat": 11.04,
+                  "lng": 76.976
+                },
+                {
+                  "id": "saravanampatti",
+                  "name": "Saravanampatti",
+                  "lat": 11.079,
+                  "lng": 77
+                },
+                {
+                  "id": "kalapatti",
+                  "name": "Kalapatti",
+                  "lat": 11.07,
+                  "lng": 77.035
+                },
+                {
+                  "id": "lakshmi_mills",
+                  "name": "Lakshmi Mills",
+                  "lat": 11.0125,
+                  "lng": 76.988
+                },
+                {
+                  "id": "peelamedu",
+                  "name": "Peelamedu",
+                  "lat": 11.0262,
+                  "lng": 77.0026
+                },
+                {
+                  "id": "hope_college",
+                  "name": "Hope College",
+                  "lat": 11.0275,
+                  "lng": 77.0183
+                },
+                {
+                  "id": "tidel_park",
+                  "name": "Tidel Park",
+                  "lat": 11.0318,
+                  "lng": 77.029
+                },
+                {
+                  "id": "airport",
+                  "name": "Coimbatore International Airport",
+                  "lat": 11.03,
+                  "lng": 77.0434
+                },
+                {
+                  "id": "chinniyampalayam",
+                  "name": "Chinniyampalayam",
+                  "lat": 11.04,
+                  "lng": 77.058
+                },
+                {
+                  "id": "neelambur",
+                  "name": "Neelambur",
+                  "lat": 11.056,
+                  "lng": 77.088
+                },
+                {
+                  "id": "ramanathapuram",
+                  "name": "Ramanathapuram",
+                  "lat": 10.997,
+                  "lng": 76.999
+                },
+                {
+                  "id": "singanallur",
+                  "name": "Singanallur",
+                  "lat": 10.999,
+                  "lng": 77.032
+                },
+                {
+                  "id": "ondipudur",
+                  "name": "Ondipudur",
+                  "lat": 10.997,
+                  "lng": 77.058
+                },
+                {
+                  "id": "chintamanipudur",
+                  "name": "Chintamanipudur",
+                  "lat": 10.996,
+                  "lng": 77.083
+                },
+                {
+                  "id": "sundarapuram",
+                  "name": "Sundarapuram",
+                  "lat": 10.958,
+                  "lng": 76.972
+                },
+                {
+                  "id": "podanur",
+                  "name": "Podanur",
+                  "lat": 10.962,
+                  "lng": 76.981
+                },
+                {
+                  "id": "malumichampatti",
+                  "name": "Malumichampatti",
+                  "lat": 10.906,
+                  "lng": 76.999
+                },
+                {
+                  "id": "chettipalayam",
+                  "name": "Chettipalayam",
+                  "lat": 10.918,
+                  "lng": 77.033
+                }
+              ],
+              "edges": [
+                {
+                  "from": "amrita",
+                  "to": "madukkarai",
+                  "roadClass": "highway"
+                },
+                {
+                  "from": "madukkarai",
+                  "to": "kuniyamuthur",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "kuniyamuthur",
+                  "to": "ukkadam",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "kuniyamuthur",
+                  "to": "kovaipudur",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "kovaipudur",
+                  "to": "perur",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "perur",
+                  "to": "ukkadam",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "perur",
+                  "to": "vadavalli",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "ukkadam",
+                  "to": "town_hall",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "town_hall",
+                  "to": "coimbatore_junction",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "town_hall",
+                  "to": "rs_puram",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "coimbatore_junction",
+                  "to": "gandhipuram",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "coimbatore_junction",
+                  "to": "race_course",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "rs_puram",
+                  "to": "gandhipuram",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "rs_puram",
+                  "to": "saibaba_colony",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "rs_puram",
+                  "to": "vadavalli",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "saibaba_colony",
+                  "to": "vadavalli",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "saibaba_colony",
+                  "to": "gandhipuram",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "saibaba_colony",
+                  "to": "thudiyalur",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "gandhipuram",
+                  "to": "ganapathy",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "ganapathy",
+                  "to": "saravanampatti",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "thudiyalur",
+                  "to": "saravanampatti",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "ganapathy",
+                  "to": "peelamedu",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "saravanampatti",
+                  "to": "kalapatti",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "kalapatti",
+                  "to": "airport",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "gandhipuram",
+                  "to": "lakshmi_mills",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "race_course",
+                  "to": "lakshmi_mills",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "lakshmi_mills",
+                  "to": "peelamedu",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "peelamedu",
+                  "to": "hope_college",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "hope_college",
+                  "to": "airport",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "hope_college",
+                  "to": "tidel_park",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "tidel_park",
+                  "to": "kalapatti",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "airport",
+                  "to": "chinniyampalayam",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "chinniyampalayam",
+                  "to": "neelambur",
+                  "roadClass": "highway"
+                },
+                {
+                  "from": "race_course",
+                  "to": "ramanathapuram",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "ramanathapuram",
+                  "to": "singanallur",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "singanallur",
+                  "to": "ondipudur",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "ondipudur",
+                  "to": "chintamanipudur",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "singanallur",
+                  "to": "peelamedu",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "singanallur",
+                  "to": "airport",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "ukkadam",
+                  "to": "sundarapuram",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "sundarapuram",
+                  "to": "podanur",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "podanur",
+                  "to": "ramanathapuram",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "sundarapuram",
+                  "to": "malumichampatti",
+                  "roadClass": "arterial"
+                },
+                {
+                  "from": "podanur",
+                  "to": "chettipalayam",
+                  "roadClass": "local"
+                },
+                {
+                  "from": "madukkarai",
+                  "to": "malumichampatti",
+                  "roadClass": "highway"
+                },
+                {
+                  "from": "malumichampatti",
+                  "to": "chettipalayam",
+                  "roadClass": "highway"
+                },
+                {
+                  "from": "chettipalayam",
+                  "to": "chintamanipudur",
+                  "roadClass": "highway"
+                },
+                {
+                  "from": "chintamanipudur",
+                  "to": "neelambur",
+                  "roadClass": "highway"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "tags": [
+        "search",
+        "routing",
+        "a-star"
+      ]
+    },
+    {
+      "uri": "/agent-trace",
+      "name": "Agent Negotiation Trace",
+      "description": "FIPA Contract Net message trace between rider, provider, and driver agents, with the outcome and protocol metrics",
+      "examples": [
+        {
+          "name": "Airport ride with re-awards",
+          "description": "Drivers refuse the cheapest bid; the rider agent re-awards",
+          "data": {
+            "protocol": "FIPA Contract Net, nested: rider ⇄ providers, provider ⇄ drivers",
+            "origin": {
+              "query": "Amrita University",
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "destination": {
+              "query": "Coimbatore Airport",
+              "formattedAddress": "Coimbatore International Airport",
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "route": {
+              "distanceKm": 41.4,
+              "durationMinutes": 59,
+              "source": "road_graph",
+              "polyline": [
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.959,
+                  10.904
+                ],
+                [
+                  76.999,
+                  10.906
+                ],
+                [
+                  77.033,
+                  10.918
+                ],
+                [
+                  77.083,
+                  10.996
+                ],
+                [
+                  77.088,
+                  11.056
+                ],
+                [
+                  77.058,
+                  11.04
+                ],
+                [
+                  77.0434,
+                  11.03
+                ],
+                [
+                  77.0434,
+                  11.03
+                ]
+              ],
+              "via": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Madukkarai",
+                "Malumichampatti",
+                "Chettipalayam",
+                "Chintamanipudur",
+                "Neelambur",
+                "Chinniyampalayam",
+                "Coimbatore International Airport"
+              ],
+              "search": {
+                "strategy": "astar",
+                "objective": "time",
+                "hour": 9,
+                "nodesExpanded": 13,
+                "nodesGenerated": 21
+              }
+            },
+            "time": "9:00 AM",
+            "outcome": {
+              "status": "MATCHED",
+              "option": {
+                "optionId": "rapido-auto-1",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "auto",
+                "fare": 440,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.1,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.98,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 3,
+                "score": 0.45,
+                "scoreReason": "Balances ₹440 fare, 5 min pickup, and 4.1★ rating",
+                "paretoOptimal": false
+              },
+              "driver": {
+                "id": "driver:rapido-driver-0",
+                "name": "Anitha",
+                "rating": 4.7,
+                "vehicleType": "auto",
+                "fuelType": "cng",
+                "provider": "rapido"
+              },
+              "pickupEtaMinutes": 5,
+              "incentive": 65,
+              "reason": "Rapido auto won the rider's contract on award #3; Anitha accepted after an incentive was added.",
+              "relaxedConstraints": []
+            },
+            "participants": [
+              {
+                "id": "rider:you",
+                "role": "rider",
+                "label": "Rider (you)"
+              },
+              {
+                "id": "provider:uber",
+                "role": "provider",
+                "label": "Uber"
+              },
+              {
+                "id": "provider:ola",
+                "role": "provider",
+                "label": "Ola"
+              },
+              {
+                "id": "provider:rapido",
+                "role": "provider",
+                "label": "Rapido"
+              },
+              {
+                "id": "driver:rapido-driver-7",
+                "role": "driver",
+                "label": "Senthil · bike (petrol)"
+              },
+              {
+                "id": "driver:rapido-driver-3",
+                "role": "driver",
+                "label": "Arun · bike (petrol)"
+              },
+              {
+                "id": "driver:rapido-driver-0",
+                "role": "driver",
+                "label": "Anitha · auto (cng)"
+              },
+              {
+                "id": "driver:rapido-driver-5",
+                "role": "driver",
+                "label": "Meena · auto (cng)"
+              },
+              {
+                "id": "driver:rapido-driver-1",
+                "role": "driver",
+                "label": "Divya · auto (cng)"
+              }
+            ],
+            "messages": [
+              {
+                "id": 2,
+                "t": 0.12,
+                "from": "rider:you",
+                "to": "provider:ola",
+                "performative": "CFP",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Call for proposals: Amrita Vishwa Vidyapeetham, Ettimadai → Coimbatore International Airport (41.4 km)"
+              },
+              {
+                "id": 3,
+                "t": 0.12,
+                "from": "rider:you",
+                "to": "provider:rapido",
+                "performative": "CFP",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Call for proposals: Amrita Vishwa Vidyapeetham, Ettimadai → Coimbatore International Airport (41.4 km)"
+              },
+              {
+                "id": 1,
+                "t": 0.19,
+                "from": "rider:you",
+                "to": "provider:uber",
+                "performative": "CFP",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Call for proposals: Amrita Vishwa Vidyapeetham, Ettimadai → Coimbatore International Airport (41.4 km)"
+              },
+              {
+                "id": 6,
+                "t": 1.03,
+                "from": "provider:uber",
+                "to": "rider:you",
+                "performative": "PROPOSE",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Bid: 4 options from ₹515"
+              },
+              {
+                "id": 4,
+                "t": 1.2,
+                "from": "provider:ola",
+                "to": "rider:you",
+                "performative": "PROPOSE",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Bid: 4 options from ₹300"
+              },
+              {
+                "id": 5,
+                "t": 1.35,
+                "from": "provider:rapido",
+                "to": "rider:you",
+                "performative": "PROPOSE",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Bid: 3 options from ₹265"
+              },
+              {
+                "id": 7,
+                "t": 1.62,
+                "from": "rider:you",
+                "to": "provider:rapido",
+                "performative": "ACCEPT_PROPOSAL",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Award: Rapido bike at ₹265 (utility rank #1)"
+              },
+              {
+                "id": 8,
+                "t": 1.87,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-7",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-bike-0-r1",
+                "summary": "Trip offer: ₹265, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 9,
+                "t": 1.94,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-3",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-bike-0-r1",
+                "summary": "Trip offer: ₹265, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 11,
+                "t": 8.11,
+                "from": "driver:rapido-driver-3",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-bike-0-r1",
+                "summary": "Decline — Net earning of ₹108 (~₹67/hr) is low for a relatively long pickup distance (3.9 km for a 41.4 km trip), and moderate, somewhat uncertain return demand at the destination — likely not worth it unless nothing better is available nearby."
+              },
+              {
+                "id": 10,
+                "t": 8.74,
+                "from": "driver:rapido-driver-7",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-bike-0-r1",
+                "summary": "Decline — Net earning of ₹117 (~₹78/hr) is low for a reasonable pickup distance (0.5 km), and moderate, somewhat uncertain return demand at the destination — likely not worth it unless nothing better is available nearby."
+              },
+              {
+                "id": 12,
+                "t": 9.11,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-7",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-bike-0-r2",
+                "summary": "Trip offer: ₹265 + ₹40 incentive, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 13,
+                "t": 9.14,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-3",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-bike-0-r2",
+                "summary": "Trip offer: ₹265 + ₹40 incentive, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 14,
+                "t": 12.58,
+                "from": "driver:rapido-driver-7",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-bike-0-r2",
+                "summary": "Decline — ₹101/hr is below my ₹260/hr floor"
+              },
+              {
+                "id": 15,
+                "t": 13.17,
+                "from": "driver:rapido-driver-3",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-bike-0-r2",
+                "summary": "Decline — Net earning of ₹142 (~₹88/hr) is low for a relatively long pickup distance (3.9 km for a 41.4 km trip), and moderate, somewhat uncertain return demand at the destination — likely not worth it unless nothing better is available nearby."
+              },
+              {
+                "id": 16,
+                "t": 13.44,
+                "from": "provider:rapido",
+                "to": "rider:you",
+                "performative": "FAILURE",
+                "conversationId": "ride-request-rider:you",
+                "summary": "All 2 nearby bike drivers declined, even with an incentive"
+              },
+              {
+                "id": 17,
+                "t": 13.71,
+                "from": "rider:you",
+                "to": "provider:ola",
+                "performative": "ACCEPT_PROPOSAL",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Re-award: Ola bike at ₹300 (utility rank #2)"
+              },
+              {
+                "id": 18,
+                "t": 14.05,
+                "from": "provider:ola",
+                "to": "rider:you",
+                "performative": "FAILURE",
+                "conversationId": "ride-request-rider:you",
+                "summary": "No Ola bike drivers within 4 km"
+              },
+              {
+                "id": 19,
+                "t": 14.29,
+                "from": "rider:you",
+                "to": "provider:rapido",
+                "performative": "ACCEPT_PROPOSAL",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Re-award: Rapido auto at ₹440 (utility rank #3)"
+              },
+              {
+                "id": 20,
+                "t": 14.51,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-0",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Trip offer: ₹440, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 21,
+                "t": 14.56,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-5",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Trip offer: ₹440, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 22,
+                "t": 14.68,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-1",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Trip offer: ₹440, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 23,
+                "t": 19.47,
+                "from": "driver:rapido-driver-0",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Decline — ₹182/hr is below my ₹200/hr floor"
+              },
+              {
+                "id": 24,
+                "t": 19.83,
+                "from": "driver:rapido-driver-5",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Decline — ₹177/hr is below my ₹270/hr floor"
+              },
+              {
+                "id": 25,
+                "t": 20.67,
+                "from": "driver:rapido-driver-1",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-auto-1-r1",
+                "summary": "Decline — ₹177/hr is below my ₹350/hr floor"
+              },
+              {
+                "id": 27,
+                "t": 20.89,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-5",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Trip offer: ₹440 + ₹65 incentive, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 28,
+                "t": 20.98,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-1",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Trip offer: ₹440 + ₹65 incentive, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 26,
+                "t": 21.07,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-0",
+                "performative": "CFP",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Trip offer: ₹440 + ₹65 incentive, 41.4 km to Coimbatore International Airport"
+              },
+              {
+                "id": 29,
+                "t": 23.89,
+                "from": "driver:rapido-driver-5",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Decline — ₹212/hr is below my ₹270/hr floor"
+              },
+              {
+                "id": 31,
+                "t": 25.25,
+                "from": "driver:rapido-driver-0",
+                "to": "provider:rapido",
+                "performative": "PROPOSE",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Accept — nets ₹337 (~₹217/hr), 1.8 km to pickup"
+              },
+              {
+                "id": 30,
+                "t": 28.73,
+                "from": "driver:rapido-driver-1",
+                "to": "provider:rapido",
+                "performative": "REFUSE",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Decline — ₹212/hr is below my ₹350/hr floor"
+              },
+              {
+                "id": 32,
+                "t": 28.97,
+                "from": "provider:rapido",
+                "to": "driver:rapido-driver-0",
+                "performative": "ACCEPT_PROPOSAL",
+                "conversationId": "dispatch-rapido-auto-1-r2",
+                "summary": "Trip assigned — pickup in 5 min"
+              },
+              {
+                "id": 33,
+                "t": 29.11,
+                "from": "provider:rapido",
+                "to": "rider:you",
+                "performative": "INFORM",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Driver Anitha (4.7★, auto) arriving in 5 min"
+              },
+              {
+                "id": 34,
+                "t": 29.24,
+                "from": "rider:you",
+                "to": "provider:uber",
+                "performative": "REJECT_PROPOSAL",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Your bid was not selected"
+              },
+              {
+                "id": 35,
+                "t": 29.3,
+                "from": "rider:you",
+                "to": "provider:ola",
+                "performative": "REJECT_PROPOSAL",
+                "conversationId": "ride-request-rider:you",
+                "summary": "Your bid was not selected"
+              }
+            ],
+            "metrics": {
+              "messageCount": 35,
+              "fleetSize": 24,
+              "providersQueried": 3,
+              "proposals": 3,
+              "refusals": 0,
+              "awards": 3,
+              "driverOffers": 10,
+              "driverAcceptances": 1,
+              "driverAcceptanceRate": 0.1,
+              "incentiveRounds": 2,
+              "timeToOutcomeSeconds": 29.3
+            }
+          }
+        }
+      ],
+      "tags": [
+        "multi-agent",
+        "contract-net",
+        "marketplace"
+      ]
+    },
+    {
+      "uri": "/shift-plan",
+      "name": "Driver Shift Plan",
+      "description": "MDP-optimal plan for a driver's next hours, compared with greedy and stay-put strategies",
+      "examples": [
+        {
+          "name": "Late-night auto shift",
+          "description": "Repositioning out of a quiet IT corridor at 11 PM",
+          "data": {
+            "currentLocation": {
+              "query": "Tidel Park",
+              "formattedAddress": "Tidel Park",
+              "coordinates": {
+                "lat": 11.0318,
+                "lng": 77.029
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "startZone": "Peelamedu IT Corridor",
+            "snappedFromKm": 1.1,
+            "startTime": "11:00 PM",
+            "hours": 4,
+            "expectedEarnings": {
+              "optimal": 306,
+              "greedy": 306,
+              "stayPut": 265
+            },
+            "upliftVsGreedyPercent": 0.2,
+            "upliftVsStayPutPercent": 15.7,
+            "firstMove": "Reposition to Coimbatore Airport (3.3 km, ~7 min)",
+            "itinerary": [
+              {
+                "time": "11:00 PM",
+                "zone": "Peelamedu IT Corridor",
+                "action": "Reposition to Coimbatore Airport (3.3 km, ~7 min)",
+                "expectedTrips": 1.7,
+                "expectedEarningThisHour": 84
+              },
+              {
+                "time": "12:00 AM",
+                "zone": "Coimbatore Airport",
+                "action": "Wait for requests in Coimbatore Airport",
+                "expectedTrips": 1.8,
+                "expectedEarningThisHour": 96
+              },
+              {
+                "time": "1:00 AM",
+                "zone": "Coimbatore Airport",
+                "action": "Wait for requests in Coimbatore Airport",
+                "expectedTrips": 1.9,
+                "expectedEarningThisHour": 98
+              },
+              {
+                "time": "2:00 AM",
+                "zone": "Coimbatore Airport",
+                "action": "Wait for requests in Coimbatore Airport",
+                "expectedTrips": 1.8,
+                "expectedEarningThisHour": 93
+              }
+            ],
+            "policy": [
+              {
+                "time": "11:00 PM",
+                "decisions": [
+                  {
+                    "zone": "Coimbatore Airport",
+                    "action": "wait",
+                    "value": 325
+                  },
+                  {
+                    "zone": "Coimbatore Railway Station",
+                    "action": "wait",
+                    "value": 276
+                  },
+                  {
+                    "zone": "Gandhipuram",
+                    "action": "→ Coimbatore Airport",
+                    "value": 265
+                  },
+                  {
+                    "zone": "RS Puram",
+                    "action": "→ Ukkadam Bus Terminus",
+                    "value": 262
+                  },
+                  {
+                    "zone": "Peelamedu IT Corridor",
+                    "action": "→ Coimbatore Airport",
+                    "value": 306
+                  },
+                  {
+                    "zone": "Ettimadai College Area",
+                    "action": "wait",
+                    "value": 266
+                  },
+                  {
+                    "zone": "Saravanampatti",
+                    "action": "wait",
+                    "value": 275
+                  },
+                  {
+                    "zone": "Ukkadam Bus Terminus",
+                    "action": "wait",
+                    "value": 280
+                  },
+                  {
+                    "zone": "Singanallur",
+                    "action": "→ Coimbatore Airport",
+                    "value": 295
+                  }
+                ]
+              },
+              {
+                "time": "12:00 AM",
+                "decisions": [
+                  {
+                    "zone": "Coimbatore Airport",
+                    "action": "wait",
+                    "value": 246
+                  },
+                  {
+                    "zone": "Coimbatore Railway Station",
+                    "action": "→ Ukkadam Bus Terminus",
+                    "value": 194
+                  },
+                  {
+                    "zone": "Gandhipuram",
+                    "action": "→ Coimbatore Airport",
+                    "value": 188
+                  },
+                  {
+                    "zone": "RS Puram",
+                    "action": "→ Ukkadam Bus Terminus",
+                    "value": 185
+                  },
+                  {
+                    "zone": "Peelamedu IT Corridor",
+                    "action": "→ Coimbatore Airport",
+                    "value": 228
+                  },
+                  {
+                    "zone": "Ettimadai College Area",
+                    "action": "wait",
+                    "value": 195
+                  },
+                  {
+                    "zone": "Saravanampatti",
+                    "action": "wait",
+                    "value": 204
+                  },
+                  {
+                    "zone": "Ukkadam Bus Terminus",
+                    "action": "wait",
+                    "value": 202
+                  },
+                  {
+                    "zone": "Singanallur",
+                    "action": "→ Coimbatore Airport",
+                    "value": 217
+                  }
+                ]
+              },
+              {
+                "time": "1:00 AM",
+                "decisions": [
+                  {
+                    "zone": "Coimbatore Airport",
+                    "action": "wait",
+                    "value": 173
+                  },
+                  {
+                    "zone": "Coimbatore Railway Station",
+                    "action": "wait",
+                    "value": 123
+                  },
+                  {
+                    "zone": "Gandhipuram",
+                    "action": "→ Coimbatore Airport",
+                    "value": 118
+                  },
+                  {
+                    "zone": "RS Puram",
+                    "action": "→ Coimbatore Railway Station",
+                    "value": 110
+                  },
+                  {
+                    "zone": "Peelamedu IT Corridor",
+                    "action": "→ Coimbatore Airport",
+                    "value": 157
+                  },
+                  {
+                    "zone": "Ettimadai College Area",
+                    "action": "wait",
+                    "value": 129
+                  },
+                  {
+                    "zone": "Saravanampatti",
+                    "action": "wait",
+                    "value": 135
+                  },
+                  {
+                    "zone": "Ukkadam Bus Terminus",
+                    "action": "wait",
+                    "value": 121
+                  },
+                  {
+                    "zone": "Singanallur",
+                    "action": "→ Coimbatore Airport",
+                    "value": 145
+                  }
+                ]
+              },
+              {
+                "time": "2:00 AM",
+                "decisions": [
+                  {
+                    "zone": "Coimbatore Airport",
+                    "action": "wait",
+                    "value": 93
+                  },
+                  {
+                    "zone": "Coimbatore Railway Station",
+                    "action": "wait",
+                    "value": 55
+                  },
+                  {
+                    "zone": "Gandhipuram",
+                    "action": "wait",
+                    "value": 49
+                  },
+                  {
+                    "zone": "RS Puram",
+                    "action": "wait",
+                    "value": 51
+                  },
+                  {
+                    "zone": "Peelamedu IT Corridor",
+                    "action": "→ Coimbatore Airport",
+                    "value": 77
+                  },
+                  {
+                    "zone": "Ettimadai College Area",
+                    "action": "wait",
+                    "value": 66
+                  },
+                  {
+                    "zone": "Saravanampatti",
+                    "action": "wait",
+                    "value": 61
+                  },
+                  {
+                    "zone": "Ukkadam Bus Terminus",
+                    "action": "wait",
+                    "value": 57
+                  },
+                  {
+                    "zone": "Singanallur",
+                    "action": "→ Coimbatore Airport",
+                    "value": 66
+                  }
+                ]
+              }
+            ],
+            "zones": [
+              {
+                "name": "Coimbatore Airport",
+                "coordinates": {
+                  "lat": 11.03,
+                  "lng": 77.0434
+                },
+                "demandAtStart": 59
+              },
+              {
+                "name": "Coimbatore Railway Station",
+                "coordinates": {
+                  "lat": 10.9966,
+                  "lng": 76.9647
+                },
+                "demandAtStart": 43
+              },
+              {
+                "name": "Gandhipuram",
+                "coordinates": {
+                  "lat": 11.0177,
+                  "lng": 76.9674
+                },
+                "demandAtStart": 15
+              },
+              {
+                "name": "RS Puram",
+                "coordinates": {
+                  "lat": 11.0057,
+                  "lng": 76.9498
+                },
+                "demandAtStart": 18
+              },
+              {
+                "name": "Peelamedu IT Corridor",
+                "coordinates": {
+                  "lat": 11.0296,
+                  "lng": 77.0193
+                },
+                "demandAtStart": 15
+              },
+              {
+                "name": "Ettimadai College Area",
+                "coordinates": {
+                  "lat": 10.9046,
+                  "lng": 76.8993
+                },
+                "demandAtStart": 8
+              },
+              {
+                "name": "Saravanampatti",
+                "coordinates": {
+                  "lat": 11.079,
+                  "lng": 77
+                },
+                "demandAtStart": 6
+              },
+              {
+                "name": "Ukkadam Bus Terminus",
+                "coordinates": {
+                  "lat": 10.988,
+                  "lng": 76.9617
+                },
+                "demandAtStart": 47
+              },
+              {
+                "name": "Singanallur",
+                "coordinates": {
+                  "lat": 10.999,
+                  "lng": 77.032
+                },
+                "demandAtStart": 18
+              }
+            ],
+            "model": {
+              "method": "Finite-horizon MDP solved exactly by backward induction (Bellman optimality)",
+              "states": 36,
+              "actionsPerState": 9,
+              "assumptions": [
+                "One decision per hour. Trips per hour = usable minutes ÷ (wait + pickup + ride).",
+                "Waiting time falls with zone demand on a convex curve (3 + 42·(1 − score/100)² minutes), shared with DemandService.",
+                "Trip destinations follow a gravity model: weight ∝ (destination demand + 15) · e^(−km/6). The destination of the last trip is where the driver ends the hour.",
+                "Repositioning burns fuel and its travel minutes are lost from the hour."
+              ]
+            }
+          }
+        }
+      ],
+      "tags": [
+        "driver",
+        "mdp",
+        "planning"
+      ]
     }
   ],
-  "generatedAt": "2026-07-26T00:00:00.000Z"
+  "generatedAt": "2026-10-15T00:00:00.000Z"
 }

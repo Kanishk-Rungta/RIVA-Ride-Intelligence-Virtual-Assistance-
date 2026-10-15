@@ -23,6 +23,13 @@ interface MultiStopPlanData {
   totalDurationMinutes: number;
   estimatedFare: number;
   routeDisplay: string;
+  optimization?: {
+    algorithm: string;
+    originalEstimateMinutes: number;
+    optimizedEstimateMinutes: number;
+    savedMinutes: number;
+    statesExpanded: number;
+  };
 }
 
 export default function RideMap() {
@@ -57,6 +64,24 @@ export default function RideMap() {
       }}
     >
       <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 14 }}>Multi-stop route</div>
+
+      {data.optimization && (
+        <div
+          style={{
+            background: isDark ? 'rgba(34,197,94,0.12)' : 'rgba(34,197,94,0.08)',
+            borderRadius: 12,
+            padding: '10px 12px',
+            fontSize: 12,
+            marginBottom: 14,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>Stops reordered{data.optimization.savedMinutes > 0 ? `, saving ~${data.optimization.savedMinutes} min` : ' — your order was already fastest'}</strong>
+          <div style={{ color: mutedColor }}>
+            {data.optimization.originalEstimateMinutes} → {data.optimization.optimizedEstimateMinutes} min · {data.optimization.algorithm}, {data.optimization.statesExpanded} states expanded
+          </div>
+        </div>
+      )}
 
       {/* Vertical stop stepper */}
       <div style={{ position: 'relative', paddingLeft: 24, marginBottom: 16 }}>

@@ -17,12 +17,25 @@ const PROVIDERS: Array<{ id: ProviderId; name: string; count: number; vehicles: 
  */
 @Injectable()
 export class NearbyDriversService {
-  generate(center: LatLng, seedKey: string, radiusKm: number): NearbyDriver[] {
+  /**
+   * `epoch` defaults to the current ~second so the map shimmers between
+   * calls like a live map; pass a fixed value for a reproducible scene.
+   * `perProvider` overrides the default fleet size (the marketplace uses a
+   * larger fleet than the map).
+   */
+  generate(
+    center: LatLng,
+    seedKey: string,
+    radiusKm: number,
+    options: { epoch?: number; perProvider?: number } = {}
+  ): NearbyDriver[] {
     const drivers: NearbyDriver[] = [];
+    const epoch = options.epoch ?? Date.now() >> 10;
 
     for (const provider of PROVIDERS) {
-      const rng = createSeededRandom(hashString(`${seedKey}|${provider.id}|${Date.now() >> 10}`));
-      for (let i = 0; i < provider.count; i++) {
+      const rng = createSeededRandom(hashString(`${seedKey}|${provider.id}|${epoch}`));
+      const count = options.perProvider ?? provider.count;
+      for (let i = 0; i < count; i++) {
         const angle = randomBetween(rng, 0, 2 * Math.PI);
         const distanceKm = randomBetween(rng, 0.1, radiusKm);
 

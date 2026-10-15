@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RIVA Case Study Report</title>
+<style>
+  @page { size: A4; margin: 2.3cm 2.4cm 2.2cm 2.4cm; }
+  :root { --ink: #111; --muted: #555; --rule: #bbb; --accent: #1f3b73; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Cambria", "Latin Modern Roman", "Times New Roman", serif; font-size: 11.2pt; line-height: 1.45; color: var(--ink); margin: 0; background: #fff; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); break-after: avoid; }
+  h2 { font-size: 15pt; margin: 22pt 0 8pt; }
+  h3 { font-size: 12pt; margin: 14pt 0 5pt; }
+  p { margin: 0 0 7pt; text-align: justify; hyphens: auto; }
+  .page { break-after: page; }
+  .title-page { text-align: center; padding-top: 1.2cm; }
+  .title-page .label { font-size: 13pt; margin-bottom: 6pt; }
+  .title-page .title { font-size: 20pt; font-weight: 700; margin: 6pt 0 4pt; }
+  .title-page .subtitle { font-size: 12.5pt; font-style: italic; margin-bottom: 30pt; }
+  .title-page .sub { font-size: 12pt; margin: 3pt 0; }
+  .title-page .dept { margin-top: 46pt; font-weight: 700; font-size: 12.5pt; line-height: 1.6; }
+  .toc { list-style: none; padding: 0; margin: 18pt 0; font-size: 11.5pt; }
+  .toc li { display: flex; align-items: baseline; margin: 5pt 0; }
+  .toc li.sub { margin-left: 1.6em; font-size: 10.8pt; }
+  .toc .fill { flex: 1; border-bottom: 1px dotted #888; margin: 0 6pt; transform: translateY(-3pt); }
+  table { border-collapse: collapse; width: 100%; margin: 6pt 0 10pt; font-size: 9.6pt; line-height: 1.3; break-inside: avoid; }
+  th, td { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 3.5pt 5pt; text-align: left; vertical-align: top; }
+  thead th { border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  tbody tr:last-child td { border-bottom: 1.5px solid var(--ink); }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  caption { caption-side: top; text-align: left; font-size: 9.8pt; margin-bottom: 4pt; }
+  figure { margin: 10pt 0 12pt; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; }
+  figcaption { font-size: 9.6pt; text-align: left; margin-top: 5pt; color: #222; }
+  .row { display: flex; gap: 14pt; justify-content: center; align-items: flex-start; }
+  .row figure { flex: 1; margin: 0; }
+  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 9.4pt; }
+  pre { font-family: Consolas, monospace; font-size: 8.8pt; background: #f4f4f2; border-left: 2px solid var(--rule); padding: 6pt 9pt; white-space: pre-wrap; break-inside: avoid; margin: 6pt 0 10pt; }
+  .eq { text-align: center; margin: 6pt 0 8pt; font-style: italic; }
+  ul, ol { margin: 0 0 8pt; padding-left: 1.4em; }
+  li { margin: 2pt 0; }
+  .refs li { margin: 4pt 0; text-align: left; }
+  .note { font-size: 9.6pt; color: var(--muted); }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ============================== TITLE PAGE ============================== -->
+<section class="page title-page">
+  <div class="label">Case Study Report</div>
+  <div class="title">RIVA: Ride Intelligence and Virtual Assistance</div>
+  <div class="subtitle">A multi-agent mobility assistant with search-based routing,<br>Contract Net negotiation and MDP shift planning</div>
+  <div class="sub"><strong>Submitted By</strong></div>
+  <div class="sub">Student1, CB.SC.U4CSE23XXX</div>
+  <div class="sub">Student2, CB.SC.U4CSE23XXX</div>
+  <div class="sub">Student3, CB.SC.U4CSE23XXX</div>
+  <div class="sub">Student4, CB.SC.U4CSE23XXX</div>
+  <div class="sub" style="margin-top:26pt">in partial fulfilment of the requirements for the course of</div>
+  <div class="sub"><strong>23CSE401 – Fundamentals of Artificial Intelligence</strong></div>
+  <div class="sub">Academic Year 2026-27 Odd Semester</div>
+  <div class="dept">DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING<br>AMRITA SCHOOL OF COMPUTING<br>AMRITA VISHWA VIDYAPEETHAM<br>COIMBATORE – 641 112</div>
+</section>
+
+<!-- ============================== CONTENTS ============================== -->
+<section class="page">
+  <h2>Contents</h2>
+  <ul class="toc">
+    <li><span>1 Introduction</span><span class="fill"></span><span data-toc="s1">3</span></li>
+    <li><span>2 PEAS Description</span><span class="fill"></span><span data-toc="s2">3</span></li>
+    <li><span>3 Agent and Environment Analysis</span><span class="fill"></span><span data-toc="s3">5</span></li>
+    <li><span>4 Design</span><span class="fill"></span><span data-toc="s4">7</span></li>
+    <li class="sub"><span>4.1 Architecture</span><span class="fill"></span><span data-toc="s41">7</span></li>
+    <li class="sub"><span>4.2 Search: routing and stop ordering</span><span class="fill"></span><span data-toc="s42">8</span></li>
+    <li class="sub"><span>4.3 Multi-agent negotiation</span><span class="fill"></span><span data-toc="s43">9</span></li>
+    <li class="sub"><span>4.4 Decision making under uncertainty and learning</span><span class="fill"></span><span data-toc="s44">10</span></li>
+    <li class="sub"><span>4.5 Requirements, tools and packages</span><span class="fill"></span><span data-toc="s45">11</span></li>
+    <li><span>5 Implementation</span><span class="fill"></span><span data-toc="s5">12</span></li>
+    <li><span>6 Testing and Results</span><span class="fill"></span><span data-toc="s6">15</span></li>
+    <li><span>7 Conclusion and Limitations</span><span class="fill"></span><span data-toc="s7">21</span></li>
+    <li><span>References</span><span class="fill"></span><span data-toc="s8">22</span></li>
+  </ul>
+</section>
+
+<!-- ============================== 1 INTRODUCTION ============================== -->
+<h2 id="s1">1 Introduction</h2>
+
+<p>A rider in Coimbatore who wants to reach the airport has three ride-hailing apps to compare, and the cheapest quote is not always a ride that will actually arrive. A driver on the same platforms sees an offer for a few seconds and has to judge, without arithmetic, whether the fare covers fuel, commission and the unpaid drive to the pickup point. RIVA (Ride Intelligence and Virtual Assistance) is a conversational assistant built to help with both sides of that exchange.</p>
+
+<p>RIVA runs as a Model Context Protocol (MCP) server. A large language model client, such as Claude or ChatGPT, talks to the user and calls RIVA's 22 tools; each tool returns structured JSON and an interactive widget that renders inside the chat. Behind those tools sits a multi-agent system. One rider agent, three provider agents (Uber, Ola and Rapido) and a fleet of driver agents negotiate every ride using two nested FIPA Contract Net protocols, exchanging timestamped messages on a discrete-event bus. A search layer plans routes over a 32-junction model of Coimbatore's road network with A*, and orders multi-stop trips by A* over a visited-set state space. A driver advisor plans a shift as a finite-horizon Markov decision process, and the rider agent learns its utility weights from the rides the rider books.</p>
+
+<p>The system is advisory and simulated. Uber and Ola quotes come from fare models, Rapido can be scraped live through Apify but falls back to the same simulation, and no booking, payment or emergency dispatch is real. Geocoding and routing use Geoapify when an API key is configured; without one, every component runs offline and deterministically, which is how all the results in this report were produced.</p>
+
+<p>The report follows the course template. Section 2 gives the PEAS description of each agent, Section 3 classifies the agents and their environment, Section 4 describes the architecture and algorithms, Section 5 the implementation, and Section 6 the test suite and the benchmark results.</p>
+
+<!-- ============================== 2 PEAS ============================== -->
+<h2 id="s2">2 PEAS Description</h2>
+
+<p>RIVA contains five kinds of agent. Table 1 gives their PEAS descriptions. Every performance measure in the table is computed by the code, either inside the tool responses or by the benchmark script (<code>npm run evaluate</code>), and Section 6 reports the measured values.</p>
+
+<table>
+<caption><strong>Table 1.</strong> PEAS description of each agent type.</caption>
+<thead><tr><th style="width:13%">Agent</th><th style="width:27%">Performance measure</th><th style="width:20%">Environment</th><th style="width:20%">Actuators</th><th style="width:20%">Sensors</th></tr></thead>
+<tbody>
+<tr><td><strong>Rider agent</strong> (one per request)</td>
+<td>Match rate (requests ending with an assigned driver); utility <i>U</i> of the ride obtained (lower is better, defined below); zero violations of hard constraints; fraction of soft constraints kept; top-1 agreement between its first choice and the ride the rider actually books.</td>
+<td>Provider agents, their quotes, the rider's stored preferences, the resolved route.</td>
+<td>CFP to all providers; ACCEPT_PROPOSAL (award) and REJECT_PROPOSAL messages; update of its own utility weights.</td>
+<td>PROPOSE / REFUSE bids, INFORM (driver assigned), FAILURE (provider could not dispatch); booking confirmations.</td></tr>
+<tr><td><strong>Provider agent</strong> (Uber, Ola, Rapido)</td>
+<td>Fulfilment rate of awarded contracts; simulated seconds from award to assignment; incentive paid per fulfilled trip.</td>
+<td>The rider agent, its own fleet of driver agents, route and time of day.</td>
+<td>PROPOSE / REFUSE to the rider; CFP trip offers, ACCEPT / REJECT to drivers; incentive re-offers; INFORM or FAILURE to the rider.</td>
+<td>Rider CFP and award messages; driver PROPOSE / REFUSE replies; its pricing model or live scraper; driver positions.</td></tr>
+<tr><td><strong>Driver agent</strong> (8 per provider per scene)</td>
+<td>Net earning per trip = fare + incentive − fuel − commission; net earning per hour; never accepting a loss-making trip.</td>
+<td>Its provider, the trip offer, fuel prices, commission rate, demand at the destination.</td>
+<td>PROPOSE (accept) or REFUSE with a stated reason.</td>
+<td>Trip offers (fare, incentive, pickup point, trip length, destination, hour); its own position, vehicle, fuel type and reservation wage.</td></tr>
+<tr><td><strong>Route planner</strong> (search agent)</td>
+<td>Route cost equal to the optimum for the chosen objective (minutes or km); nodes expanded; frontier size.</td>
+<td>Coimbatore road graph (32 nodes, 48 road segments) with hour-dependent congestion.</td>
+<td>Returns a path, distance, duration and polyline; reorders multi-stop itineraries.</td>
+<td>Start and goal junctions (snapped from geocoded positions), objective, departure hour.</td></tr>
+<tr><td><strong>Shift planner</strong> (driver advisor)</td>
+<td>Expected net earnings over the shift horizon, compared with greedy and stay-put policies.</td>
+<td>Nine demand zones, hourly demand curves, zone-to-zone travel times from A*.</td>
+<td>Recommended action now (wait or reposition) and an hour-by-hour plan.</td>
+<td>Driver's location, start time, shift length, vehicle, fuel type and platform.</td></tr>
+</tbody></table>
+
+<p>The rider agent scores a ride option <i>o</i> from the pool <i>P</i> of available bids with a weighted sum of three normalised, lower-is-better features:</p>
+<p class="eq">U(o) = w<sub>f</sub> · fare(o)/max<sub>P</sub> fare &nbsp;+&nbsp; w<sub>e</sub> · eta(o)/max<sub>P</sub> eta &nbsp;+&nbsp; w<sub>r</sub> · (1 − rating(o)/5), &nbsp;&nbsp; w<sub>f</sub> + w<sub>e</sub> + w<sub>r</sub> = 1</p>
+<p>The weights start at 0.45, 0.35 and 0.20 and are then learned (Section 4.4). For the driver agent, fuel cost is charged on pickup distance plus trip distance, because the unpaid drive to the rider burns fuel too, and commission is 25%, 22% and 15% of the fare for Uber, Ola and Rapido respectively.</p>
+
+<h3>Input–sensor mapping</h3>
+<table>
+<caption><strong>Table 2.</strong> How raw inputs reach the agents' sensors.</caption>
+<thead><tr><th style="width:30%">Raw input</th><th style="width:30%">Sensor (code path)</th><th>Percept produced</th></tr></thead>
+<tbody>
+<tr><td>User utterance, e.g. “I need to reach the airport by 8 AM tomorrow”</td><td>LLM client → MCP <code>tools/call</code> arguments, validated by Zod schemas</td><td>Typed request: origin, destination, <code>arriveBy</code>, preferences</td></tr>
+<tr><td>Place names (“Amrita University”)</td><td><code>MapsService.resolveLocation</code>: Geoapify geocoder, else road-graph names, else local gazetteer</td><td>Coordinates with a <code>live</code> / <code>estimated</code> flag</td></tr>
+<tr><td>Clock and calendar</td><td><code>time.util.ts</code> parsers; <code>isWeekend()</code></td><td>Hour of day, day offset, weekday or weekend</td></tr>
+<tr><td>Provider prices</td><td>Provider adapters (fare model; Apify actor for Rapido)</td><td>Normalised <code>RideOption</code> list</td></tr>
+<tr><td>Other agents' messages</td><td><code>MessageBus</code> delivery to <code>Agent.receive()</code></td><td>ACL message: performative, sender, content, timestamp</td></tr>
+<tr><td>Zone demand</td><td><code>DemandService</code> hourly curves per zone category</td><td>Demand score 0–100, expected wait, return probability</td></tr>
+</tbody></table>
+
+<h3>Output–actuator mapping</h3>
+<table>
+<caption><strong>Table 3.</strong> How agent decisions become effects.</caption>
+<thead><tr><th style="width:30%">Decision</th><th style="width:30%">Actuator</th><th>Effect visible to the user</th></tr></thead>
+<tbody>
+<tr><td>Ranked rides, relaxed constraints, Pareto flags</td><td><code>find_rides</code> result + <code>ride-comparison</code> widget</td><td>Ranked card list with route, A* statistics and a constraint note</td></tr>
+<tr><td>Award, re-award, driver assignment</td><td><code>bus.send()</code> of ACCEPT_PROPOSAL / INFORM</td><td><code>agent-trace</code> widget; driver name and ETA in <code>booking_simulation</code></td></tr>
+<tr><td>Accept or decline a trip offer</td><td>PROPOSE / REFUSE message with reason</td><td>Line in the negotiation trace</td></tr>
+<tr><td>Route and stop order</td><td><code>RouteInfo</code> (path, polyline, search stats); <code>MultiStopPlan.optimization</code></td><td><code>search-comparison</code> and <code>ride-map</code> widgets</td></tr>
+<tr><td>Shift policy</td><td><code>plan_driver_shift</code> result</td><td><code>shift-plan</code> widget: first move, itinerary, baseline comparison</td></tr>
+<tr><td>Learned preference weights</td><td><code>RankingService.learnFromChoice</code></td><td>Changed ranking on the next search; weights shown in the ranking banner</td></tr>
+</tbody></table>
+
+<!-- ============================== 3 AGENT & ENV ============================== -->
+<h2 id="s3">3 Agent and Environment Analysis</h2>
+
+<h3>Agent categories</h3>
+<p>The agents span four of the standard categories in Russell and Norvig [1]. Table 4 lists them, with the specific mechanism that puts each agent in its category.</p>
+
+<table>
+<caption><strong>Table 4.</strong> Agent types and the mechanism behind each classification.</caption>
+<thead><tr><th style="width:17%">Agent</th><th style="width:22%">Category</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Rider agent</td><td>Utility-based, learning</td><td>Chooses the bid that minimises <i>U</i> subject to constraints. Its learning element is a ranking-perceptron update of (w<sub>f</sub>, w<sub>e</sub>, w<sub>r</sub>) from each confirmed booking; the critic is the rider's revealed choice.</td></tr>
+<tr><td>Provider agent</td><td>Model-based reflex, with a fixed escalation plan</td><td>Keeps internal state (quoted options, current award, round number, replies received). Its rules are condition–action: no available vehicle → REFUSE; all drivers declined → re-offer with a 15% incentive; still declined → FAILURE.</td></tr>
+<tr><td>Driver agent</td><td>Utility-based</td><td>Computes net and hourly earnings for each offer, combines them with destination demand and pickup distance into an ACCEPT / CONSIDER / REJECT score, and accepts a CONSIDER only above a private reservation wage (₹160–420 per hour, different per driver).</td></tr>
+<tr><td>Route planner</td><td>Goal-based (search)</td><td>Has an explicit goal state and finds a minimum-cost action sequence with A* under an admissible heuristic.</td></tr>
+<tr><td>Shift planner</td><td>Utility-based, planning under uncertainty</td><td>Maximises expected cumulative reward over a horizon by solving an MDP with backward induction.</td></tr>
+</tbody></table>
+
+<p>The LLM client is a fifth participant. It is outside RIVA's code, so it is not modelled in Table 4, but it acts as the interface agent: it perceives the user's text, selects tools and arguments, and phrases the results. Tool descriptions and the <code>start_conversation</code> prompt are the only levers RIVA has on its behaviour.</p>
+
+<h3>Environment classification</h3>
+<p>The task environment differs between the marketplace as a whole and the narrower problems that individual agents solve, so Table 5 classifies them separately.</p>
+
+<table>
+<caption><strong>Table 5.</strong> Environment properties.</caption>
+<thead><tr><th style="width:20%">Property</th><th style="width:27%">Ride marketplace</th><th style="width:26%">Route planning</th><th>Driver shift</th></tr></thead>
+<tbody>
+<tr><td>Observability</td><td>Partially observable: the rider cannot see driver availability or reservation wages; a provider cannot know a driver's answer before it arrives.</td><td>Fully observable: the whole graph and its edge costs for the hour are known.</td><td>Partially observable: future trip requests and destinations are known only as distributions.</td></tr>
+<tr><td>Agents</td><td>Multi-agent, mixed: providers compete for the rider's award; drivers of a provider compete for the trip; rider and provider cooperate once the contract is awarded.</td><td>Single agent.</td><td>Single agent (other drivers are folded into the demand model).</td></tr>
+<tr><td>Determinism</td><td>Stochastic from each agent's viewpoint (other agents' choices, availability); the simulation itself is seeded and reproducible.</td><td>Deterministic.</td><td>Stochastic: transitions follow trip-destination probabilities.</td></tr>
+<tr><td>Episodic / sequential</td><td>Sequential within a request (awards, rounds); requests are independent episodes, except that learned weights carry over.</td><td>Episodic per query.</td><td>Sequential: where the driver ends one hour sets the options for the next.</td></tr>
+<tr><td>Static / dynamic</td><td>Dynamic: simulated time passes while drivers decide (2–9 s each).</td><td>Static during a query; costs change with the departure hour between queries.</td><td>Dynamic: demand changes hour by hour.</td></tr>
+<tr><td>Discrete / continuous</td><td>Continuous positions, fares and times; discrete message types.</td><td>Discrete graph, continuous edge costs.</td><td>Discretised: 9 zones × 1-hour steps.</td></tr>
+<tr><td>Known / unknown</td><td>Known rules (fare formulas, protocol), unknown other-agent parameters.</td><td>Known.</td><td>Known model (the MDP is given, not learned).</td></tr>
+</tbody></table>
+
+<!-- ============================== 4 DESIGN ============================== -->
+<h2 id="s4">4 Design</h2>
+
+<h3 id="s41">4.1 Architecture</h3>
+<p>Figure 1 shows the layers. The LLM client is the only part the user talks to. NitroStack, an MCP framework with NestJS-style modules and dependency injection, hosts six feature modules that expose tools. The tools call services, and the services use a framework-free core in <code>src/ai</code> (search, road network, tour ordering, MDP solver) and <code>src/agents</code> (message bus and the three agent classes). Keeping the core free of framework imports is what lets the test suite and the benchmark drive the same code as the tools, through a hand-wired harness, without starting a server.</p>
+
+<figure>
+<svg viewBox="0 0 760 380" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+  <g font-size="11.5">
+  <rect x="10" y="10" width="740" height="44" rx="6" fill="#eef2fa" stroke="#1f3b73"/>
+  <text x="380" y="30" text-anchor="middle" font-weight="700">User ⇄ LLM client (Claude / ChatGPT) — interface agent</text>
+  <text x="380" y="46" text-anchor="middle" fill="#555" font-size="10.5">picks tools and arguments from the conversation; renders widgets inline</text>
+  <line x1="380" y1="54" x2="380" y2="72" stroke="#444" marker-end="url(#ar)"/>
+  <text x="388" y="67" fill="#555" font-size="10">MCP (stdio / HTTP) — 22 tools, 16 widgets</text>
+  <rect x="10" y="74" width="740" height="96" rx="6" fill="#fff" stroke="#888"/>
+  <text x="20" y="90" font-weight="700">NitroStack MCP server — feature modules (tools)</text>
+  <g font-size="10.5">
+    <rect x="20" y="98" width="112" height="62" rx="4" fill="#f6f6f4" stroke="#aaa"/><text x="76" y="115" text-anchor="middle" font-weight="700">Rides</text><text x="76" y="130" text-anchor="middle">find_rides, ranking,</text><text x="76" y="143" text-anchor="middle">preferences, return</text><text x="76" y="155" text-anchor="middle">fare forecast</text>
+    <rect x="142" y="98" width="112" height="62" rx="4" fill="#f6f6f4" stroke="#aaa"/><text x="198" y="115" text-anchor="middle" font-weight="700">Journey</text><text x="198" y="130" text-anchor="middle">concierge, multi-stop,</text><text x="198" y="143" text-anchor="middle">pooling, booking,</text><text x="198" y="155" text-anchor="middle">SOS (simulated)</text>
+    <rect x="264" y="98" width="112" height="62" rx="4" fill="#f6f6f4" stroke="#aaa"/><text x="320" y="115" text-anchor="middle" font-weight="700">Driver</text><text x="320" y="130" text-anchor="middle">trip analysis, demand,</text><text x="320" y="143" text-anchor="middle">zones, earnings,</text><text x="320" y="155" text-anchor="middle">plan_driver_shift</text>
+    <rect x="386" y="98" width="112" height="62" rx="4" fill="#e8f5ec" stroke="#2e7d4f"/><text x="442" y="115" text-anchor="middle" font-weight="700">Marketplace</text><text x="442" y="130" text-anchor="middle">simulate_ride_</text><text x="442" y="143" text-anchor="middle">marketplace</text>
+    <rect x="508" y="98" width="112" height="62" rx="4" fill="#e8f5ec" stroke="#2e7d4f"/><text x="564" y="115" text-anchor="middle" font-weight="700">Routing</text><text x="564" y="130" text-anchor="middle">compare_search_</text><text x="564" y="143" text-anchor="middle">strategies</text>
+    <rect x="630" y="98" width="110" height="62" rx="4" fill="#f6f6f4" stroke="#aaa"/><text x="685" y="115" text-anchor="middle" font-weight="700">Session</text><text x="685" y="130" text-anchor="middle">set_user_mode,</text><text x="685" y="143" text-anchor="middle">start prompt</text>
+  </g>
+  <line x1="380" y1="170" x2="380" y2="186" stroke="#444" marker-end="url(#ar)"/>
+  <rect x="10" y="188" width="740" height="62" rx="6" fill="#fff" stroke="#888"/>
+  <text x="20" y="204" font-weight="700">Services (injectable singletons)</text>
+  <text x="20" y="222" font-size="10.5">MapsService (geocode → road-graph A* → straight line) · RideSearchService (constraint satisfaction) · RankingService (learned utility, Pareto)</text>
+  <text x="20" y="238" font-size="10.5">MarketplaceService · ShiftPlannerService · Profitability / Demand / Recommendation · Forecast · Booking · SearchStore · provider adapters</text>
+  <line x1="200" y1="250" x2="200" y2="266" stroke="#444" marker-end="url(#ar)"/>
+  <line x1="560" y1="250" x2="560" y2="266" stroke="#444" marker-end="url(#ar)"/>
+  <rect x="10" y="268" width="370" height="100" rx="6" fill="#fdf6e9" stroke="#b07d1a"/>
+  <text x="20" y="285" font-weight="700">src/ai — framework-free core</text>
+  <text x="20" y="303" font-size="10.5">search.ts: best-first engine (BFS, UCS, greedy, A*)</text>
+  <text x="20" y="319" font-size="10.5">road-network.ts: 32 nodes, 48 edges, congestion model</text>
+  <text x="20" y="335" font-size="10.5">tour.ts: stop ordering, A* over (stop, visited set)</text>
+  <text x="20" y="351" font-size="10.5">mdp.ts: finite-horizon backward induction</text>
+  <rect x="390" y="268" width="360" height="100" rx="6" fill="#fdf6e9" stroke="#b07d1a"/>
+  <text x="400" y="285" font-weight="700">src/agents — multi-agent core</text>
+  <text x="400" y="303" font-size="10.5">acl.ts: FIPA performatives, discrete-event MessageBus</text>
+  <text x="400" y="319" font-size="10.5">rider.agent.ts: Contract Net manager (awards bids)</text>
+  <text x="400" y="335" font-size="10.5">provider.agent.ts: contractor to rider, manager to drivers</text>
+  <text x="400" y="351" font-size="10.5">driver.agent.ts: contractor (accept / decline offers)</text>
+  </g>
+</svg>
+<figcaption><strong>Figure 1.</strong> RIVA's layers. Green modules are new in this version; the two orange packages hold all of the AI logic and have no dependency on the MCP framework.</figcaption>
+</figure>
+
+<p>Every external integration is lazy and has a fallback. No network call happens at start-up; a missing Geoapify key routes through the road graph, a failed Apify scrape falls back to Rapido's fare model, and a single provider failing does not stop the other two from bidding.</p>
+
+<h3 id="s42">4.2 Search: routing and stop ordering</h3>
+<p><strong>Problem formulation.</strong> States are the 32 junctions of a hand-built Coimbatore road graph (Amrita at Ettimadai, Madukkarai, Ukkadam, Town Hall, Gandhipuram, Peelamedu, the airport, Neelambur and others). Actions traverse one of 48 undirected road segments, each tagged as highway, arterial or local. The initial state is the junction nearest the pickup point, within a 2.5 km snapping radius, and the goal test is equality with the junction nearest the drop point. The step cost depends on the objective:</p>
+<p class="eq">length(e) = haversine(a, b) × winding<sub>class</sub> &nbsp;&nbsp;&nbsp; time(e, h) = length(e) / v<sub>class</sub> × (1 + (c(h) − 1) · s<sub>class</sub>)</p>
+<p>The free-flow speeds v are 55, 32 and 24 km/h for highway, arterial and local roads. The city congestion factor c(h) is 1.6 in the 8–10 AM and 6–9 PM peaks, 1.25 in the daytime, 1.1 in the late evening and 1.0 overnight. The sensitivity s is 0.35, 1.0 and 0.8 by class, so rush hour slows city roads far more than the bypass. The graph includes the L&amp;T bypass that skirts the city from Madukkarai to Neelambur, which gives the search problem a real trade-off: from Amrita to the airport the city route is shorter (31.9 km) but slower (85 min at 9 AM), while the bypass is longer (41.4 km) and faster (59 min).</p>
+
+<p><strong>Algorithms.</strong> A single best-first graph search in <code>search.ts</code> serves all four strategies, which differ only in the priority that orders the frontier: depth for BFS, path cost g for UCS, the heuristic h for greedy best-first, and g + h for A*. The frontier is a binary min-heap with insertion-order tie-breaking, so BFS stays first-in-first-out. The goal test runs when a node is popped, which is what keeps UCS and A* optimal. Instead of a decrease-key operation, duplicate frontier entries are allowed and skipped on pop when stale, and UCS and A* re-open a state whenever a cheaper path to it appears.</p>
+
+<p><strong>Heuristic.</strong> For the time objective h(n) is the straight-line distance to the goal divided by 55 km/h, the fastest free-flow speed in the graph; for distance it is the straight-line distance itself. Every edge is at least as long as the straight line between its ends, and no road is faster than 55 km/h after congestion, so h never overestimates, and the same argument gives consistency. The test suite checks both properties exhaustively for every (node, goal) pair at four hours of the day rather than relying on the argument (Section 6).</p>
+
+<p><strong>Time-dependent replanning.</strong> The travel concierge plans backwards from an arrival deadline. Congestion depends on the departure hour, and the departure hour depends on the travel time, so the concierge iterates: plan with A* at the arrival hour, compute the departure time, re-plan at that hour, and stop when the departure hour no longer changes (at most three iterations).</p>
+
+<p><strong>Multi-stop ordering.</strong> When a rider lists stops and does not care about their order, the start and final destination stay fixed and the intermediate stops form an open travelling-salesman path. <code>tour.ts</code> solves it exactly with the same A* engine over states (current stop, set of visited stops), using the heuristic</p>
+<p class="eq">h(s) = max over unvisited u of [ cost(s, u) + cost(u, end) ]</p>
+<p>which is admissible whenever costs satisfy the triangle inequality, as shortest-path travel times do: any completion must pass through u and then reach the end. Pairwise costs come from the offline road-graph estimate, so ordering never costs n² live API calls; only the legs of the chosen order are routed and priced.</p>
+
+<h3 id="s43">4.3 Multi-agent negotiation</h3>
+<p>Every ride is negotiated with two nested instances of the Contract Net protocol [3], using FIPA ACL performatives [4]. The sequence below is the outer net; the inner net starts when a provider receives an award.</p>
+<ol>
+<li>The rider agent sends a CFP describing the route to all three provider agents.</li>
+<li>Each provider queries its pricing model and answers PROPOSE with its available options, or REFUSE if it has none.</li>
+<li>Once all providers have answered, the rider filters the bids through its constraints, ranks them by <i>U</i>, and sends ACCEPT_PROPOSAL for the best option.</li>
+<li>The winning provider sends a CFP trip offer to the three nearest drivers in its fleet whose vehicle type matches, within 4 km.</li>
+<li>Each driver evaluates the offer with the profitability, demand and recommendation engines and answers PROPOSE (accept) or REFUSE (with its reason).</li>
+<li>If any driver accepts, the provider assigns the trip to the accepting driver with the shortest pickup ETA, sends ACCEPT_PROPOSAL to that driver and REJECT_PROPOSAL to the others, and INFORMs the rider. If none accepts, it re-offers once with a platform-funded incentive of 15% of the fare. If that also fails, it sends FAILURE to the rider.</li>
+<li>On FAILURE the rider re-awards the next-ranked bid, up to three awards. When a driver is assigned, the rider sends REJECT_PROPOSAL to every other bidder, which closes the conversation.</li>
+</ol>
+<p>Messages travel on a discrete-event bus. Each message is stamped with the sender's simulated clock plus a latency (0.1–0.5 s between software agents, 2–9 s for a driver to decide) and delivered in timestamp order from a priority queue, so a driver who decides in 3 s answers before one who takes 8 s. Agents never call each other's methods; they only post messages. All randomness, from fleet positions to latencies, comes from a seeded generator, so a given seed reproduces the same trace exactly. A confirmed booking uses the same market with <code>maxAwards = 1</code>, so the rider is never silently moved to a ride they did not confirm, and the assigned driver is one who actually accepted.</p>
+
+<h3 id="s44">4.4 Decision making under uncertainty and learning</h3>
+<p><strong>Driver shift MDP.</strong> The shift planner models the next H hours (default 4) as a finite-horizon MDP [5]. A state is a demand zone (nine zones: airport, railway station, Ukkadam bus terminus, Gandhipuram, RS Puram, Peelamedu IT corridor, Saravanampatti, Singanallur and the Ettimadai college area) at a given hour. The actions are to wait in the zone, or to reposition to one of the other eight. In an hour of waiting, the driver completes</p>
+<p class="eq">trips = usable minutes / (wait(score) + 5 min pickup + expected ride minutes), &nbsp;&nbsp; wait(score) = 3 + 42 · (1 − score/100)²</p>
+<p>trips, with the convex waiting curve shared with <code>DemandService</code>. Trip destinations follow a gravity model, weight ∝ (destination demand + 15) · e<sup>−km/6</sup>, so most trips are short and busy zones attract more of them. The destination of the hour's last trip is where the driver starts the next hour. Repositioning costs fuel and loses its travel minutes, taken from A* on the road graph at that hour. Backward induction applies the Bellman optimality equation from the last hour to the first and is exact for a finite horizon. The planner then evaluates two fixed policies on the same model for comparison: greedy (best expected reward this hour only) and stay-put (always wait).</p>
+
+<p><strong>Constraint satisfaction.</strong> Rider preferences form a small constraint problem over the candidate rides. The female-driver preference is a hard constraint, since it concerns safety, and is never relaxed; if no ride satisfies it the result is empty and the response says why. Luggage, budget and vehicle exclusions are soft constraints in that priority order. When no ride satisfies all of them, the lowest-priority one is dropped and the filter retried, and the response names what was relaxed. The previous version discarded every preference when nothing matched, without saying so.</p>
+
+<p><strong>Preference learning.</strong> Each confirmed booking is a revealed preference: the rider chose option c over the options the current weights ranked above it. For that set A, the rider agent applies a ranking-perceptron update</p>
+<p class="eq">w ← w − η · mean<sub>a∈A</sub> ( f(c) − f(a) ), &nbsp;&nbsp; η = 0.6</p>
+<p>where f is the feature vector in <i>U</i>. Each weight is clipped at 0.05 and the vector renormalised to sum to 1. A rider who keeps paying more for a faster pickup therefore moves weight from fare to pickup ETA. Every ranked option is also tagged as Pareto-optimal or dominated (another available option is no more expensive, no slower to arrive, rated no lower, and strictly better on one of the three).</p>
+
+<h3 id="s45">4.5 Requirements, tools and packages</h3>
+<p><strong>Hardware.</strong> Any machine that runs Node.js; no GPU. The full test suite runs in about 5 s and the full benchmark in about 29 s on the development laptop (Windows 11, Node.js 24.20).</p>
+<p><strong>Software.</strong> Node.js 20 or later and npm. API keys are optional: <code>GEOAPIFY_API_KEY</code> enables live geocoding, routing and static maps; <code>APIFY_API_TOKEN</code> enables live Rapido fares.</p>
+
+<table>
+<caption><strong>Table 6.</strong> Tools and packages, and why each was chosen.</caption>
+<thead><tr><th style="width:24%">Package / service</th><th style="width:22%">Role</th><th>Reason for the choice</th></tr></thead>
+<tbody>
+<tr><td>Model Context Protocol</td><td>Agent ↔ LLM interface</td><td>Open protocol supported by several LLM clients, so the same server works in Claude and ChatGPT; tool results can carry UI widgets.</td></tr>
+<tr><td><code>@nitrostack/core</code> 1.0.14</td><td>MCP server framework</td><td>Decorator-based tools, modules and dependency injection; built-in widget binding (<code>@Widget</code>); stdio and HTTP transports.</td></tr>
+<tr><td><code>zod</code> 3</td><td>Tool input schemas</td><td>Validates every tool argument at the trust boundary and doubles as the schema the LLM reads.</td></tr>
+<tr><td>Next.js 14, React 18, <code>@nitrostack/widgets</code></td><td>Widget front-ends</td><td>Each widget compiles to a self-contained HTML page the chat client renders inline; the SDK supplies tool output, theme and state.</td></tr>
+<tr><td>TypeScript 5 (strict)</td><td>Language</td><td>Shared domain types between tools, agents and widgets.</td></tr>
+<tr><td>Geoapify API (optional)</td><td>Geocoding, routing, static maps</td><td>OpenStreetMap-based, good coverage of informal Indian landmark names, free tier.</td></tr>
+<tr><td>Apify (optional)</td><td>Live Rapido fares</td><td>Hosted scraper actors with a synchronous run endpoint; failures fall back to the simulation.</td></tr>
+<tr><td><code>node:test</code></td><td>Test runner</td><td>Built into Node.js; adds no dependency.</td></tr>
+</tbody></table>
+
+<p>We chose to write the search, MDP and negotiation code ourselves rather than use a graph or agent library. Each piece is short (the search engine is under 200 lines, comments included), the course asks for the algorithms to be understood rather than imported, and owning the code made it possible to expose search statistics such as nodes expanded and the explored set to the widgets.</p>
+
+<!-- ============================== 5 IMPLEMENTATION ============================== -->
+<h2 id="s5">5 Implementation</h2>
+
+<h3>Input representation</h3>
+<p>Every tool input is a Zod object. A ride search, for example, is <code>{ origin: string, destination: string, preferences?: { femaleDriverOnly?, budgetLimit?, luggageRequired?, excludeVehicleTypes? }, rankingMode?: 'cheapest' | 'fastest' | 'instant_pickup' | 'best_value' }</code>. Free-text times (“8 AM tomorrow”, “21:00”) are parsed into an hour and a day offset. Inside the system, a route is a <code>RouteInfo</code> (distance, duration, source, polyline, the junctions passed and the search statistics), a quote is a normalised <code>RideOption</code> with the same fields for every provider, and an agent message is an <code>AclMessage</code> with id, timestamp, sender, receiver, performative, conversation id, content and a one-line summary.</p>
+
+<h3>Data</h3>
+<p>RIVA uses no training dataset. Its data is a set of hand-specified models, listed here because every result depends on them:</p>
+<ul>
+<li><strong>Road graph:</strong> 32 junctions with approximate coordinates and 48 classified segments (<code>road-network.ts</code>). It is an abstraction of the arterial network, not an OpenStreetMap extract.</li>
+<li><strong>Fare models:</strong> per-provider, per-vehicle base fare, per-km and per-minute rates with minimum fares, modelled on public Indian fare structures; surge is drawn between 0.95× and 1.15×.</li>
+<li><strong>Demand model:</strong> nine zones in six categories, each with a 24-hour demand curve and a weekend multiplier.</li>
+<li><strong>Driver economics:</strong> fuel efficiency per vehicle and fuel type, fuel prices (petrol ₹103/L, diesel ₹94/L, CNG ₹85/kg, electricity ₹8/kWh), and commission rates per platform.</li>
+</ul>
+<p>All of these are illustrative values chosen to be plausible. They have not been fitted to observed data, and the results in Section 6 describe the behaviour of the system under these models, not the real Coimbatore market.</p>
+
+<h3>Modules</h3>
+<table>
+<caption><strong>Table 7.</strong> Source layout (64 TypeScript files across src, scripts and tests).</caption>
+<thead><tr><th style="width:30%">Path</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>src/ai/</code></td><td>Search engine and heap, road network and congestion model, tour ordering, MDP solver.</td></tr>
+<tr><td><code>src/agents/</code></td><td>ACL message types and the discrete-event bus; rider, provider and driver agents.</td></tr>
+<tr><td><code>src/services/</code></td><td>Maps, ride search with constraint satisfaction, ranking with learning and Pareto tags, forecasting, nearby drivers, session state.</td></tr>
+<tr><td><code>src/providers/</code></td><td>Uber and Ola fare-model adapters, Rapido hybrid adapter (Apify with simulation fallback).</td></tr>
+<tr><td><code>src/modules/rides</code>, <code>journey</code>, <code>driver</code>, <code>session</code></td><td>The original rider, journey and driver tools, now using the new core.</td></tr>
+<tr><td><code>src/modules/marketplace</code>, <code>routing</code></td><td>New tools: <code>simulate_ride_marketplace</code>, <code>compare_search_strategies</code>; <code>plan_driver_shift</code> lives in the driver module.</td></tr>
+<tr><td><code>src/widgets/app/*</code></td><td>16 widgets, including the new <code>agent-trace</code>, <code>search-comparison</code> and <code>shift-plan</code>.</td></tr>
+<tr><td><code>scripts/</code>, <code>tests/</code></td><td>Offline harness, narrated demo, benchmark; four test files with 42 tests.</td></tr>
+</tbody></table>
+
+<h3>User interface</h3>
+<p>Users interact in natural language through an MCP client. Each tool result is rendered by its widget: ride comparison cards with Pareto and constraint notes, a search-comparison view that draws the road graph with the nodes each strategy expanded, a negotiation trace with colour-coded performatives, a shift plan with its baseline comparison, and the earlier booking, travel-plan, demand and safety widgets. Figures 2–5 show four of them rendering real tool output. For presentations without an LLM client, <code>npm run demo</code> prints seven narrated scenarios in the terminal (Figures 9 and 13).</p>
+
+<div class="row">
+<figure><img src="../figures/widget-ride-comparison.png" style="width:100%"><figcaption><strong>Figure 2.</strong> <code>find_rides</code>, Amrita → airport, 9 AM, luggage and a ₹350 budget. No ride meets both, so the budget is relaxed and the response says so; the route is A* over the road graph (13 nodes expanded).</figcaption></figure>
+<figure><img src="../figures/widget-search-comparison.png" style="width:100%"><figcaption><strong>Figure 3.</strong> <code>compare_search_strategies</code> for the same trip. A* returns the bypass route (59 min) after expanding 13 nodes; UCS needs 19; greedy best-first and BFS return routes over 90 min.</figcaption></figure>
+</div>
+
+<div class="row">
+<figure><img src="../figures/widget-agent-trace-top.png" style="width:100%"><figcaption><strong>Figure 4.</strong> <code>simulate_ride_marketplace</code> (first half of the trace). Both nearby Rapido bike drivers decline the ₹265 airport trip, then decline again with a ₹40 incentive; the rider re-awards, and on the third award a Rapido auto driver accepts.</figcaption></figure>
+<figure><img src="../figures/widget-shift-plan.png" style="width:100%"><figcaption><strong>Figure 5.</strong> <code>plan_driver_shift</code> for an auto driver at Tidel Park at 11 PM. The MDP moves the driver to the airport; expected net ₹306 against ₹265 for staying put.</figcaption></figure>
+</div>
+
+<!-- ============================== 6 TESTING ============================== -->
+<h2 id="s6">6 Testing and Results</h2>
+
+<h3>Levels of testing</h3>
+<p>Testing was done at five levels. Unit tests check single functions against hand-computed answers. Property tests check a claim over every case in a finite space instead of a few examples. Protocol tests run the marketplace on 18 scenes (six trips × three seeds) and check Contract Net invariants on every message log. Integration tests drive the full offline pipeline: geocoding, routing, provider quotes, constraints, ranking and multi-stop planning. At the system level we started the built server (<code>node dist/index.js</code>), completed the MCP handshake over stdio, listed the tools (22) and called <code>simulate_ride_marketplace</code>, <code>compare_search_strategies</code> and <code>plan_driver_shift</code>, each of which returned its widget reference; this system check was run by hand and is not part of <code>npm test</code>. Finally, <code>npm run evaluate</code> measures each agent against its performance measure over generated workloads.</p>
+
+<table>
+<caption><strong>Table 8.</strong> Automated test cases (<code>npm test</code>: 42 tests in 14 suites, all passing).</caption>
+<thead><tr><th style="width:7%">ID</th><th style="width:14%">Level</th><th>What is checked</th></tr></thead>
+<tbody>
+<tr><td>T1</td><td>Property</td><td>A* path cost equals UCS path cost for all 992 ordered node pairs at 4 hours, for both objectives.</td></tr>
+<tr><td>T2</td><td>Property</td><td>A* never expands more nodes than UCS on any pair, and expands fewer in total.</td></tr>
+<tr><td>T3</td><td>Property</td><td>Heuristic is admissible (h ≤ true cost) and consistent (h(n) ≤ c(n, n′) + h(n′)) for every node, goal and hour.</td></tr>
+<tr><td>T4</td><td>Property</td><td>Graph is connected; edges are positive and no shorter than the straight line; rush hour never shortens a trip.</td></tr>
+<tr><td>T5</td><td>Property</td><td>Greedy and BFS always find a path and are never cheaper than the optimum; BFS uses the fewest segments.</td></tr>
+<tr><td>T6</td><td>Property</td><td>A* stop ordering equals brute-force enumeration on 60 random instances of 3–7 stops; start and end stay fixed; each stop appears once.</td></tr>
+<tr><td>T7</td><td>Protocol</td><td>Every CFP gets exactly one PROPOSE or REFUSE; message timestamps never decrease.</td></tr>
+<tr><td>T8</td><td>Protocol</td><td>A matched ride goes to a driver who proposed, from the winning provider, with the vehicle the rider chose; the rider is informed once; every losing bidder receives REJECT_PROPOSAL.</td></tr>
+<tr><td>T9</td><td>Protocol</td><td>A fixed seed reproduces the identical message log; failed awards are followed by re-awards; a confirmed booking never switches rides.</td></tr>
+<tr><td>T10</td><td>Unit</td><td>Bus delivers by timestamp, not send order; rejects unknown recipients; heap pops in priority then FIFO order.</td></tr>
+<tr><td>T11</td><td>Unit</td><td>Soft constraints relax lowest-priority first; the hard safety constraint is never relaxed; Pareto flags on a hand-built pool.</td></tr>
+<tr><td>T12</td><td>Unit</td><td>Learning moves weight from fare to pickup ETA for a speed-seeking rider, keeps weights summing to 1, and does not move when the choice was already ranked first.</td></tr>
+<tr><td>T13</td><td>Unit</td><td>Backward induction finds the known optimum (20) of a two-state MDP; fixed policies are bounded by it.</td></tr>
+<tr><td>T14</td><td>Property</td><td>Optimal shift value ≥ greedy and ≥ stay-put from all 9 zones at 6 start hours.</td></tr>
+<tr><td>T15</td><td>Unit</td><td>Net = gross − fuel − commission; fuel covers the pickup leg; a loss-making trip is rejected; time phrases parse correctly.</td></tr>
+<tr><td>T16</td><td>Integration</td><td>Coimbatore searches route via A* on the graph; off-graph places (Mumbai) fall back to the straight-line estimate; multi-stop optimisation never lengthens a trip.</td></tr>
+</tbody></table>
+
+<h3>Search</h3>
+<p>Table 9 summarises 3,968 route queries per objective (992 ordered pairs × departures at 3 AM, 9 AM, 2 PM and 7 PM). UCS and A* were optimal on every query, which T1 also enforces. The heuristic cut the mean number of expanded nodes from 16.0 to 11.3 for travel time (29% fewer) and to 6.6 for distance (59% fewer). The gap between objectives fits the heuristic's form: for distance, straight-line km is a tight bound, whereas dividing by the 55 km/h highway speed makes the time heuristic loose on congested city roads. Greedy best-first expanded only 4.2 nodes, but its route was optimal on 62% of time queries and was up to 216% slower than the best route. BFS ignores costs altogether and was optimal on about half the queries. At 9 AM the fastest route differs from the shortest on 19% of node pairs, which is why the objective is a parameter rather than fixed.</p>
+
+<table>
+<caption><strong>Table 9.</strong> Search strategies over all node pairs and four departure hours (3,968 queries per objective).</caption>
+<thead><tr><th>Strategy</th><th class="n">Optimal (%)</th><th class="n">Nodes expanded</th><th class="n">Nodes generated</th><th class="n">Max frontier</th><th class="n">Mean excess cost (%)</th><th class="n">Worst excess (%)</th></tr></thead>
+<tbody>
+<tr><td colspan="7"><i>Objective: travel time</i></td></tr>
+<tr><td>BFS</td><td class="n">52.7</td><td class="n">16.0</td><td class="n">21.4</td><td class="n">7.4</td><td class="n">21.0</td><td class="n">301.5</td></tr>
+<tr><td>UCS</td><td class="n">100</td><td class="n">16.0</td><td class="n">24.2</td><td class="n">9.1</td><td class="n">0</td><td class="n">0</td></tr>
+<tr><td>Greedy</td><td class="n">62.4</td><td class="n">4.2</td><td class="n">10.8</td><td class="n">6.7</td><td class="n">10.6</td><td class="n">215.9</td></tr>
+<tr><td>A*</td><td class="n">100</td><td class="n">11.3</td><td class="n">19.5</td><td class="n">8.5</td><td class="n">0</td><td class="n">0</td></tr>
+<tr><td colspan="7"><i>Objective: distance</i></td></tr>
+<tr><td>BFS</td><td class="n">54.2</td><td class="n">16.0</td><td class="n">21.4</td><td class="n">7.4</td><td class="n">17.4</td><td class="n">279.0</td></tr>
+<tr><td>UCS</td><td class="n">100</td><td class="n">16.0</td><td class="n">23.6</td><td class="n">8.8</td><td class="n">0</td><td class="n">0</td></tr>
+<tr><td>Greedy</td><td class="n">67.0</td><td class="n">4.2</td><td class="n">10.8</td><td class="n">6.7</td><td class="n">5.5</td><td class="n">82.4</td></tr>
+<tr><td>A*</td><td class="n">100</td><td class="n">6.6</td><td class="n">14.1</td><td class="n">7.6</td><td class="n">0</td><td class="n">0</td></tr>
+</tbody></table>
+
+<figure><img src="../figures/fig-search.png" style="width:92%"><figcaption><strong>Figure 6.</strong> Mean nodes expanded per strategy, with the share of queries on which the returned route was optimal.</figcaption></figure>
+
+<p>On a 32-node graph the absolute savings are a few node expansions per query, and the run time of any strategy is well under a millisecond. The result that matters at this scale is the optimality column; the expansion counts indicate how the gap would grow on a larger graph, which we did not test.</p>
+
+<h3>Multi-stop ordering</h3>
+<p>We generated 300 random itineraries of 4–8 stops from the graph's junctions, with travel-time costs at 2 PM, and compared the order as given with the A*-optimised order (Table 10). The share of itineraries the optimiser improves rises from 42% at four stops to 100% at eight, where it saves 35% of travel time on average. Because the given orders are random, these savings are an upper bound on what a rider who already orders stops sensibly would gain. The heuristic's pruning grows with problem size: at eight stops A* expanded 39 states, UCS 186, and brute force would evaluate 720 complete orders (Figure 7).</p>
+
+<table>
+<caption><strong>Table 10.</strong> Stop ordering on 300 random itineraries (60 per size).</caption>
+<thead><tr><th class="n">Stops</th><th class="n">Improved (%)</th><th class="n">Mean min saved</th><th class="n">Mean time saved (%)</th><th class="n">A* states</th><th class="n">UCS states</th><th class="n">Brute-force orders</th></tr></thead>
+<tbody>
+<tr><td class="n">4</td><td class="n">41.7</td><td class="n">9.3</td><td class="n">8.5</td><td class="n">3.3</td><td class="n">4.8</td><td class="n">2</td></tr>
+<tr><td class="n">5</td><td class="n">80.0</td><td class="n">23.8</td><td class="n">17.3</td><td class="n">5.4</td><td class="n">12.4</td><td class="n">6</td></tr>
+<tr><td class="n">6</td><td class="n">96.7</td><td class="n">44.8</td><td class="n">26.0</td><td class="n">8.6</td><td class="n">31.3</td><td class="n">24</td></tr>
+<tr><td class="n">7</td><td class="n">95.0</td><td class="n">57.1</td><td class="n">28.5</td><td class="n">18.2</td><td class="n">76.4</td><td class="n">120</td></tr>
+<tr><td class="n">8</td><td class="n">100</td><td class="n">82.2</td><td class="n">35.4</td><td class="n">38.9</td><td class="n">186.4</td><td class="n">720</td></tr>
+</tbody></table>
+
+<div class="row">
+<figure><img src="../figures/fig-tours.png" style="width:100%"><figcaption><strong>Figure 7.</strong> Work to find the best stop order, log scale. A* and UCS count expanded states; brute force counts complete orders.</figcaption></figure>
+<figure><img src="../figures/fig-market.png" style="width:100%"><figcaption><strong>Figure 8.</strong> Share of 528 ride requests that ended with an assigned driver, by protocol variant.</figcaption></figure>
+</div>
+
+<h3>Multi-agent marketplace</h3>
+<p>The marketplace benchmark ran every ordered pair of 12 landmarks (132 trips) at 9 AM, 2 PM, 7 PM and 11 PM, giving 528 requests, under three protocol variants (Table 11). With the full protocol, 91.9% of requests ended with an assigned driver. Removing the incentive round lowered this to 80.7%, and awarding only the best bid once, with no incentive, lowered it to 21.6%.</p>
+
+<table>
+<caption><strong>Table 11.</strong> Marketplace outcomes over 528 requests per variant.</caption>
+<thead><tr><th>Variant</th><th class="n">Matched (%)</th><th class="n">Matched on 1st award (%)</th><th class="n">Messages</th><th class="n">Driver offers</th><th class="n">Driver accept (%)</th><th class="n">Incentive used (%)</th><th class="n">Sim. seconds</th><th class="n">Utility rank of ride</th></tr></thead>
+<tbody>
+<tr><td>Re-award + incentive</td><td class="n">91.9</td><td class="n">30.5</td><td class="n">27.0</td><td class="n">6.8</td><td class="n">29.5</td><td class="n">24.3</td><td class="n">23.9</td><td class="n">1.89</td></tr>
+<tr><td>Re-award only</td><td class="n">80.7</td><td class="n">21.6</td><td class="n">23.4</td><td class="n">4.8</td><td class="n">32.8</td><td class="n">0</td><td class="n">17.6</td><td class="n">2.04</td></tr>
+<tr><td>Single award</td><td class="n">21.6</td><td class="n">21.6</td><td class="n">15.4</td><td class="n">2.2</td><td class="n">14.9</td><td class="n">0</td><td class="n">8.7</td><td class="n">1.00</td></tr>
+</tbody></table>
+
+<p>The traces show why the single award fails so often. The rider's top-ranked bid is usually the cheapest two-wheeler or auto, and for longer trips that fare gives drivers a low hourly rate: in the Amrita–airport trace, the ₹265 bike trip nets the nearer driver ₹117 for about 90 minutes of work. Drivers decline such offers, or no driver with that vehicle type is within 4 km. Re-awarding lets the rider fall back to its second- or third-ranked bid. The cost is a mean utility rank of 1.89 instead of 1, together with more messages (27.0 against 15.4) and more simulated time (23.9 s against 8.7 s). Match rates also varied by hour, from 86.4% at 2 PM to 98.5% at 7 PM, which is consistent with the demand model: destination demand is higher at 7 PM, and the drivers' acceptance score rewards destination demand. These numbers characterise the simulated market. Driver reservation wages, fleet density and the 4 km radius are parameters we chose, and different values would move every column.</p>
+
+<figure><img src="../figures/demo-marketplace.png" style="width:100%"><figcaption><strong>Figure 9.</strong> <code>npm run demo</code>, scenario 4: the full 35-message negotiation for Amrita → airport at 9 AM, with simulated timestamps.</figcaption></figure>
+
+<h3>Driver shift planning</h3>
+<p>The shift planner was solved from every zone at every start hour (216 start states) for an auto on CNG and a sedan on diesel (Table 12, Figure 10). The optimal policy beat staying put by 3.6% on average for the auto and by up to 18.9%, with the largest gains in the late evening and before dawn, when some zones go quiet. It beat the greedy policy by only 0.18% on average (at most 6.1%), and for the sedan the two were indistinguishable. Under this model, then, repositioning helps, but looking ahead beyond the current hour adds little. A likely reason is the transition model: each hour's trips move the driver to a demand-weighted random destination, so a position chosen now has little effect two hours later. A model in which positions persist, for example with half-hour steps or longer airport queues, could show a larger gap. We did not test such variants.</p>
+
+<table>
+<caption><strong>Table 12.</strong> Expected 4-hour net earnings (₹) over 216 start states (9 zones × 24 hours).</caption>
+<thead><tr><th>Vehicle</th><th class="n">Optimal</th><th class="n">Greedy</th><th class="n">Stay put</th><th class="n">Gain vs stay (mean / max %)</th><th class="n">Gain vs greedy (mean / max %)</th><th class="n">Reposition first (%)</th></tr></thead>
+<tbody>
+<tr><td>Auto, CNG</td><td class="n">353</td><td class="n">352</td><td class="n">342</td><td class="n">3.6 / 18.9</td><td class="n">0.18 / 6.1</td><td class="n">25.5</td></tr>
+<tr><td>Sedan, diesel</td><td class="n">571</td><td class="n">571</td><td class="n">557</td><td class="n">2.7 / 15.6</td><td class="n">0.00 / 0.2</td><td class="n">19.0</td></tr>
+</tbody></table>
+
+<figure><img src="../figures/fig-mdp.png" style="width:86%"><figcaption><strong>Figure 10.</strong> Expected 4-hour net for an auto, averaged over the nine start zones, by shift start hour. The greedy curve lies almost on the optimal one.</figcaption></figure>
+
+<h3>Preference learning</h3>
+<p>To test the learner without real users we simulated 40 riders, each with hidden weights drawn at random, who each booked 15 rides from searches across 10 landmarks. Each rider always booked the option that minimised their hidden utility. Table 13 compares how often the agent's first-ranked option matched that choice, for learned weights against the fixed 45/35/20 weights. Over bookings 11–15, agreement was 91.5% with learning and 82% without. Over bookings 1–5 the two were close, 81% against 79.5%, as expected before the learner has seen many choices. The per-booking curve in Figure 11 is noisy because each point averages 40 riders on different trips, and the comparison rests on a single simulated population.</p>
+
+<table>
+<caption><strong>Table 13.</strong> Top-1 agreement with the rider's actual choice (%), 40 simulated riders.</caption>
+<thead><tr><th></th><th class="n">Bookings 1–5</th><th class="n">Bookings 11–15</th></tr></thead>
+<tbody>
+<tr><td>Learned weights</td><td class="n">81.0</td><td class="n">91.5</td></tr>
+<tr><td>Fixed weights</td><td class="n">79.5</td><td class="n">82.0</td></tr>
+</tbody></table>
+
+<div class="row">
+<figure><img src="../figures/fig-learning.png" style="width:100%"><figcaption><strong>Figure 11.</strong> Top-1 agreement by booking number, learned against fixed weights.</figcaption></figure>
+<figure><img src="../figures/widget-ride-map.png" style="width:72%"><figcaption><strong>Figure 12.</strong> <code>multi_stop_trip_planner</code> with <code>optimizeOrder</code>: four errands reordered, saving about 10 minutes at 2 PM.</figcaption></figure>
+</div>
+
+<figure><img src="../figures/demo-search.png" style="width:100%"><figcaption><strong>Figure 13.</strong> <code>npm run demo</code>, scenarios 1–2: the ride comparison with Pareto tags, and the four search strategies on the same trip.</figcaption></figure>
+
+<!-- ============================== 7 CONCLUSION ============================== -->
+<h2 id="s7">7 Conclusion and Limitations</h2>
+<p>RIVA now routes with A* over a time-dependent road model, negotiates each ride between rider, provider and driver agents through nested Contract Nets, plans driver shifts with an MDP, treats rider preferences as hard and soft constraints, and learns rider utility weights from bookings. Each of these is reachable from a conversation through MCP tools with their own widgets, and each is checked by tests that cover whole spaces where the space is finite: all node pairs, all zones and hours, all stop orders up to seven stops.</p>
+<p>The benchmark supports three conclusions about this system. A* matched UCS on every query while expanding 29–59% fewer nodes. Negotiation with re-awards and incentives raised the matched share of requests from 21.6% to 91.9%, because the rider's cheapest bid is often a trip no nearby driver will take. And MDP planning improved on staying put but barely on greedy repositioning, a result we attribute, tentatively, to the way trips scatter the driver each hour.</p>
+<p>The limitations follow from the design. Prices, demand, driver behaviour and latencies are simulated, so the numbers describe the model rather than the Coimbatore market, and the model parameters were chosen, not fitted. The road graph uses approximate coordinates and 32 junctions, and the advantage of A* on a full city network was not measured. Rider preferences, learned weights and the user mode are process-wide in-memory state with no user accounts. The LLM client's tool selection was not evaluated quantitatively. Bookings, payments and SOS alerts are simulations and say so in every response.</p>
+<p>The natural next steps are to replace the hand-built graph with an OpenStreetMap extract to test search at realistic scale, to fit the demand curves and reservation wages to trip data if any becomes available, and to keep per-user state so that learned preferences belong to a rider rather than to the server process.</p>
+
+<!-- ============================== REFERENCES ============================== -->
+<h2 id="s8">References</h2>
+<ol class="refs">
+<li>S. Russell and P. Norvig, <i>Artificial Intelligence: A Modern Approach</i>, 4th ed. Pearson, 2020.</li>
+<li>P. E. Hart, N. J. Nilsson and B. Raphael, “A formal basis for the heuristic determination of minimum cost paths,” <i>IEEE Transactions on Systems Science and Cybernetics</i>, vol. 4, no. 2, pp. 100–107, 1968.</li>
+<li>R. G. Smith, “The Contract Net Protocol: High-level communication and control in a distributed problem solver,” <i>IEEE Transactions on Computers</i>, vol. C-29, no. 12, pp. 1104–1113, 1980.</li>
+<li>Foundation for Intelligent Physical Agents, <i>FIPA Contract Net Interaction Protocol Specification</i>, SC00029H, 2002.</li>
+<li>R. Bellman, <i>Dynamic Programming</i>. Princeton University Press, 1957.</li>
+<li>M. Wooldridge, <i>An Introduction to MultiAgent Systems</i>, 2nd ed. Wiley, 2009.</li>
+<li>Model Context Protocol specification, <span class="mono">modelcontextprotocol.io</span>.</li>
+<li>NitroStack documentation, <span class="mono">docs.nitrostack.ai</span>; Geoapify API documentation, <span class="mono">apidocs.geoapify.com</span>.</li>
+</ol>
+
+<p class="note">Reproducing the results: <code>npm install</code>, then <code>npm test</code> (42 tests), <code>npm run demo</code>, and <code>npm run evaluate</code>, which rewrites <code>docs/results/evaluation.json</code>. All runs are offline and seeded.</p>
+
+</body>
+</html>

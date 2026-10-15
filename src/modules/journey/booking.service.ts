@@ -1,9 +1,7 @@
 import { Injectable } from '@nitrostack/core';
 import { randomUUID } from 'crypto';
-import { createSeededRandom, hashString, pick, randomBetween } from '../../services/sim.util.js';
+import { DRIVER_NAMES, createSeededRandom, hashString, pick, randomBetween } from '../../services/sim.util.js';
 import type { Booking, BookingStatus, RankedRideOption, ResolvedLocation, SimulatedDriverInfo } from '../../domain/types.js';
-
-const DRIVER_NAMES = ['Karthik', 'Suresh', 'Muthu', 'Anitha', 'Priya', 'Rajesh', 'Vignesh', 'Lakshmi', 'Saravanan', 'Divya'];
 
 /** Ordered lifecycle — advanceBooking() moves one step at a time through this list. */
 const LIFECYCLE: BookingStatus[] = ['SEARCHING', 'DRIVER_ASSIGNED', 'DRIVER_ARRIVING', 'TRIP_STARTED', 'COMPLETED'];
@@ -28,7 +26,19 @@ const TTL_MS = 30 * 60 * 1000;
 export class BookingService {
   private store = new Map<string, Booking>();
 
-  createBooking(searchId: string, optionId: string, option: RankedRideOption, origin: ResolvedLocation, destination: ResolvedLocation): Booking {
+  /**
+   * `assigned` is the driver agent that accepted the trip in the
+   * marketplace; their name, rating, and pickup ETA carry into the booking
+   * (the plate number is still simulated).
+   */
+  createBooking(
+    searchId: string,
+    optionId: string,
+    option: RankedRideOption,
+    origin: ResolvedLocation,
+    destination: ResolvedLocation,
+    assigned?: Pick<SimulatedDriverInfo, 'driverName' | 'rating' | 'etaMinutes'>
+  ): Booking {
     this.evictExpired();
 
     const bookingId = randomUUID();
@@ -53,7 +63,9 @@ export class BookingService {
 
     // "Searching" resolves instantly in a demo — immediately advance to
     // Driver Assigned so the caller gets a concrete driver right away.
-    return this.advanceBooking(bookingId)!;
+    const advanced = this.advanceBooking(bookingId)!;
+    if (assigned && advanced.driver) advanced.driver = { ...advanced.driver, ...assigned };
+    return advanced;
   }
 
   getBooking(bookingId: string): Booking | undefined {

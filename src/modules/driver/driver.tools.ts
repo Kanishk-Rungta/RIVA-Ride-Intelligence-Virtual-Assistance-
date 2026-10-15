@@ -5,18 +5,22 @@ import { ProfitabilityService } from './profitability.service.js';
 import { DemandService } from './demand.service.js';
 import { RecommendationService } from './recommendation.service.js';
 import { NearbyRidesService } from './nearby-rides.service.js';
+import { ShiftPlannerService } from './shift-planner.service.js';
 import {
   analyseDriverTripSchema,
   getDestinationDemandSchema,
   suggestNextDriverZoneSchema,
   driverProfitabilitySummarySchema,
   searchNearbyRidesSchema,
+  planDriverShiftSchema,
 } from './driver.schemas.js';
 import { formatHourLabel, isWeekend, parseHourFromLabel } from '../../services/time.util.js';
 import type {
   DriverEarningsInput,
   DriverTripAnalysis,
   DriverTripInput,
+  FuelType,
+  ProviderId,
   VehicleType,
 } from '../../domain/types.js';
 
@@ -29,7 +33,7 @@ import type {
  * resolution rather than duplicating geocoding logic.
  */
 @Injectable({
-  deps: [MapsService, DriverService, ProfitabilityService, DemandService, RecommendationService, NearbyRidesService],
+  deps: [MapsService, DriverService, ProfitabilityService, DemandService, RecommendationService, NearbyRidesService, ShiftPlannerService],
 })
 export class DriverTools {
   constructor(
@@ -38,7 +42,8 @@ export class DriverTools {
     private readonly profitability: ProfitabilityService,
     private readonly demand: DemandService,
     private readonly recommendation: RecommendationService,
-    private readonly nearbyRides: NearbyRidesService
+    private readonly nearbyRides: NearbyRidesService,
+    private readonly shiftPlanner: ShiftPlannerService
   ) {}
 
   // ------------------------------------------------------------------
@@ -192,6 +197,41 @@ export class DriverTools {
       rideCount: rides.length,
       rides,
       note: 'Ride requests are simulated for demonstration purposes — no real ride marketplace data is used.',
+    };
+  }
+
+  // ------------------------------------------------------------------
+  // 6. plan_driver_shift — MDP over demand zones
+  // ------------------------------------------------------------------
+  @Tool({
+    name: 'plan_driver_shift',
+    description:
+      'Plan the next few hours of a driver\'s shift: where to wait and when to reposition to maximise expected net earnings. Solves a finite-horizon Markov decision process over demand zones (backward induction) and compares the optimal plan against greedy and stay-put strategies.',
+    inputSchema: planDriverShiftSchema,
+    examples: {
+      request: { currentLocation: 'Gandhipuram', startTime: '5 PM', hours: 4, vehicleType: 'auto', fuelType: 'cng' },
+    },
+  })
+  @Widget('shift-plan')
+  async planDriverShift(
+    input: { currentLocation: string; startTime?: string; hours?: number; vehicleType?: VehicleType; fuelType?: FuelType; provider?: ProviderId },
+    ctx: ExecutionContext
+  ) {
+    const resolved = await this.maps.resolveLocation(input.currentLocation, ctx.logger);
+    const startHour = parseHourFromLabel(input.startTime ?? 'now');
+    ctx.logger.info('plan_driver_shift', { startHour, hours: input.hours });
+
+    return {
+      currentLocation: resolved,
+      ...this.shiftPlanner.plan({
+        currentLocation: resolved.coordinates,
+        startHour,
+        hours: input.hours ?? 4,
+        vehicleType: input.vehicleType ?? 'auto',
+        fuelType: input.fuelType ?? 'cng',
+        provider: input.provider ?? 'uber',
+        weekend: isWeekend(),
+      }),
     };
   }
 }

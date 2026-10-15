@@ -5,6 +5,7 @@ import { ProfitabilityService } from './profitability.service.js';
 import { DemandService } from './demand.service.js';
 import { RecommendationService } from './recommendation.service.js';
 import { NearbyRidesService } from './nearby-rides.service.js';
+import { ShiftPlannerService } from './shift-planner.service.js';
 import { MapsService } from '../../services/maps.service.js';
 
 /**
@@ -27,6 +28,7 @@ import { MapsService } from '../../services/maps.service.js';
     DemandService,
     RecommendationService,
     NearbyRidesService,
+    ShiftPlannerService,
     // MapsService is already provided by RidesModule, but NitroStack's DI
     // container is a single global registry (see container.d.ts), so
     // listing it again here is safe — it resolves to the same singleton,

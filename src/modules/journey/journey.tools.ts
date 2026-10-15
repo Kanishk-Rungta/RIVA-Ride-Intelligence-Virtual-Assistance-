@@ -8,6 +8,7 @@ import { RideSearchService } from '../../services/ride-search.service.js';
 import { RankingService } from '../../services/ranking.service.js';
 import { ForecastService } from '../../services/forecast.service.js';
 import { SearchStoreService } from '../../services/search-store.service.js';
+import { MarketplaceService } from '../marketplace/marketplace.service.js';
 import { formatHourLabel, parseDateTimeLabel } from '../../services/time.util.js';
 import {
   travelConciergeSchema,
@@ -29,6 +30,7 @@ import {
     RankingService,
     ForecastService,
     SearchStoreService,
+    MarketplaceService,
   ],
 })
 export class JourneyTools {
@@ -41,7 +43,8 @@ export class JourneyTools {
     private readonly rideSearch: RideSearchService,
     private readonly ranking: RankingService,
     private readonly forecast: ForecastService,
-    private readonly searchStore: SearchStoreService
+    private readonly searchStore: SearchStoreService,
+    private readonly marketplace: MarketplaceService
   ) {}
 
   // ------------------------------------------------------------------
@@ -109,16 +112,17 @@ export class JourneyTools {
   // ------------------------------------------------------------------
   @Tool({
     name: 'multi_stop_trip_planner',
-    description: 'Plan a trip with one or more intermediate stops, e.g. "campus to airport, stopping at Gandhipuram" — totals distance, time, and fare.',
+    description:
+      'Plan a trip with one or more intermediate stops, e.g. "campus to airport, stopping at Gandhipuram" — totals distance, time, and fare. With optimizeOrder, A* search finds the fastest order to visit the intermediate stops.',
     inputSchema: multiStopTripPlannerSchema,
     examples: {
-      request: { stops: ['Amrita University Ettimadai', 'Gandhipuram', 'Coimbatore Airport'] },
+      request: { stops: ['Amrita University Ettimadai', 'Coimbatore Airport', 'Gandhipuram', 'RS Puram', 'Coimbatore Junction'], optimizeOrder: true },
     },
   })
   @Widget('ride-map')
-  async multiStopTripPlanner(input: { stops: string[] }, ctx: ExecutionContext) {
-    ctx.logger.info('multi_stop_trip_planner', { stopCount: input.stops.length });
-    return this.multiStop.planTrip(input.stops, ctx.logger);
+  async multiStopTripPlanner(input: { stops: string[]; optimizeOrder?: boolean }, ctx: ExecutionContext) {
+    ctx.logger.info('multi_stop_trip_planner', { stopCount: input.stops.length, optimizeOrder: input.optimizeOrder });
+    return this.multiStop.planTrip(input.stops, input.optimizeOrder ?? false, ctx.logger);
   }
 
   // ------------------------------------------------------------------
@@ -210,10 +214,41 @@ export class JourneyTools {
       };
     }
 
-    const ranked = this.ranking.rank([option], search.rankingMode);
-    const rankedOption = ranked[0];
-    const created = this.booking.createBooking(input.searchId, input.optionId, rankedOption, search.origin, search.destination);
-    ctx.logger.info('Booking confirmed', { bookingId: created.bookingId, status: created.status });
-    return created;
+    // Dispatch through the multi-agent marketplace: the chosen provider
+    // offers the trip to its nearby driver agents and only a driver who
+    // actually accepts is assigned. maxAwards: 1 — the rider confirmed THIS
+    // ride, so the rider agent must not silently switch to another one.
+    const dispatch = await this.marketplace.run(
+      { origin: search.origin, destination: search.destination, route: search.route, preferences: search.preferences },
+      { preferredOptionId: option.optionId, maxAwards: 1, seed: `${input.searchId}|${option.optionId}`, logger: ctx.logger }
+    );
+    const dispatchSummary = {
+      messagesExchanged: dispatch.metrics.messageCount,
+      driversContacted: dispatch.metrics.driverOffers,
+      driverAcceptances: dispatch.metrics.driverAcceptances,
+      incentiveRounds: dispatch.metrics.incentiveRounds,
+      trace: dispatch.messages.filter((m) => m.from.startsWith('driver:') || m.to.startsWith('driver:')).map((m) => `${m.performative} ${m.from} → ${m.to}: ${m.summary}`),
+    };
+
+    if (dispatch.outcome.status !== 'MATCHED' || !dispatch.outcome.driver) {
+      return {
+        status: 'CANCELLED' as const,
+        message: `No driver accepted this ${option.providerName} ${option.vehicleType} trip: ${dispatch.outcome.reason} Try another option from the same search.`,
+        rideSummary: { provider: option.provider, providerName: option.providerName, vehicleType: option.vehicleType, fare: option.fare },
+        dispatch: dispatchSummary,
+      };
+    }
+
+    // The confirmed booking is a revealed preference — the rider agent learns from it.
+    const learning = this.ranking.learnFromChoice(option, search.options);
+
+    const rankedOption = this.ranking.rank([option], search.rankingMode)[0];
+    const created = this.booking.createBooking(input.searchId, input.optionId, rankedOption, search.origin, search.destination, {
+      driverName: dispatch.outcome.driver.name,
+      rating: dispatch.outcome.driver.rating,
+      etaMinutes: dispatch.outcome.pickupEtaMinutes ?? 5,
+    });
+    ctx.logger.info('Booking confirmed', { bookingId: created.bookingId, status: created.status, driver: dispatch.outcome.driver.name });
+    return { ...created, dispatch: dispatchSummary, learning };
   }
 }

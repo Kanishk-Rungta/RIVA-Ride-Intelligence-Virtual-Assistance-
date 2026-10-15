@@ -40,3 +40,12 @@ export const searchNearbyRidesSchema = z.object({
   currentLocation: z.string().describe('The driver\'s current location'),
   radiusKm: z.number().positive().max(15).optional().describe('Search radius in km (default 5)'),
 });
+
+export const planDriverShiftSchema = z.object({
+  currentLocation: z.string().describe('Where the driver is starting the shift'),
+  startTime: z.string().optional().describe('Shift start, e.g. "6 PM" (default: now)'),
+  hours: z.number().int().min(1).max(8).optional().describe('Shift length in hours (default 4)'),
+  vehicleType: vehicleTypeSchema.optional().describe('Vehicle being driven (default auto)'),
+  fuelType: fuelTypeSchema.optional().describe('Fuel type (default cng)'),
+  provider: providerSchema.optional().describe('Platform the driver works on — sets the commission (default uber)'),
+});

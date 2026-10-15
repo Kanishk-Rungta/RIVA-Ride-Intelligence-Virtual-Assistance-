@@ -10,6 +10,7 @@ import { RideSearchService } from '../../services/ride-search.service.js';
 import { RankingService } from '../../services/ranking.service.js';
 import { ForecastService } from '../../services/forecast.service.js';
 import { SearchStoreService } from '../../services/search-store.service.js';
+import { MarketplaceService } from '../marketplace/marketplace.service.js';
 
 /**
  * JourneyModule
@@ -39,6 +40,7 @@ import { SearchStoreService } from '../../services/search-store.service.js';
     RankingService,
     ForecastService,
     SearchStoreService,
+    MarketplaceService,
   ],
 })
 export class JourneyModule {}

@@ -5,7 +5,19 @@ import { PreferenceService } from './preference.service.js';
 import { UberMockProvider } from '../providers/uber-mock.provider.js';
 import { OlaMockProvider } from '../providers/ola-mock.provider.js';
 import { RapidoHybridProvider } from '../providers/rapido-hybrid.provider.js';
-import type { ResolvedLocation, RideOption, RiderPreferences, RideSearchContext } from '../domain/types.js';
+import type { PreferenceSatisfaction, ResolvedLocation, RideOption, RiderPreferences, RideSearchContext } from '../domain/types.js';
+
+export interface SearchOutcome {
+  context: RideSearchContext;
+  rawOptions: RideOption[];
+  filteredOptions: RideOption[];
+  satisfaction: PreferenceSatisfaction;
+}
+
+interface PreferenceConstraint {
+  name: string;
+  test: (option: RideOption) => boolean;
+}
 
 /**
  * RideSearchService
@@ -32,14 +44,15 @@ export class RideSearchService {
     originQuery: string,
     destinationQuery: string,
     preferencesOverride: RiderPreferences | undefined,
-    logger?: Logger
+    logger?: Logger,
+    hour?: number
   ): Promise<RideSearchContext> {
     const [origin, destination] = await Promise.all([
       this.maps.resolveLocation(originQuery, logger),
       this.maps.resolveLocation(destinationQuery, logger),
     ]);
 
-    const route = await this.maps.calculateRoute(origin, destination, logger);
+    const route = await this.maps.calculateRoute(origin, destination, logger, hour);
     const preferences = this.preferences.merge(preferencesOverride);
 
     return { origin, destination, route, preferences };
@@ -68,24 +81,56 @@ export class RideSearchService {
   }
 
   applyPreferenceFilter(options: RideOption[], preferences: RiderPreferences): RideOption[] {
-    let filtered = options;
+    return this.satisfyPreferences(options, preferences).options;
+  }
 
-    if (preferences.excludeVehicleTypes?.length) {
-      filtered = filtered.filter((o) => !preferences.excludeVehicleTypes!.includes(o.vehicleType));
+  /**
+   * Treats rider preferences as a small constraint-satisfaction problem
+   * over the candidate rides. femaleDriverOnly is a HARD constraint — it is
+   * a safety preference, so it is never silently dropped. The rest are SOFT
+   * constraints ordered by priority; when no ride satisfies all of them,
+   * the lowest-priority constraint is relaxed and the search retried, so
+   * the rider loses as little of what they asked for as possible and is
+   * told exactly what was relaxed.
+   */
+  satisfyPreferences(options: RideOption[], preferences: RiderPreferences): PreferenceSatisfaction {
+    const hard: PreferenceConstraint[] = [];
+    if (preferences.femaleDriverOnly) {
+      hard.push({ name: 'femaleDriverOnly', test: (o) => o.hasFemaleDriverOption });
+    }
+
+    // Highest priority first; relaxation pops from the end.
+    const soft: PreferenceConstraint[] = [];
+    if (preferences.luggageRequired) {
+      soft.push({ name: 'luggageRequired', test: (o) => o.luggageFriendly });
     }
     if (preferences.budgetLimit) {
-      filtered = filtered.filter((o) => o.fare <= preferences.budgetLimit!);
+      const limit = preferences.budgetLimit;
+      soft.push({ name: 'budgetLimit', test: (o) => o.fare <= limit });
     }
-    if (preferences.luggageRequired) {
-      filtered = filtered.filter((o) => o.luggageFriendly);
-    }
-    if (preferences.femaleDriverOnly) {
-      filtered = filtered.filter((o) => o.hasFemaleDriverOption);
+    if (preferences.excludeVehicleTypes?.length) {
+      const excluded = preferences.excludeVehicleTypes;
+      soft.push({ name: 'excludeVehicleTypes', test: (o) => !excluded.includes(o.vehicleType) });
     }
 
-    // If preferences eliminate everything, fall back to the unfiltered set
-    // rather than showing the rider nothing — better UX for a demo/MVP.
-    return filtered.length > 0 ? filtered : options;
+    const hardOk = options.filter((o) => hard.every((c) => c.test(o)));
+    if (hard.length > 0 && hardOk.length === 0) {
+      return { options: [], satisfied: [], relaxed: [], unsatisfiableHard: hard[0].name };
+    }
+
+    const relaxed: string[] = [];
+    for (;;) {
+      const matches = hardOk.filter((o) => soft.every((c) => c.test(o)));
+      if (matches.length > 0 || soft.length === 0) {
+        return {
+          options: matches,
+          satisfied: [...hard, ...soft].map((c) => c.name),
+          relaxed,
+          unsatisfiableHard: null,
+        };
+      }
+      relaxed.push(soft.pop()!.name);
+    }
   }
 
   /**
@@ -102,26 +147,28 @@ export class RideSearchService {
     destination: ResolvedLocation,
     preferencesOverride: RiderPreferences | undefined,
     logger?: Logger
-  ): Promise<{ context: RideSearchContext; rawOptions: RideOption[]; filteredOptions: RideOption[] }> {
+  ): Promise<SearchOutcome> {
     const route = await this.maps.calculateRoute(origin, destination, logger);
     const preferences = this.preferences.merge(preferencesOverride);
     const context: RideSearchContext = { origin, destination, route, preferences };
-
-    const rawOptions = await this.queryAllProviders(context, logger);
-    const filteredOptions = this.applyPreferenceFilter(rawOptions, context.preferences);
-    return { context, rawOptions, filteredOptions };
+    return this.collect(context, logger);
   }
 
-  /** Convenience: full pipeline — resolve route, query all providers, apply preference filter. */
+  /** Convenience: full pipeline — resolve route, query all providers, apply preference constraints. */
   async search(
     originQuery: string,
     destinationQuery: string,
     preferencesOverride: RiderPreferences | undefined,
-    logger?: Logger
-  ): Promise<{ context: RideSearchContext; rawOptions: RideOption[]; filteredOptions: RideOption[] }> {
-    const context = await this.buildSearchContext(originQuery, destinationQuery, preferencesOverride, logger);
+    logger?: Logger,
+    hour?: number
+  ): Promise<SearchOutcome> {
+    const context = await this.buildSearchContext(originQuery, destinationQuery, preferencesOverride, logger, hour);
+    return this.collect(context, logger);
+  }
+
+  private async collect(context: RideSearchContext, logger?: Logger): Promise<SearchOutcome> {
     const rawOptions = await this.queryAllProviders(context, logger);
-    const filteredOptions = this.applyPreferenceFilter(rawOptions, context.preferences);
-    return { context, rawOptions, filteredOptions };
+    const satisfaction = this.satisfyPreferences(rawOptions, context.preferences);
+    return { context, rawOptions, filteredOptions: satisfaction.options, satisfaction };
   }
 }

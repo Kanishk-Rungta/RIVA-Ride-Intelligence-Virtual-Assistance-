@@ -15,6 +15,9 @@ const ZONES: DemandZoneProfile[] = [
   { zoneKey: 'rs_puram', displayName: 'RS Puram', coordinates: { lat: 11.0057, lng: 76.9498 }, category: 'commercial' },
   { zoneKey: 'peelamedu_it_corridor', displayName: 'Peelamedu IT Corridor', coordinates: { lat: 11.0296, lng: 77.0193 }, category: 'it_park' },
   { zoneKey: 'college_area_ettimadai', displayName: 'Ettimadai College Area', coordinates: { lat: 10.9046, lng: 76.8993 }, category: 'college' },
+  { zoneKey: 'saravanampatti', displayName: 'Saravanampatti', coordinates: { lat: 11.079, lng: 77.0 }, category: 'it_park' },
+  { zoneKey: 'ukkadam_bus_terminus', displayName: 'Ukkadam Bus Terminus', coordinates: { lat: 10.988, lng: 76.9617 }, category: 'railway' },
+  { zoneKey: 'singanallur', displayName: 'Singanallur', coordinates: { lat: 10.999, lng: 77.032 }, category: 'residential' },
 ];
 
 /** Base demand-by-hour curve (0-100), one entry per category, indexed by hour of day (0-23). */
@@ -74,6 +77,16 @@ export class DemandService {
     return Math.max(0, Math.min(100, Math.round(base + jitter)));
   }
 
+  /**
+   * Expected wait for the next ride request at a given demand score. Convex,
+   * not linear: going from busy to moderate costs a few minutes, but a dead
+   * zone (late-night IT park, college area on a holiday) leaves a driver
+   * waiting the better part of an hour.
+   */
+  expectedWaitMinutes(score: number): number {
+    return 3 + 42 * (1 - score / 100) ** 2;
+  }
+
   private classify(score: number): DemandLevel {
     if (score >= 62) return 'HIGH';
     if (score >= 38) return 'MEDIUM';
@@ -97,8 +110,7 @@ export class DemandService {
     const expectedRideAvailability: DestinationDemand['expectedRideAvailability'] =
       demandLevel === 'HIGH' ? 'PLENTY' : demandLevel === 'MEDIUM' ? 'MODERATE' : 'SCARCE';
 
-    // Higher demand -> shorter expected wait for the next ride request.
-    const expectedWaitingMinutes = Math.round(Math.max(2, 25 - score / 5));
+    const expectedWaitingMinutes = Math.round(this.expectedWaitMinutes(score));
 
     // Return-trip probability: airports/railway/commercial hubs have decent
     // return flow; college/residential areas are more one-directional
@@ -130,6 +142,11 @@ export class DemandService {
       returnProbability,
       explanation,
     };
+  }
+
+  /** Demand score (0-100) for every known zone at the given hour — the shift planner's demand model. */
+  zoneScores(hour: number, isWeekend: boolean): Map<string, number> {
+    return new Map(ZONES.map((zone) => [zone.zoneKey, this.computeDemandScore(zone.category, hour, isWeekend, zone.zoneKey)]));
   }
 
   /** Demand score + straight-line distance for every known zone, used by RecommendationService for zone ranking. */

@@ -23,6 +23,7 @@ interface RankedRideOption {
   rank: number;
   score: number;
   scoreReason: string;
+  paretoOptimal?: boolean;
 }
 
 interface ResolvedLocation {
@@ -36,8 +37,10 @@ interface ResolvedLocation {
 interface RouteInfo {
   distanceKm: number;
   durationMinutes: number;
-  source: 'live' | 'estimated';
+  source: 'live' | 'road_graph' | 'estimated';
   staticMapUrl?: string;
+  via?: string[];
+  search?: { strategy: string; nodesExpanded: number };
 }
 
 interface RideComparisonData {
@@ -50,6 +53,7 @@ interface RideComparisonData {
   totalOptionsFound: number;
   options: RankedRideOption[];
   recommendation: RankedRideOption | null;
+  constraints?: { relaxed: string[]; unsatisfiableHard: string | null; note?: string };
 }
 
 const PROVIDER_COLORS: Record<string, string> = {
@@ -148,8 +152,20 @@ export default function RideComparison() {
           <span>·</span>
           <span>{Math.round(data.route.durationMinutes)} min drive</span>
           <span>·</span>
-          <span>{data.route.source === 'live' ? 'Live route' : 'Estimated route'}</span>
+          <span>
+            {data.route.source === 'live'
+              ? 'Live route'
+              : data.route.source === 'road_graph'
+                ? `A* route · ${data.route.search?.nodesExpanded ?? '?'} nodes expanded`
+                : 'Estimated route'}
+          </span>
         </div>
+        {data.route.via && data.route.via.length > 2 && (
+          <div style={{ fontSize: 11, color: mutedColor, marginTop: 4 }}>via {data.route.via.slice(1, -1).join(' › ')}</div>
+        )}
+        {data.constraints?.note && (
+          <div style={{ fontSize: 11, color: '#e0a030', marginTop: 6 }}>⚖ {data.constraints.note}</div>
+        )}
         {(data.origin.source === 'estimated' || data.destination.source === 'estimated') && (
           <div style={{ fontSize: 11, color: '#e0a030', marginTop: 6 }}>
             ⚠ {data.origin.estimationNote ?? data.destination.estimationNote ?? 'Using an approximate location — configure GEOAPIFY_API_KEY for exact geocoding.'}
@@ -268,6 +284,7 @@ export default function RideComparison() {
                     <div style={{ fontSize: 12, color: mutedColor, marginTop: 2 }}>
                       ⭐ {option.rating.toFixed(1)} · ETA {option.pickupEtaMinutes} min
                       {!option.availability && ' · Unavailable'}
+                      {option.availability && option.paretoOptimal === false && ' · dominated'}
                     </div>
                   </div>
                 </div>

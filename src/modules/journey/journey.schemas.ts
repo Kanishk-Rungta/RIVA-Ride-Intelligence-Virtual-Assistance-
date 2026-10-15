@@ -18,7 +18,13 @@ export const multiStopTripPlannerSchema = z.object({
   stops: z
     .array(z.string())
     .min(2)
+    .max(10)
     .describe('Ordered list of stops including the starting point and final destination, e.g. ["Amrita University", "Gandhipuram", "Coimbatore Airport"]'),
+  optimizeOrder: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('Reorder the intermediate stops (start and final destination stay fixed) to minimise total travel time. Use when the rider does not care which stop comes first.'),
 });
 
 export const carPoolingAssistantSchema = z.object({

@@ -56,3 +56,6 @@ export function randomBetween(rng: () => number, min: number, max: number): numb
 export function pick<T>(rng: () => number, items: T[]): T {
   return items[Math.floor(rng() * items.length)];
 }
+
+/** Simulated driver names, shared by the booking simulator and the marketplace's driver agents. */
+export const DRIVER_NAMES = ['Karthik', 'Suresh', 'Muthu', 'Anitha', 'Priya', 'Rajesh', 'Vignesh', 'Lakshmi', 'Saravanan', 'Divya', 'Arun', 'Kavya', 'Senthil', 'Meena'];

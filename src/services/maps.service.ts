@@ -2,6 +2,7 @@ import { Injectable, ConfigService } from '@nitrostack/core';
 import type { Logger } from '@nitrostack/core';
 import type { LatLng, ResolvedLocation, RouteInfo } from '../domain/types.js';
 import { createSeededRandom, hashString, haversineDistanceKm, randomBetween } from './sim.util.js';
+import { findNodeByText, findRoute, nearestNode } from '../ai/road-network.js';
 
 /**
  * A small local gazetteer, used ONLY as the last-resort fallback when no
@@ -143,7 +144,8 @@ export class MapsService {
   async calculateRoute(
     origin: ResolvedLocation,
     destination: ResolvedLocation,
-    logger?: Logger
+    logger?: Logger,
+    hour: number = new Date().getHours()
   ): Promise<RouteInfo> {
     const apiKey = this.getApiKey();
 
@@ -157,7 +159,46 @@ export class MapsService {
       }
     }
 
-    return this.estimateRoute(origin, destination);
+    return this.estimateRoute(origin, destination, hour);
+  }
+
+  /**
+   * Offline routing. When both endpoints snap onto the Coimbatore road
+   * graph, A* finds the time-optimal path for the given hour (congestion
+   * included); the short walk from each endpoint to its snapped node is
+   * added as local-road travel. Anywhere else falls back to a straight-line
+   * estimate with a detour factor.
+   */
+  estimateRoute(origin: ResolvedLocation, destination: ResolvedLocation, hour: number = new Date().getHours()): RouteInfo {
+    const from = nearestNode(origin.coordinates);
+    const to = nearestNode(destination.coordinates);
+
+    if (from && to && from.node.id !== to.node.id) {
+      const route = findRoute(from.node.id, to.node.id, { strategy: 'astar', objective: 'time', hour });
+      if (route.found) {
+        const accessKm = (from.distanceKm + to.distanceKm) * 1.3;
+        return {
+          distanceKm: Math.round((route.distanceKm + accessKm) * 10) / 10,
+          durationMinutes: Math.round(route.durationMinutes + (accessKm / 24) * 60),
+          source: 'road_graph',
+          polyline: [
+            [origin.coordinates.lng, origin.coordinates.lat],
+            ...route.polyline,
+            [destination.coordinates.lng, destination.coordinates.lat],
+          ],
+          via: route.via,
+          search: {
+            strategy: route.strategy,
+            objective: route.objective,
+            hour,
+            nodesExpanded: route.search.nodesExpanded,
+            nodesGenerated: route.search.nodesGenerated,
+          },
+        };
+      }
+    }
+
+    return this.estimateStraightLine(origin, destination);
   }
 
   // ---- Live Geoapify calls -------------------------------------------
@@ -299,6 +340,20 @@ export class MapsService {
   private estimateLocation(query: string, note: string): ResolvedLocation {
     const normalized = query.trim().toLowerCase();
 
+    // Places on the Coimbatore road graph are the most specific names we
+    // know, so they win over the broader gazetteer (which would match
+    // "Peelamedu, Coimbatore" to the city centre).
+    const graphNode = findNodeByText(normalized);
+    if (graphNode) {
+      return {
+        query,
+        formattedAddress: graphNode.name,
+        coordinates: graphNode.coordinates,
+        source: 'estimated',
+        estimationNote: note,
+      };
+    }
+
     // Bidirectional, longest-match-first: handles both a longer query
     // containing a landmark name ("...Amrita University Ettimadai...")
     // and a shorter query that IS a prefix/substring of a landmark name
@@ -334,7 +389,7 @@ export class MapsService {
     };
   }
 
-  private estimateRoute(origin: ResolvedLocation, destination: ResolvedLocation): RouteInfo {
+  private estimateStraightLine(origin: ResolvedLocation, destination: ResolvedLocation): RouteInfo {
     const straightLineKm = haversineDistanceKm(origin.coordinates, destination.coordinates);
     // Real road distance is longer than straight-line distance; apply a
     // typical detour factor for Indian urban/interurban roads.

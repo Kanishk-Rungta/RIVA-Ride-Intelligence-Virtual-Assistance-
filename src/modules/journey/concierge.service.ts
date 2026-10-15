@@ -3,6 +3,8 @@ import type { Logger } from '@nitrostack/core';
 import { RideSearchService } from '../../services/ride-search.service.js';
 import { RankingService } from '../../services/ranking.service.js';
 import { ForecastService } from '../../services/forecast.service.js';
+import { MapsService } from '../../services/maps.service.js';
+import { congestionFactor } from '../../ai/road-network.js';
 import { formatDateTimeLabel, parseDateTimeLabel } from '../../services/time.util.js';
 import type { TravelPlan } from '../../domain/types.js';
 
@@ -15,12 +17,13 @@ const HIGH_BUFFER_KEYWORDS: Array<{ pattern: RegExp; minutes: number; reason: st
 const DEFAULT_BUFFER_MINUTES = 15;
 const DEFAULT_BUFFER_REASON = 'A general safety buffer for boarding, parking, or walking to the gate/entrance.';
 
-@Injectable({ deps: [RideSearchService, RankingService, ForecastService] })
+@Injectable({ deps: [RideSearchService, RankingService, ForecastService, MapsService] })
 export class ConciergeService {
   constructor(
     private readonly rideSearch: RideSearchService,
     private readonly ranking: RankingService,
-    private readonly forecast: ForecastService
+    private readonly forecast: ForecastService,
+    private readonly maps: MapsService
   ) {}
 
   async planTravel(
@@ -37,11 +40,31 @@ export class ConciergeService {
     const { minutes: autoBuffer, reason: bufferReason } = this.resolveBuffer(destinationQuery, context.destination.formattedAddress);
     const bufferMinutes = bufferOverride ?? autoBuffer;
 
-    // Traffic multiplier evaluated at the arrival hour, as a reasonable proxy
-    // for the driving window (buffer + drive time are usually within an
-    // hour or two of the arrival time for typical city trips).
-    const trafficMultiplier = this.forecast.getTrafficMultiplier(arriveBy.hour);
-    const trafficAdjustedTravelMinutes = Math.round(context.route.durationMinutes * trafficMultiplier);
+    let route = context.route;
+    let trafficMultiplier: number;
+    let trafficAdjustedTravelMinutes: number;
+
+    if (route.source === 'road_graph') {
+      // Time-dependent planning: congestion depends on when the rider
+      // leaves, and when they leave depends on the travel time. Iterate
+      // A* to a fixed point — plan at the arrival hour, derive the
+      // departure hour, re-plan at that hour (the best path can change,
+      // e.g. bypass at rush hour, city roads at night).
+      let departureHour = arriveBy.hour;
+      for (let i = 0; i < 3; i++) {
+        route = this.maps.estimateRoute(context.origin, context.destination, departureHour);
+        const departure = new Date(arriveBy.date.getTime() - (route.durationMinutes + bufferMinutes) * 60 * 1000);
+        if (departure.getHours() === departureHour) break;
+        departureHour = departure.getHours();
+      }
+      trafficMultiplier = congestionFactor(departureHour);
+      trafficAdjustedTravelMinutes = route.durationMinutes;
+    } else {
+      // No graph route: scale the straight-line / live estimate by the
+      // rush-hour multiplier at the arrival hour.
+      trafficMultiplier = this.forecast.getTrafficMultiplier(arriveBy.hour);
+      trafficAdjustedTravelMinutes = Math.round(route.durationMinutes * trafficMultiplier);
+    }
 
     const pickupDate = new Date(arriveBy.date.getTime() - (trafficAdjustedTravelMinutes + bufferMinutes) * 60 * 1000);
     const recommendedPickupLabel = formatDateTimeLabel(pickupDate, new Date());
@@ -63,7 +86,7 @@ export class ConciergeService {
       bufferReason,
       trafficAdjustedTravelMinutes,
       trafficMultiplier,
-      route: context.route,
+      route,
       recommendation: recommendation ?? null,
       recommendationReason,
       alternatives: alternatives.slice(0, 3),

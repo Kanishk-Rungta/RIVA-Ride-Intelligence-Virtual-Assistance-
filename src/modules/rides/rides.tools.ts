@@ -7,6 +7,7 @@ import { ForecastService } from '../../services/forecast.service.js';
 import { NearbyDriversService } from '../../services/nearby-drivers.service.js';
 import { RideSearchService } from '../../services/ride-search.service.js';
 import type {
+  PreferenceSatisfaction,
   RankedRideOption,
   RankingMode,
   RiderPreferences,
@@ -78,7 +79,7 @@ export class RidesTools {
     ctx.logger.info('find_rides', { origin: input.origin, destination: input.destination });
 
     const rankingMode: RankingMode = input.rankingMode ?? 'best_value';
-    const { context, rawOptions, filteredOptions } = await this.rideSearch.search(
+    const { context, rawOptions, filteredOptions, satisfaction } = await this.rideSearch.search(
       input.origin,
       input.destination,
       input.preferences,
@@ -95,7 +96,7 @@ export class RidesTools {
       rankingMode,
     });
 
-    return this.buildComparisonResponse(search.searchId, context, ranked, rankingMode, rawOptions.length);
+    return this.buildComparisonResponse(search.searchId, context, ranked, rankingMode, rawOptions.length, satisfaction);
   }
 
   // ------------------------------------------------------------------
@@ -136,8 +137,8 @@ export class RidesTools {
     };
 
     const rankingMode: RankingMode = input.rankingMode ?? search.rankingMode;
-    const filtered = this.rideSearch.applyPreferenceFilter(search.options, mergedPreferences);
-    const ranked = this.ranking.rank(filtered, rankingMode);
+    const satisfaction = this.rideSearch.satisfyPreferences(search.options, mergedPreferences);
+    const ranked = this.ranking.rank(satisfaction.options, rankingMode);
 
     this.searchStore.update(input.searchId, { preferences: mergedPreferences, rankingMode });
 
@@ -148,7 +149,7 @@ export class RidesTools {
       preferences: mergedPreferences,
     };
 
-    return this.buildComparisonResponse(input.searchId, context, ranked, rankingMode, search.options.length);
+    return this.buildComparisonResponse(input.searchId, context, ranked, rankingMode, search.options.length, satisfaction);
   }
 
   // ------------------------------------------------------------------
@@ -258,7 +259,7 @@ export class RidesTools {
       searchId: input.searchId,
       mode: search.rankingMode,
       modeExplanation: this.ranking.explainMode(search.rankingMode),
-      selectedRide: rankedMatch ?? { ...option, rank: 0, score: 0, scoreReason: 'Excluded by current preferences' },
+      selectedRide: rankedMatch ?? { ...option, rank: 0, score: 0, scoreReason: 'Excluded by current preferences', paretoOptimal: false },
       reasoning: rankedMatch
         ? `Ranked #${rankedMatch.rank} of ${ranked.length} for "${search.rankingMode}" — ${rankedMatch.scoreReason}. Approx. ₹${perKmEquivalent}/km.`
         : 'This option does not currently match the active rider preferences.',
@@ -378,7 +379,8 @@ export class RidesTools {
     context: RideSearchContext,
     ranked: RankedRideOption[],
     rankingMode: RankingMode,
-    totalOptionsFound: number
+    totalOptionsFound: number,
+    satisfaction: PreferenceSatisfaction
   ) {
     return {
       searchId,
@@ -389,6 +391,18 @@ export class RidesTools {
       rankingExplanation: this.ranking.explainMode(rankingMode),
       preferencesApplied: context.preferences,
       totalOptionsFound,
+      constraints: {
+        satisfied: satisfaction.satisfied,
+        relaxed: satisfaction.relaxed,
+        unsatisfiableHard: satisfaction.unsatisfiableHard,
+        note: satisfaction.unsatisfiableHard
+          ? `No ride satisfies "${satisfaction.unsatisfiableHard}", a safety preference RIVA never relaxes.`
+          : satisfaction.relaxed.length
+            ? `No ride met every preference, so the lowest-priority ones were relaxed: ${satisfaction.relaxed.join(', ')}.`
+            : undefined,
+      },
+      utilityWeights: this.ranking.getWeights(),
+      paretoOptimalCount: ranked.filter((o) => o.paretoOptimal).length,
       options: ranked,
       recommendation: ranked[0] ?? null,
     };

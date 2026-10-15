@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "RIVA (Ride Intelligence & Virtual Assistance) — conversational mobility copilot for riders and drivers",
+  "description": "RIVA (Ride Intelligence & Virtual Assistance) — a multi-agent mobility copilot for riders and drivers: A* routing, Contract Net negotiation, MDP shift planning",
   "scripts": {
     "dev": "nitrostack-cli dev",
     "build": "nitrostack-cli build",
     "start": "npm run build && nitrostack-cli start",
     "start:prod": "nitrostack-cli start",
+    "build:dev": "tsc -p tsconfig.dev.json",
+    "test": "npm run build:dev && node --test --test-force-exit \".build/tests/*.test.js\"",
+    "demo": "npm run build:dev && node .build/scripts/demo.js",
+    "evaluate": "npm run build:dev && node .build/scripts/evaluate.js",
     "upgrade": "nitrostack-cli upgrade",
     "install:all": "nitrostack-cli install",
     "widget": "npm --prefix src/widgets"

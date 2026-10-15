@@ -3,6 +3,8 @@ import { RidesModule } from './modules/rides/rides.module.js';
 import { DriverModule } from './modules/driver/driver.module.js';
 import { SessionModule } from './modules/session/session.module.js';
 import { JourneyModule } from './modules/journey/journey.module.js';
+import { MarketplaceModule } from './modules/marketplace/marketplace.module.js';
+import { RoutingModule } from './modules/routing/routing.module.js';
 import { SystemHealthCheck } from './health/system.health.js';
 
 /**
@@ -24,6 +26,13 @@ import { SystemHealthCheck } from './health/system.health.js';
  * concierge, ride-later forecasting, multi-stop planning, pooling
  * simulation, SOS safety simulation, and booking lifecycle simulation.
  *
+ * Phase 4 (Multi-agent intelligence): MarketplaceModule — rider,
+ * provider, and driver agents negotiating every ride through nested FIPA
+ * Contract Nets on a discrete-event message bus. RoutingModule — exposes
+ * the BFS / UCS / greedy / A* search layer that routes rides offline. The
+ * driver side gains an MDP shift planner, the rider side a learning
+ * utility and constraint relaxation.
+ *
  * Per the reliability rules, ConfigModule.forRoot() only reads environment
  * variables here — it never calls Geoapify or Apify at startup. Those
  * integrations are lazily initialized inside their respective
@@ -42,7 +51,7 @@ import { SystemHealthCheck } from './health/system.health.js';
 @Module({
   name: 'app',
   description: 'Root application module',
-  imports: [ConfigModule.forRoot(), RidesModule, DriverModule, SessionModule, JourneyModule],
+  imports: [ConfigModule.forRoot(), RidesModule, DriverModule, SessionModule, JourneyModule, MarketplaceModule, RoutingModule],
   providers: [
     // Health Checks
     SystemHealthCheck,

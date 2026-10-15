@@ -41,10 +41,21 @@ export interface ResolvedLocation {
 export interface RouteInfo {
   distanceKm: number;
   durationMinutes: number;
-  source: 'live' | 'estimated';
+  /** live = Geoapify routing; road_graph = A* over the offline Coimbatore graph; estimated = straight line × detour factor. */
+  source: 'live' | 'road_graph' | 'estimated';
   staticMapUrl?: string;
-  /** Route geometry as [lng, lat] coordinate pairs from Geoapify Routing, used to draw the path on the static map. */
+  /** Route geometry as [lng, lat] coordinate pairs (Geoapify geometry, or the A* node sequence). */
   polyline?: Array<[number, number]>;
+  /** Named junctions the A* route passes through (road_graph routes only). */
+  via?: string[];
+  /** Search statistics for road_graph routes — exposed so the agent can explain how it planned the route. */
+  search?: {
+    strategy: string;
+    objective: string;
+    hour: number;
+    nodesExpanded: number;
+    nodesGenerated: number;
+  };
 }
 
 export interface RiderPreferences {
@@ -79,6 +90,26 @@ export interface RankedRideOption extends RideOption {
   rank: number;
   score: number;
   scoreReason: string;
+  /** False when another available option is at least as cheap, as quick to arrive, and as well rated — and strictly better on one of them. */
+  paretoOptimal: boolean;
+}
+
+/** Weights of the rider's best_value utility. Learned online from the rides the rider actually books. */
+export interface UtilityWeights {
+  fare: number;
+  pickupEta: number;
+  rating: number;
+}
+
+/** Result of solving the rider's preferences as a constraint problem. */
+export interface PreferenceSatisfaction {
+  options: RideOption[];
+  /** Constraints every returned option satisfies. */
+  satisfied: string[];
+  /** Soft constraints dropped (lowest priority first) because no option could satisfy all of them. */
+  relaxed: string[];
+  /** Hard constraint that no option could satisfy — the result is then empty. */
+  unsatisfiableHard: string | null;
 }
 
 export interface RideSearchContext {
@@ -282,6 +313,16 @@ export interface MultiStopPlan {
   totalDurationMinutes: number;
   estimatedFare: number;
   routeDisplay: string;
+  /** Present when the rider asked RIVA to reorder the intermediate stops. */
+  optimization?: {
+    algorithm: string;
+    originalOrder: string[];
+    optimizedOrder: string[];
+    originalEstimateMinutes: number;
+    optimizedEstimateMinutes: number;
+    savedMinutes: number;
+    statesExpanded: number;
+  };
 }
 
 export interface PoolingMatch {
