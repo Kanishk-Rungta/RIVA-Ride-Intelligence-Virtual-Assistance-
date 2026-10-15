@@ -1,196 +1,71 @@
 'use client';
 
-import { useTheme, useWidgetSDK } from '@nitrostack/widgets';
-
-interface ResolvedLocation {
-  query: string;
-  formattedAddress: string;
-  source: 'live' | 'estimated';
-  estimationNote?: string;
-}
-
-interface TripProfitabilityBreakdown {
-  grossEarning: number;
-  fuelCost: number;
-  fuelCostExplanation: string;
-  platformCommission: number;
-  platformCommissionRate: number;
-  netEarning: number;
-  costPerKm: number;
-  estimatedTripMinutes: number;
-  estimatedHourlyEarning: number;
-}
-
-interface DestinationAttractiveness {
-  demandLevel: 'HIGH' | 'MEDIUM' | 'LOW';
-  returnProbability: number;
-  explanation: string;
-}
+import { useWidgetSDK } from '@nitrostack/widgets';
+import { Glass, Loading, Meter, Pill, Route, Shell, Stat, cap, inr, type Tone } from '../../components/ui';
 
 interface DriverTripAnalysisData {
-  provider: 'uber' | 'ola' | 'rapido';
+  provider: string;
   vehicleType: string;
-  currentLocation: ResolvedLocation;
-  destination: ResolvedLocation;
+  currentLocation: { formattedAddress: string };
+  destination: { formattedAddress: string };
   totalDistanceKm: number;
-  breakdown: TripProfitabilityBreakdown;
-  destinationAttractiveness: DestinationAttractiveness;
+  breakdown: {
+    grossEarning: number; fuelCost: number; fuelCostExplanation: string; platformCommission: number; platformCommissionRate: number;
+    netEarning: number; costPerKm: number; estimatedTripMinutes: number; estimatedHourlyEarning: number;
+  };
+  destinationAttractiveness: { demandLevel: 'HIGH' | 'MEDIUM' | 'LOW'; returnProbability: number; explanation: string };
   recommendation: 'ACCEPT' | 'CONSIDER' | 'REJECT';
   reason: string;
 }
 
-const RECOMMENDATION_COLOR: Record<string, string> = {
-  ACCEPT: '#22c55e',
-  CONSIDER: '#f59e0b',
-  REJECT: '#ef4444',
+const VERDICT: Record<string, { tone: Tone; label: string }> = {
+  ACCEPT: { tone: 'green', label: 'Take this trip' },
+  CONSIDER: { tone: 'amber', label: 'Borderline' },
+  REJECT: { tone: 'rose', label: 'Skip this one' },
 };
-
-const DEMAND_COLOR: Record<string, string> = {
-  HIGH: '#22c55e',
-  MEDIUM: '#f59e0b',
-  LOW: '#ef4444',
-};
+const DEMAND_TONE: Record<string, Tone> = { HIGH: 'green', MEDIUM: 'amber', LOW: 'rose' };
 
 export default function DriverTripAnalysis() {
-  const theme = useTheme();
   const { getToolOutput } = useWidgetSDK();
   const data = getToolOutput<DriverTripAnalysisData>();
-  const isDark = theme === 'dark';
+  if (!data) return <Loading label="Working out what this trip really pays…" />;
 
-  const bg = isDark ? '#111318' : '#f7f8fa';
-  const cardBg = isDark ? '#1c1f26' : '#ffffff';
-  const textColor = isDark ? '#f2f3f5' : '#15181e';
-  const mutedColor = isDark ? 'rgba(242,243,245,0.62)' : 'rgba(21,24,30,0.6)';
-  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-
-  if (!data) {
-    return (
-      <div style={{ padding: 24, textAlign: 'center', color: textColor, background: bg }}>
-        Analyzing trip…
-      </div>
-    );
-  }
-
-  const recColor = RECOMMENDATION_COLOR[data.recommendation] ?? '#888';
-  const { breakdown } = data;
+  const b = data.breakdown;
+  const v = VERDICT[data.recommendation];
+  const d = data.destinationAttractiveness;
+  const parts: Array<[string, number, Tone]> = [['Fuel', b.fuelCost, 'amber'], [`Commission (${Math.round(b.platformCommissionRate * 100)}%)`, b.platformCommission, 'violet'], ['You keep', b.netEarning, 'green']];
 
   return (
-    <div
-      style={{
-        padding: 20,
-        background: bg,
-        borderRadius: 18,
-        maxWidth: 440,
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        color: textColor,
-      }}
-    >
-      {/* Recommendation banner */}
-      <div
-        style={{
-          background: recColor,
-          borderRadius: 16,
-          padding: '16px 18px',
-          color: 'white',
-          marginBottom: 14,
-        }}
-      >
-        <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.9, letterSpacing: 0.5 }}>RECOMMENDATION</div>
-        <div style={{ fontSize: 24, fontWeight: 800, marginTop: 2 }}>{data.recommendation}</div>
-        <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.4, opacity: 0.95 }}>{data.reason}</div>
-      </div>
-
-      {/* Route */}
-      <div style={{ fontSize: 12, color: mutedColor, marginBottom: 12 }}>
-        {data.currentLocation.formattedAddress} → {data.destination.formattedAddress}
-        <span style={{ marginLeft: 6 }}>· {data.totalDistanceKm} km total · {data.provider} {data.vehicleType}</span>
-      </div>
-
-      {/* Earnings breakdown */}
-      <div
-        style={{
-          background: cardBg,
-          border: `1px solid ${borderColor}`,
-          borderRadius: 14,
-          padding: 16,
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontSize: 13, color: mutedColor }}>Gross fare</span>
-          <span style={{ fontSize: 13, fontWeight: 600 }}>₹{breakdown.grossEarning}</span>
+    <Shell title="Should you accept?" subtitle={`${cap(data.provider)} ${data.vehicleType} offer, ${data.totalDistanceKm} km including pickup`}>
+      <Glass i={1} tone={v.tone} hero>
+        <div className="between">
+          <div><div className="small">{v.label}</div><div className="mid" style={{ marginTop: 2 }}>{inr(b.netEarning)} net from {inr(b.grossEarning)}</div></div>
+          <div style={{ textAlign: 'right' }}><div className="num big">{inr(b.estimatedHourlyEarning)}</div><div className="small">per hour</div></div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontSize: 13, color: mutedColor }}>− Fuel cost</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#ef4444' }}>−₹{breakdown.fuelCost}</span>
-        </div>
-        <div style={{ fontSize: 11, color: mutedColor, marginBottom: 10 }}>{breakdown.fuelCostExplanation}</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontSize: 13, color: mutedColor }}>
-            − Platform commission ({Math.round(breakdown.platformCommissionRate * 100)}%)
-          </span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#ef4444' }}>−₹{breakdown.platformCommission}</span>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            paddingTop: 10,
-            borderTop: `1px solid ${borderColor}`,
-          }}
-        >
-          <span style={{ fontSize: 14, fontWeight: 700 }}>Net earning</span>
-          <span style={{ fontSize: 18, fontWeight: 800, color: breakdown.netEarning >= 0 ? '#22c55e' : '#ef4444' }}>
-            ₹{breakdown.netEarning}
-          </span>
-        </div>
-      </div>
-
-      {/* Rate stats */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        <div style={{ flex: 1, background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 12, padding: 12, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: mutedColor }}>Cost/km</div>
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>₹{breakdown.costPerKm}</div>
-        </div>
-        <div style={{ flex: 1, background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 12, padding: 12, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: mutedColor }}>Est. time</div>
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>{breakdown.estimatedTripMinutes} min</div>
-        </div>
-        <div style={{ flex: 1, background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 12, padding: 12, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: mutedColor }}>₹/hour</div>
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>₹{breakdown.estimatedHourlyEarning}</div>
-        </div>
-      </div>
-
-      {/* Destination attractiveness */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          background: cardBg,
-          border: `1px solid ${borderColor}`,
-          borderRadius: 12,
-          padding: '10px 14px',
-        }}
-      >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            background: DEMAND_COLOR[data.destinationAttractiveness.demandLevel] ?? '#888',
-            display: 'inline-block',
-            flexShrink: 0,
-          }}
-        />
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 600 }}>
-            Destination demand: {data.destinationAttractiveness.demandLevel} · {Math.round(data.destinationAttractiveness.returnProbability * 100)}% return chance
+        <div className="small" style={{ marginTop: 8, opacity: 0.92 }}>{data.reason}</div>
+      </Glass>
+      <div className="split">
+        <Glass i={2} tone="green">
+          <div className="h">Where the fare goes</div>
+          <div className="stack" style={{ gap: 10 }}>
+            {parts.map(([label, value, tone], k) => (
+              <div key={label}>
+                <div className="between small"><span className="muted">{label}</span><span className="num strong">{inr(value)}</span></div>
+                <Meter value={Math.max(value, 0)} max={b.grossEarning} tone={tone} i={2 + k} />
+              </div>
+            ))}
           </div>
-          <div style={{ fontSize: 11, color: mutedColor, marginTop: 2 }}>{data.destinationAttractiveness.explanation}</div>
+          <div className="faint" style={{ marginTop: 10 }}>{b.fuelCostExplanation}</div>
+        </Glass>
+        <div className="stack">
+          <Glass i={3} tone="teal" lift><Route from={data.currentLocation.formattedAddress} to={data.destination.formattedAddress} middle={`About ${b.estimatedTripMinutes} min`} /></Glass>
+          <Glass i={4} tone={DEMAND_TONE[d.demandLevel]} lift>
+            <div className="between"><span className="h" style={{ margin: 0 }}>Return demand</span><Pill tone={DEMAND_TONE[d.demandLevel]}>{cap(d.demandLevel)}</Pill></div>
+            <div className="small muted" style={{ marginTop: 6 }}>{Math.round(d.returnProbability * 100)}% chance of a ride back. {d.explanation}</div>
+          </Glass>
+          <Stat i={5} tone="amber" label="Cost per paid km" value={inr(b.costPerKm)} />
         </div>
       </div>
-    </div>
+    </Shell>
   );
 }

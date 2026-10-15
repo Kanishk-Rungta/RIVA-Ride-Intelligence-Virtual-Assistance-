@@ -1,153 +1,63 @@
 'use client';
 
-import { useTheme, useWidgetSDK } from '@nitrostack/widgets';
-
-interface ResolvedLocation {
-  query: string;
-  formattedAddress: string;
-  source: 'live' | 'estimated';
-}
-
-interface MultiStopLeg {
-  from: string;
-  to: string;
-  distanceKm: number;
-  durationMinutes: number;
-  fare: number;
-}
+import { useWidgetSDK } from '@nitrostack/widgets';
+import { Glass, Loading, Note, Shell, Stat, inr } from '../../components/ui';
 
 interface MultiStopPlanData {
-  stops: ResolvedLocation[];
-  legs: MultiStopLeg[];
+  stops: Array<{ formattedAddress: string }>;
+  legs: Array<{ from: string; to: string; distanceKm: number; durationMinutes: number; fare: number }>;
   totalDistanceKm: number;
   totalDurationMinutes: number;
   estimatedFare: number;
-  routeDisplay: string;
-  optimization?: {
-    algorithm: string;
-    originalEstimateMinutes: number;
-    optimizedEstimateMinutes: number;
-    savedMinutes: number;
-    statesExpanded: number;
-  };
+  optimization?: { algorithm: string; originalEstimateMinutes: number; optimizedEstimateMinutes: number; savedMinutes: number; statesExpanded: number };
 }
 
 export default function RideMap() {
-  const theme = useTheme();
   const { getToolOutput } = useWidgetSDK();
   const data = getToolOutput<MultiStopPlanData>();
-  const isDark = theme === 'dark';
+  if (!data) return <Loading label="Finding the best order for your stops…" />;
 
-  const bg = isDark ? '#111318' : '#f7f8fa';
-  const cardBg = isDark ? '#1c1f26' : '#ffffff';
-  const textColor = isDark ? '#f2f3f5' : '#15181e';
-  const mutedColor = isDark ? 'rgba(242,243,245,0.62)' : 'rgba(21,24,30,0.6)';
-  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-
-  if (!data) {
-    return (
-      <div style={{ padding: 24, textAlign: 'center', color: textColor, background: bg }}>
-        Mapping your route…
-      </div>
-    );
-  }
-
+  const o = data.optimization;
   return (
-    <div
-      style={{
-        padding: 20,
-        background: bg,
-        borderRadius: 18,
-        maxWidth: 420,
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        color: textColor,
-      }}
-    >
-      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 14 }}>Multi-stop route</div>
-
-      {data.optimization && (
-        <div
-          style={{
-            background: isDark ? 'rgba(34,197,94,0.12)' : 'rgba(34,197,94,0.08)',
-            borderRadius: 12,
-            padding: '10px 12px',
-            fontSize: 12,
-            marginBottom: 14,
-            lineHeight: 1.5,
-          }}
-        >
-          <strong>Stops reordered{data.optimization.savedMinutes > 0 ? `, saving ~${data.optimization.savedMinutes} min` : ' — your order was already fastest'}</strong>
-          <div style={{ color: mutedColor }}>
-            {data.optimization.originalEstimateMinutes} → {data.optimization.optimizedEstimateMinutes} min · {data.optimization.algorithm}, {data.optimization.statesExpanded} states expanded
-          </div>
+    <Shell title="Multi-stop trip" subtitle={`${data.stops.length} stops, ${data.legs.length} legs`}>
+      <div className="g3">
+        <Stat i={1} tone="teal" label="Distance" value={`${data.totalDistanceKm} km`} />
+        <Stat i={2} tone="violet" label="Drive time" value={`${data.totalDurationMinutes} min`} />
+        <Stat i={3} tone="amber" label="Estimated fare" value={inr(data.estimatedFare)} />
+      </div>
+      {o ? (
+        <div className="rise" style={{ ['--i' as string]: 4 }}>
+          <Note tone="green" icon="✓">
+            {o.savedMinutes > 0 ? <><b>Stops reordered, saving about {o.savedMinutes} min</b> ({o.originalEstimateMinutes} to {o.optimizedEstimateMinutes} min). </> : <><b>Your order was already the fastest.</b> </>}
+            {o.algorithm}, {o.statesExpanded} states expanded.
+          </Note>
         </div>
-      )}
-
-      {/* Vertical stop stepper */}
-      <div style={{ position: 'relative', paddingLeft: 24, marginBottom: 16 }}>
-        <div
-          style={{
-            position: 'absolute',
-            left: 7,
-            top: 8,
-            bottom: 8,
-            width: 2,
-            background: borderColor,
-          }}
-        />
-        {data.stops.map((stop, index) => {
-          const isFirst = index === 0;
-          const isLast = index === data.stops.length - 1;
-          return (
-            <div key={index} style={{ position: 'relative', marginBottom: index < data.stops.length - 1 ? 22 : 0 }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  left: -24,
-                  top: 2,
-                  width: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  background: isFirst ? '#22c55e' : isLast ? '#e63946' : '#5b8def',
-                  border: `2px solid ${bg}`,
-                }}
-              />
-              <div style={{ fontSize: 13, fontWeight: 600 }}>{stop.formattedAddress}</div>
-              <div style={{ fontSize: 11, color: mutedColor }}>{isFirst ? 'Start' : isLast ? 'Final destination' : `Stop ${index}`}</div>
-              {index < data.legs.length && (
-                <div style={{ fontSize: 11, color: mutedColor, marginTop: 4 }}>
-                  ↓ {data.legs[index].distanceKm} km · {data.legs[index].durationMinutes} min · ₹{data.legs[index].fare}
+      ) : null}
+      <Glass i={5} tone="teal">
+        <div className="steps">
+          {data.stops.map((s, k) => {
+            const leg = data.legs[k];
+            const last = k === data.stops.length - 1;
+            return (
+              <div key={k} className={`step tone-${k === 0 ? 'teal' : last ? 'rose' : 'violet'}`}>
+                <span className="bullet">{k === 0 ? '●' : last ? '■' : k}</span>
+                <div>
+                  <div className="strong">{s.formattedAddress}</div>
+                  <div className="faint">{k === 0 ? 'Start' : last ? 'Final destination' : `Stop ${k}`}</div>
+                  {leg ? (
+                    <Glass tight lift tone="teal" style={{ marginTop: 6 }}>
+                      <div className="between small">
+                        <span className="muted">{leg.distanceKm} km, {leg.durationMinutes} min</span>
+                        <span className="num strong">{inr(leg.fare)}</span>
+                      </div>
+                    </Glass>
+                  ) : null}
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Totals */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #5b8def 0%, #3f6fd6 100%)',
-          borderRadius: 14,
-          padding: 16,
-          color: 'white',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 11, opacity: 0.85 }}>TOTAL DISTANCE</div>
-          <div style={{ fontSize: 16, fontWeight: 800 }}>{data.totalDistanceKm} km</div>
+              </div>
+            );
+          })}
         </div>
-        <div>
-          <div style={{ fontSize: 11, opacity: 0.85 }}>TOTAL TIME</div>
-          <div style={{ fontSize: 16, fontWeight: 800 }}>{data.totalDurationMinutes} min</div>
-        </div>
-        <div>
-          <div style={{ fontSize: 11, opacity: 0.85 }}>EST. FARE</div>
-          <div style={{ fontSize: 16, fontWeight: 800 }}>₹{data.estimatedFare}</div>
-        </div>
-      </div>
-    </div>
+      </Glass>
+    </Shell>
   );
 }

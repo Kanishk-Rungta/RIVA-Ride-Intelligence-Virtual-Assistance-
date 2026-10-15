@@ -1,192 +1,85 @@
 'use client';
 
-import { useTheme, useWidgetSDK } from '@nitrostack/widgets';
-
-interface ResolvedLocation {
-  query: string;
-  formattedAddress: string;
-  source: 'live' | 'estimated';
-}
-
-interface RideSummary {
-  provider: string;
-  providerName: string;
-  vehicleType: string;
-  fare: number;
-  origin: string;
-  destination: string;
-}
-
-interface PendingConfirmationData {
-  status: 'PENDING_CONFIRMATION';
-  message: string;
-  rideSummary: RideSummary;
-}
-
-interface SimulatedDriverInfo {
-  driverName: string;
-  vehicleType: string;
-  vehicleNumber: string;
-  rating: number;
-  etaMinutes: number;
-}
+import { useWidgetSDK } from '@nitrostack/widgets';
+import { Glass, Loading, Mark, Note, Route, Shell, Stat, cap, inr } from '../../components/ui';
 
 type BookingStatus = 'SEARCHING' | 'DRIVER_ASSIGNED' | 'DRIVER_ARRIVING' | 'TRIP_STARTED' | 'COMPLETED' | 'CANCELLED';
-
+interface RideSummary { provider: string; providerName: string; vehicleType: string; fare: number; origin?: string; destination?: string }
+interface PendingData { status: 'PENDING_CONFIRMATION'; message: string; rideSummary: RideSummary }
+interface CancelledData { status: 'CANCELLED'; message: string; rideSummary: RideSummary; dispatch?: { driversContacted: number } }
 interface BookingData {
   bookingId: string;
   provider: string;
   vehicleType: string;
   fare: number;
-  origin: ResolvedLocation;
-  destination: ResolvedLocation;
+  origin: { formattedAddress: string };
+  destination: { formattedAddress: string };
   status: BookingStatus;
-  driver: SimulatedDriverInfo | null;
+  driver: { driverName: string; vehicleNumber: string; rating: number; etaMinutes: number } | null;
+  dispatch?: { driversContacted: number; driverAcceptances: number };
+  learning?: { after: { fare: number; pickupEta: number; rating: number } };
 }
-
-type WidgetData = PendingConfirmationData | BookingData;
 
 const LIFECYCLE: BookingStatus[] = ['SEARCHING', 'DRIVER_ASSIGNED', 'DRIVER_ARRIVING', 'TRIP_STARTED', 'COMPLETED'];
-const LIFECYCLE_LABELS: Record<BookingStatus, string> = {
-  SEARCHING: 'Searching',
-  DRIVER_ASSIGNED: 'Driver Assigned',
-  DRIVER_ARRIVING: 'Driver Arriving',
-  TRIP_STARTED: 'Trip Started',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-};
+const LABEL: Record<string, string> = { SEARCHING: 'Finding a driver', DRIVER_ASSIGNED: 'Driver assigned', DRIVER_ARRIVING: 'Driver arriving', TRIP_STARTED: 'On the way', COMPLETED: 'Arrived' };
 
-function isPending(data: WidgetData): data is PendingConfirmationData {
-  return data.status === 'PENDING_CONFIRMATION';
-}
-
-export default function BookingStatus() {
-  const theme = useTheme();
+export default function BookingStatusWidget() {
   const { getToolOutput } = useWidgetSDK();
-  const data = getToolOutput<WidgetData>();
-  const isDark = theme === 'dark';
+  const data = getToolOutput<PendingData | CancelledData | BookingData>();
+  if (!data) return <Loading label="Dispatching your ride…" />;
 
-  const bg = isDark ? '#111318' : '#f7f8fa';
-  const cardBg = isDark ? '#1c1f26' : '#ffffff';
-  const textColor = isDark ? '#f2f3f5' : '#15181e';
-  const mutedColor = isDark ? 'rgba(242,243,245,0.62)' : 'rgba(21,24,30,0.6)';
-  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-
-  if (!data) {
+  if (!('bookingId' in data)) {
+    const pending = data.status === 'PENDING_CONFIRMATION';
+    const r = data.rideSummary;
     return (
-      <div style={{ padding: 24, textAlign: 'center', color: textColor, background: bg }}>
-        Loading booking…
-      </div>
+      <Shell title={pending ? 'Confirm your booking' : 'No driver accepted'} subtitle="Simulated booking, no payment is taken" width={600}>
+        <Glass i={1} tone={pending ? 'violet' : 'rose'} lift>
+          <div className="between">
+            <div className="row"><Mark provider={r.provider} vehicle={r.vehicleType} /><div className="strong">{r.providerName} {r.vehicleType}</div></div>
+            <span className="num mid">{inr(r.fare)}</span>
+          </div>
+          {r.origin && r.destination ? <div style={{ marginTop: 10 }}><Route from={r.origin} to={r.destination} /></div> : null}
+        </Glass>
+        <div className="rise" style={{ ['--i' as string]: 2 }}><Note tone={pending ? 'violet' : 'rose'} icon={pending ? '?' : '!'}>{data.message}</Note></div>
+      </Shell>
     );
   }
 
-  const wrapperStyle = {
-    padding: 20,
-    background: bg,
-    borderRadius: 18,
-    maxWidth: 420,
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    color: textColor,
-  } as const;
-
-  if (isPending(data)) {
-    return (
-      <div style={wrapperStyle}>
-        <div
-          style={{
-            background: '#f59e0b',
-            borderRadius: 16,
-            padding: '16px 18px',
-            color: 'white',
-            marginBottom: 14,
-          }}
-        >
-          <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.9 }}>⏳ CONFIRMATION NEEDED</div>
-          <div style={{ fontSize: 13, marginTop: 6, lineHeight: 1.4 }}>{data.message}</div>
-        </div>
-
-        <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 16 }}>
-          <div style={{ fontSize: 13, fontWeight: 700 }}>
-            {data.rideSummary.providerName} {data.rideSummary.vehicleType}
-          </div>
-          <div style={{ fontSize: 12, color: mutedColor, marginTop: 4 }}>
-            {data.rideSummary.origin} → {data.rideSummary.destination}
-          </div>
-          <div style={{ fontSize: 18, fontWeight: 800, marginTop: 10 }}>₹{data.rideSummary.fare}</div>
-        </div>
-      </div>
-    );
-  }
-
-  const currentIndex = LIFECYCLE.indexOf(data.status);
-
+  const current = LIFECYCLE.indexOf(data.status);
   return (
-    <div style={wrapperStyle}>
-      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>Booking status</div>
-      <div style={{ fontSize: 12, color: mutedColor, marginBottom: 16 }}>
-        {data.origin.formattedAddress} → {data.destination.formattedAddress}
-      </div>
-
-      {/* Lifecycle stepper */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, position: 'relative' }}>
-        <div
-          style={{
-            position: 'absolute',
-            top: 7,
-            left: '8%',
-            right: '8%',
-            height: 2,
-            background: borderColor,
-            zIndex: 0,
-          }}
-        />
-        {LIFECYCLE.map((stage, i) => {
-          const done = i <= currentIndex;
-          return (
-            <div key={stage} style={{ position: 'relative', zIndex: 1, textAlign: 'center', flex: 1 }}>
-              <div
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  background: done ? '#5b8def' : cardBg,
-                  border: `2px solid ${done ? '#5b8def' : borderColor}`,
-                  margin: '0 auto',
-                }}
-              />
-              <div style={{ fontSize: 9, color: done ? textColor : mutedColor, marginTop: 6, fontWeight: done ? 700 : 400 }}>
-                {LIFECYCLE_LABELS[stage]}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 16, marginBottom: 12 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: 13, fontWeight: 700 }}>
-            {data.provider} {data.vehicleType}
+    <Shell title={LABEL[data.status] ?? cap(data.status)} subtitle={`Booking ${data.bookingId.slice(0, 8)}, simulated`}>
+      {data.driver ? (
+        <Glass i={1} tone="green" hero>
+          <div className="between">
+            <div><div className="small">Your driver</div><div className="mid">{data.driver.driverName}, ★ {data.driver.rating}</div><div className="small">{data.driver.vehicleNumber}</div></div>
+            <div style={{ textAlign: 'right' }}><div className="num big">{data.driver.etaMinutes} min</div><div className="small">to pickup</div></div>
           </div>
-          <div style={{ fontSize: 16, fontWeight: 800 }}>₹{data.fare}</div>
-        </div>
-      </div>
-
-      {data.driver && (
-        <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 16 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Driver</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>{data.driver.driverName}</div>
-              <div style={{ fontSize: 11, color: mutedColor, marginTop: 2 }}>
-                {data.driver.vehicleNumber} · ⭐ {data.driver.rating.toFixed(1)}
+        </Glass>
+      ) : null}
+      <div className="split">
+        <Glass i={2} tone="teal">
+          <div className="steps">
+            {LIFECYCLE.map((s, k) => (
+              <div key={s} className={`step tone-${k <= current ? 'green' : 'slate'}${k > current ? ' todo' : ''}${k === current ? ' now' : ''}`}>
+                <span className="bullet">{k < current ? '✓' : k + 1}</span>
+                <div className={k <= current ? 'strong' : 'muted'} style={{ paddingTop: 2 }}>{LABEL[s]}</div>
               </div>
-            </div>
-            {data.status !== 'COMPLETED' && (
-              <div style={{ fontSize: 13, fontWeight: 700 }}>{data.driver.etaMinutes} min</div>
-            )}
+            ))}
+          </div>
+        </Glass>
+        <div className="stack">
+          <Glass i={3} tone="teal" lift><Route from={data.origin.formattedAddress} to={data.destination.formattedAddress} /></Glass>
+          <div className="g2">
+            <Stat i={4} tone="amber" label="Fare" value={inr(data.fare)} sub={`${cap(data.provider)} ${data.vehicleType}`} />
+            <Stat i={5} tone="violet" label="Drivers asked" value={data.dispatch ? data.dispatch.driversContacted : '—'} sub={data.dispatch ? `${data.dispatch.driverAcceptances} accepted` : undefined} />
           </div>
         </div>
-      )}
-    </div>
+      </div>
+      {data.learning ? (
+        <div className="faint rise" style={{ ['--i' as string]: 6, padding: '0 4px' }}>
+          RIVA learned from this choice: fare {Math.round(data.learning.after.fare * 100)}%, pickup {Math.round(data.learning.after.pickupEta * 100)}%, rating {Math.round(data.learning.after.rating * 100)}%.
+        </div>
+      ) : null}
+    </Shell>
   );
 }

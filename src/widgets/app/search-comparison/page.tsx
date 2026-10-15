@@ -1,15 +1,14 @@
 'use client';
 
-import { useTheme, useWidgetState, useWidgetSDK } from '@nitrostack/widgets';
+import { useWidgetState, useWidgetSDK } from '@nitrostack/widgets';
+import { Glass, Loading, Meter, Note, Pill, Shell, type Tone } from '../../components/ui';
 
 interface StrategyResult {
   strategy: 'bfs' | 'ucs' | 'greedy' | 'astar';
   label: string;
-  via: string[];
   nodeIds: string[];
   distanceKm: number;
   durationMinutes: number;
-  cost: number;
   optimal: boolean;
   nodesExpanded: number;
   nodesGenerated: number;
@@ -22,137 +21,84 @@ interface SearchComparisonData {
   objective: 'time' | 'distance';
   time: string;
   results: StrategyResult[];
-  alternativeObjective: { objective: string; distanceKm: number; durationMinutes: number; via: string[] };
+  alternativeObjective: { objective: string; distanceKm: number; durationMinutes: number };
   insight: string;
   heuristic: string;
-  graph: {
-    nodes: Array<{ id: string; name: string; lat: number; lng: number }>;
-    edges: Array<{ from: string; to: string; roadClass: 'highway' | 'arterial' | 'local' }>;
-  };
+  graph: { nodes: Array<{ id: string; name: string; lat: number; lng: number }>; edges: Array<{ from: string; to: string; roadClass: string }> };
 }
 
-const STRATEGY_COLOR: Record<string, string> = { bfs: '#8b5cf6', ucs: '#0ea5e9', greedy: '#f59e0b', astar: '#22c55e' };
-const W = 420;
+const TONE: Record<string, Tone> = { bfs: 'violet', ucs: 'slate', greedy: 'amber', astar: 'teal' };
+const W = 400;
 const H = 300;
-const PAD = 16;
+const PAD = 18;
 
 export default function SearchComparison() {
-  const theme = useTheme();
   const { getToolOutput } = useWidgetSDK();
   const data = getToolOutput<SearchComparisonData>();
   const [state, setState] = useWidgetState<{ selected: string }>(() => ({ selected: 'astar' }));
-  const isDark = theme === 'dark';
+  if (!data) return <Loading label="Expanding the search frontier…" />;
 
-  const bg = isDark ? '#111318' : '#f7f8fa';
-  const cardBg = isDark ? '#1c1f26' : '#ffffff';
-  const text = isDark ? '#f2f3f5' : '#15181e';
-  const muted = isDark ? 'rgba(242,243,245,0.62)' : 'rgba(21,24,30,0.6)';
-  const border = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-
-  if (!data) return <div style={{ padding: 24, color: text, background: bg }}>Running search strategies…</div>;
-
-  const selected = data.results.find((r) => r.strategy === (state?.selected ?? 'astar')) ?? data.results[0];
+  const sel = data.results.find((r) => r.strategy === (state?.selected ?? 'astar')) ?? data.results[0];
   const lats = data.graph.nodes.map((n) => n.lat);
   const lngs = data.graph.nodes.map((n) => n.lng);
-  const [minLat, maxLat, minLng, maxLng] = [Math.min(...lats), Math.max(...lats), Math.min(...lngs), Math.max(...lngs)];
-  const xy = (id: string) => {
-    const n = data.graph.nodes.find((g) => g.id === id)!;
-    return { x: PAD + ((n.lng - minLng) / (maxLng - minLng)) * (W - 2 * PAD), y: PAD + ((maxLat - n.lat) / (maxLat - minLat)) * (H - 2 * PAD) };
-  };
-  const expanded = new Set(selected.expandedOrder);
-  const onPath = new Set(selected.nodeIds.slice(0, -1).map((id, i) => `${id}|${selected.nodeIds[i + 1]}`));
-  const maxExpanded = Math.max(...data.results.map((r) => r.nodesExpanded), 1);
+  const [a, b, c, d] = [Math.min(...lats), Math.max(...lats), Math.min(...lngs), Math.max(...lngs)];
+  const pos = new Map(data.graph.nodes.map((n) => [n.id, { x: PAD + ((n.lng - c) / (d - c)) * (W - 2 * PAD), y: PAD + ((b - n.lat) / (b - a)) * (H - 2 * PAD), name: n.name }]));
+  const expanded = new Set(sel.expandedOrder);
+  const onPath = new Set(sel.nodeIds.slice(0, -1).map((id, k) => [id, sel.nodeIds[k + 1]].sort().join('|')));
+  const maxExp = Math.max(...data.results.map((r) => r.nodesExpanded), 1);
   const unit = data.objective === 'time' ? 'min' : 'km';
+  const colour = `var(--${TONE[sel.strategy]})`;
 
   return (
-    <div style={{ padding: 20, background: bg, borderRadius: 18, maxWidth: 460, fontFamily: 'system-ui, -apple-system, sans-serif', color: text }}>
-      <div style={{ fontSize: 14, fontWeight: 700 }}>
-        {data.origin.node} → {data.destination.node}
-      </div>
-      <div style={{ fontSize: 12, color: muted, marginTop: 2, marginBottom: 12 }}>
-        Minimising {data.objective === 'time' ? 'travel time' : 'distance'} · departing {data.time} · 32-junction Coimbatore road graph
-      </div>
-
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', background: cardBg, borderRadius: 14, border: `1px solid ${border}` }}>
-        {data.graph.edges.map((e) => {
-          const a = xy(e.from);
-          const b = xy(e.to);
-          const hot = onPath.has(`${e.from}|${e.to}`) || onPath.has(`${e.to}|${e.from}`);
-          return (
-            <line
-              key={`${e.from}-${e.to}`}
-              x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-              stroke={hot ? STRATEGY_COLOR[selected.strategy] : isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.15)'}
-              strokeWidth={hot ? 4 : e.roadClass === 'highway' ? 2 : 1}
-              strokeDasharray={e.roadClass === 'local' && !hot ? '3 3' : undefined}
-            />
-          );
-        })}
-        {data.graph.nodes.map((n) => {
-          const p = xy(n.id);
-          const endpoint = n.id === selected.nodeIds[0] || n.id === selected.nodeIds.at(-1);
-          return (
-            <g key={n.id}>
-              <circle
-                cx={p.x} cy={p.y} r={endpoint ? 7 : 4.5}
-                fill={endpoint ? STRATEGY_COLOR[selected.strategy] : expanded.has(n.id) ? `${STRATEGY_COLOR[selected.strategy]}99` : cardBg}
-                stroke={isDark ? '#9aa1ad' : '#6b7280'} strokeWidth={1}
-              >
-                <title>{n.name}{expanded.has(n.id) ? ` — expanded #${selected.expandedOrder.indexOf(n.id) + 1}` : ''}</title>
-              </circle>
-              {endpoint && (
-                <text x={p.x > W / 2 ? p.x - 9 : p.x + 9} y={p.y + 4} textAnchor={p.x > W / 2 ? 'end' : 'start'} fontSize={10} fill={text} fontWeight={600}>
-                  {n.name.split(',')[0].replace('International ', '')}
-                </text>
-              )}
-            </g>
-          );
-        })}
-      </svg>
-      <div style={{ fontSize: 11, color: muted, marginTop: 6 }}>
-        Filled nodes were expanded by {selected.label}; the coloured line is the path it returned. Tap a strategy below.
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
-        {data.results.map((r) => (
-          <div
-            key={r.strategy}
-            onClick={() => setState({ selected: r.strategy })}
-            style={{
-              background: cardBg,
-              border: r.strategy === selected.strategy ? `1.5px solid ${STRATEGY_COLOR[r.strategy]}` : `1px solid ${border}`,
-              borderRadius: 12,
-              padding: '10px 12px',
-              cursor: 'pointer',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-              <span style={{ fontWeight: 700 }}>
-                <span style={{ color: STRATEGY_COLOR[r.strategy] }}>●</span> {r.label}
-              </span>
-              <span>
-                <strong>{data.objective === 'time' ? r.durationMinutes : r.distanceKm} {unit}</strong>{' '}
-                <span style={{ fontSize: 11, color: r.optimal ? '#22c55e' : '#ef4444' }}>{r.optimal ? 'optimal' : 'suboptimal'}</span>
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-              <div style={{ flex: 1, height: 6, borderRadius: 3, background: border }}>
-                <div style={{ width: `${(r.nodesExpanded / maxExpanded) * 100}%`, height: 6, borderRadius: 3, background: STRATEGY_COLOR[r.strategy] }} />
+    <Shell title={`${data.origin.node.split(',')[0]} to ${data.destination.node.split(',')[0]}`} subtitle={`How RIVA searched for the ${data.objective === 'time' ? 'fastest' : 'shortest'} route, departing ${data.time}`}>
+      <div className="split">
+        <Glass i={1} tone={TONE[sel.strategy]} style={{ padding: 8 }}>
+          <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`${sel.label} on the road graph`}>
+            {data.graph.edges.map((e) => {
+              const p = pos.get(e.from)!;
+              const q = pos.get(e.to)!;
+              const hot = onPath.has([e.from, e.to].sort().join('|'));
+              return <line key={e.from + e.to} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke={hot ? colour : 'var(--ink-3)'} strokeOpacity={hot ? 1 : 0.35}
+                strokeWidth={hot ? 4.5 : e.roadClass === 'highway' ? 2 : 1.2} strokeLinecap="round" strokeDasharray={!hot && e.roadClass === 'local' ? '3 4' : undefined}
+                style={hot ? { filter: `drop-shadow(0 0 5px ${colour})` } : undefined} />;
+            })}
+            {data.graph.nodes.map((n) => {
+              const p = pos.get(n.id)!;
+              const end = n.id === sel.nodeIds[0] || n.id === sel.nodeIds.at(-1);
+              const order = sel.expandedOrder.indexOf(n.id);
+              return (
+                <g key={n.id}>
+                  <circle cx={p.x} cy={p.y} r={end ? 8 : 5} fill={end || expanded.has(n.id) ? colour : 'var(--base)'} fillOpacity={end ? 1 : expanded.has(n.id) ? 0.55 : 1}
+                    stroke={end ? '#fff' : 'var(--ink-3)'} strokeWidth={end ? 2.5 : 1}>
+                    <title>{n.name}{order >= 0 ? `, expanded #${order + 1}` : ''}</title>
+                  </circle>
+                  {end ? <text x={p.x > W / 2 ? p.x - 4 : p.x + 4} y={p.y - 13} textAnchor={p.x > W / 2 ? 'end' : 'start'} fontSize={11} fontWeight={700} fill="var(--ink)">{n.name.split(',')[0].replace('International ', '')}</text> : null}
+                </g>
+              );
+            })}
+          </svg>
+          <div className="faint" style={{ padding: '0 8px 4px' }}>Filled junctions were expanded by {sel.label}. The glowing line is the route it returned.</div>
+        </Glass>
+        <div className="stack" style={{ gap: 9 }}>
+          {data.results.map((r, k) => (
+            <Glass key={r.strategy} i={2 + k} tone={TONE[r.strategy]} lift tight active={r.strategy === sel.strategy} onClick={() => setState({ selected: r.strategy })}>
+              <div className="between">
+                <span className="strong">{r.label}</span>
+                <Pill tone={r.optimal ? 'green' : 'rose'}>{r.optimal ? 'Optimal' : 'Suboptimal'}</Pill>
               </div>
-              <span style={{ fontSize: 11, color: muted, minWidth: 92, textAlign: 'right' }}>{r.nodesExpanded} nodes expanded</span>
-            </div>
-          </div>
-        ))}
+              <div className="between" style={{ margin: '6px 0' }}>
+                <span className="num mid accent">{data.objective === 'time' ? r.durationMinutes : r.distanceKm} {unit}</span>
+                <span className="faint">{r.nodesExpanded} expanded</span>
+              </div>
+              <Meter value={r.nodesExpanded} max={maxExp} tone={TONE[r.strategy]} i={2 + k} />
+            </Glass>
+          ))}
+        </div>
       </div>
-
-      <div style={{ marginTop: 12, padding: 12, borderRadius: 12, background: isDark ? 'rgba(34,197,94,0.12)' : 'rgba(34,197,94,0.08)', fontSize: 12, lineHeight: 1.5 }}>
-        {data.insight}
+      <div className="rise" style={{ ['--i' as string]: 7 }}><Note tone="green" icon="✓">{data.insight}</Note></div>
+      <div className="faint rise" style={{ ['--i' as string]: 8, padding: '0 4px' }}>
+        {data.heuristic} Optimising for {data.alternativeObjective.objective} instead gives {data.alternativeObjective.distanceKm} km in {data.alternativeObjective.durationMinutes} min.
       </div>
-      <div style={{ fontSize: 11, color: muted, marginTop: 8, lineHeight: 1.5 }}>
-        {data.heuristic}
-        <br />
-        Optimising for {data.alternativeObjective.objective} instead gives {data.alternativeObjective.distanceKm} km / {data.alternativeObjective.durationMinutes} min.
-      </div>
-    </div>
+    </Shell>
   );
 }

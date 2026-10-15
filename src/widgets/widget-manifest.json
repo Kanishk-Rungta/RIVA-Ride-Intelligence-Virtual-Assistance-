@@ -317,6 +317,214 @@
       "description": "Visualizes simulated nearby Uber, Ola, and Rapido drivers around a pickup point",
       "examples": [
         {
+          "name": "Drivers around Gandhipuram",
+          "description": "14 simulated drivers within 3 km",
+          "data": {
+            "origin": {
+              "query": "Gandhipuram",
+              "formattedAddress": "Gandhipuram",
+              "coordinates": {
+                "lat": 11.0177,
+                "lng": 76.9674
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "radiusKm": 3,
+            "driverCount": 14,
+            "countsByProvider": {
+              "Uber": 5,
+              "Ola": 5,
+              "Rapido": 4
+            },
+            "drivers": [
+              {
+                "driverId": "uber-driver-2",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.021145151178612,
+                  "lng": 76.96591800518614
+                },
+                "etaMinutes": 1,
+                "rating": 4.9,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "uber-driver-3",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "sedan",
+                "coordinates": {
+                  "lat": 11.017078602603378,
+                  "lng": 76.96636732370747
+                },
+                "etaMinutes": 1,
+                "rating": 4.1,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "uber-driver-4",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "sedan",
+                "coordinates": {
+                  "lat": 11.018022639048292,
+                  "lng": 76.96299969568597
+                },
+                "etaMinutes": 1,
+                "rating": 4.1,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "ola-driver-2",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "sedan",
+                "coordinates": {
+                  "lat": 11.020980687845944,
+                  "lng": 76.96960629607894
+                },
+                "etaMinutes": 1,
+                "rating": 4.5,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "rapido-driver-3",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.02687016977119,
+                  "lng": 76.96643419268617
+                },
+                "etaMinutes": 2,
+                "rating": 4.7,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "uber-driver-0",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.004938922231096,
+                  "lng": 76.96978773003202
+                },
+                "etaMinutes": 3,
+                "rating": 4.6,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "ola-driver-0",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.004487452610729,
+                  "lng": 76.96586341946437
+                },
+                "etaMinutes": 3,
+                "rating": 4.3,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "ola-driver-3",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.017837972644044,
+                  "lng": 76.95463379044124
+                },
+                "etaMinutes": 3,
+                "rating": 4.8,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "ola-driver-4",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "bike",
+                "coordinates": {
+                  "lat": 11.00703898291282,
+                  "lng": 76.95791901106897
+                },
+                "etaMinutes": 3,
+                "rating": 4.5,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "rapido-driver-2",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "bike",
+                "coordinates": {
+                  "lat": 11.00923027602332,
+                  "lng": 76.95775640397738
+                },
+                "etaMinutes": 3,
+                "rating": 4.6,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "uber-driver-1",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "suv",
+                "coordinates": {
+                  "lat": 11.026786523162798,
+                  "lng": 76.95176334026415
+                },
+                "etaMinutes": 4,
+                "rating": 4.5,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "rapido-driver-1",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.032175606214592,
+                  "lng": 76.97608476970387
+                },
+                "etaMinutes": 4,
+                "rating": 4.9,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "ola-driver-1",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "sedan",
+                "coordinates": {
+                  "lat": 11.007420078977566,
+                  "lng": 76.99268968473099
+                },
+                "etaMinutes": 6,
+                "rating": 4.2,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "rapido-driver-0",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.010195218000188,
+                  "lng": 76.9903904790874
+                },
+                "etaMinutes": 6,
+                "rating": 4.6,
+                "isFemaleDriver": true
+              }
+            ],
+            "note": "Driver positions are simulated for demonstration purposes — no real driver tracking is used."
+          }
+        },
+        {
           "name": "Drivers near campus",
           "description": "Simulated nearby drivers around a pickup location",
           "data": {
@@ -835,6 +1043,74 @@
       "name": "Booking Status",
       "description": "Booking confirmation preview and lifecycle progress (Searching → Driver Assigned → Driver Arriving → Trip Started → Completed)",
       "examples": [
+        {
+          "name": "Dispatched through the marketplace",
+          "description": "Driver who accepted the offer, with learned weights",
+          "data": {
+            "bookingId": "11a5b71f-348b-4de7-8916-47fa2555f5f4",
+            "createdAt": 1792049511911,
+            "searchId": "search-1",
+            "optionId": "uber-sedan-2",
+            "provider": "uber",
+            "vehicleType": "sedan",
+            "fare": 855,
+            "origin": {
+              "query": "Amrita University",
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "destination": {
+              "query": "Coimbatore Airport",
+              "formattedAddress": "Coimbatore International Airport",
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "status": "DRIVER_ASSIGNED",
+            "driver": {
+              "driverName": "Suresh",
+              "vehicleType": "sedan",
+              "vehicleNumber": "TN 66 GG 2195",
+              "rating": 4.4,
+              "etaMinutes": 5
+            },
+            "statusHistory": [
+              {
+                "status": "SEARCHING",
+                "at": 1792049511911
+              },
+              {
+                "status": "DRIVER_ASSIGNED",
+                "at": 1792049511911
+              }
+            ],
+            "dispatch": {
+              "driversContacted": 3,
+              "driverAcceptances": 3
+            },
+            "learning": {
+              "before": {
+                "fare": 0.45,
+                "pickupEta": 0.35,
+                "rating": 0.2
+              },
+              "after": {
+                "fare": 0.24904982690754665,
+                "pickupEta": 0.5089708764182004,
+                "rating": 0.24197929667425308
+              },
+              "violations": 6
+            }
+          }
+        },
         {
           "name": "Driver assigned",
           "description": "A confirmed booking with a driver assigned",

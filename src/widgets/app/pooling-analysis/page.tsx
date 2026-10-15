@@ -1,109 +1,52 @@
 'use client';
 
-import { useTheme, useWidgetSDK } from '@nitrostack/widgets';
+import { useWidgetSDK } from '@nitrostack/widgets';
+import { Glass, Loading, Meter, Pill, Route, Shell, Stat, inr } from '../../components/ui';
 
-interface ResolvedLocation {
-  query: string;
-  formattedAddress: string;
-  source: 'live' | 'estimated';
-}
-
-interface PoolingMatch {
-  matchedRiderDestination: string;
-  routeOverlapPercent: number;
-  savingsInr: number;
-  extraMinutes: number;
-}
-
-interface PoolingAnalysisData {
-  origin: ResolvedLocation;
-  destination: ResolvedLocation;
+interface Match { matchedRiderDestination: string; routeOverlapPercent: number; savingsInr: number; extraMinutes: number }
+interface PoolingData {
+  origin: { formattedAddress: string };
+  destination: { formattedAddress: string };
   soloFare: number;
-  bestMatch: PoolingMatch | null;
-  otherMatches: PoolingMatch[];
+  bestMatch: Match | null;
+  otherMatches: Match[];
   recommendation: 'POOL' | 'DO_NOT_POOL';
   reason: string;
 }
 
 export default function PoolingAnalysis() {
-  const theme = useTheme();
   const { getToolOutput } = useWidgetSDK();
-  const data = getToolOutput<PoolingAnalysisData>();
-  const isDark = theme === 'dark';
+  const data = getToolOutput<PoolingData>();
+  if (!data) return <Loading label="Looking for riders going your way…" />;
 
-  const bg = isDark ? '#111318' : '#f7f8fa';
-  const cardBg = isDark ? '#1c1f26' : '#ffffff';
-  const textColor = isDark ? '#f2f3f5' : '#15181e';
-  const mutedColor = isDark ? 'rgba(242,243,245,0.62)' : 'rgba(21,24,30,0.6)';
-  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-
-  if (!data) {
-    return (
-      <div style={{ padding: 24, textAlign: 'center', color: textColor, background: bg }}>
-        Looking for pooling matches…
-      </div>
-    );
-  }
-
-  const shouldPool = data.recommendation === 'POOL';
-  const pooledFare = data.bestMatch ? data.soloFare - data.bestMatch.savingsInr : data.soloFare;
-
+  const pool = data.recommendation === 'POOL';
+  const matches = [data.bestMatch, ...data.otherMatches].filter(Boolean) as Match[];
   return (
-    <div
-      style={{
-        padding: 20,
-        background: bg,
-        borderRadius: 18,
-        maxWidth: 420,
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        color: textColor,
-      }}
-    >
-      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>Pooling assistant</div>
-      <div style={{ fontSize: 12, color: mutedColor, marginBottom: 14 }}>
-        {data.origin.formattedAddress} → {data.destination.formattedAddress}
+    <Shell title="Share this ride?" subtitle="Simulated riders on overlapping routes">
+      <Glass i={1} tone={pool ? 'green' : 'slate'} hero>
+        <div className="between">
+          <div><div className="small">{pool ? 'Pooling is worth it' : 'Ride solo'}</div><div className="mid" style={{ marginTop: 2 }}>{data.reason}</div></div>
+        </div>
+      </Glass>
+      <div className="split">
+        <Glass i={2} tone="teal" lift><Route from={data.origin.formattedAddress} to={data.destination.formattedAddress} /></Glass>
+        <div className="g2">
+          <Stat i={3} tone="amber" label="Solo fare" value={inr(data.soloFare)} />
+          <Stat i={4} tone="green" label="Pooled fare" value={data.bestMatch ? inr(data.soloFare - data.bestMatch.savingsInr) : '—'} />
+        </div>
       </div>
-
-      {/* Recommendation banner */}
-      <div
-        style={{
-          background: shouldPool ? '#22c55e' : '#6b7280',
-          borderRadius: 16,
-          padding: '16px 18px',
-          color: 'white',
-          marginBottom: 14,
-        }}
-      >
-        <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.9 }}>{shouldPool ? '🤝 POOL' : '🚗 DO NOT POOL'}</div>
-        <div style={{ fontSize: 13, marginTop: 6, lineHeight: 1.4 }}>{data.reason}</div>
+      <div className="g2">
+        {matches.map((m, k) => (
+          <Glass key={k} i={5 + k} tone={k === 0 ? 'green' : 'teal'} lift active={k === 0 && pool}>
+            <div className="between"><span className="strong">{cap1(m.matchedRiderDestination)}</span>{k === 0 ? <Pill tone="green">Best match</Pill> : null}</div>
+            <div className="between small" style={{ margin: '8px 0 4px' }}><span className="muted">Route overlap</span><span className="num strong">{m.routeOverlapPercent}%</span></div>
+            <Meter value={m.routeOverlapPercent} max={100} tone="teal" i={5 + k} />
+            <div className="chips" style={{ marginTop: 8 }}><Pill tone="green">Save {inr(m.savingsInr)}</Pill><Pill tone="amber">+{m.extraMinutes} min</Pill></div>
+          </Glass>
+        ))}
       </div>
-
-      {data.bestMatch ? (
-        <>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
-            <div style={{ flex: 1, background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 12, padding: 12, textAlign: 'center' }}>
-              <div style={{ fontSize: 11, color: mutedColor }}>Solo fare</div>
-              <div style={{ fontSize: 16, fontWeight: 700, marginTop: 2 }}>₹{data.soloFare}</div>
-            </div>
-            <div style={{ flex: 1, background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 12, padding: 12, textAlign: 'center' }}>
-              <div style={{ fontSize: 11, color: mutedColor }}>Pooled fare</div>
-              <div style={{ fontSize: 16, fontWeight: 700, marginTop: 2, color: '#22c55e' }}>₹{pooledFare}</div>
-            </div>
-          </div>
-
-          <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Best match</div>
-            <div style={{ fontSize: 13, marginBottom: 6 }}>{data.bestMatch.matchedRiderDestination}</div>
-            <div style={{ display: 'flex', gap: 14, fontSize: 12, color: mutedColor }}>
-              <span>{data.bestMatch.routeOverlapPercent}% route overlap</span>
-              <span>+{data.bestMatch.extraMinutes} min</span>
-              <span>saves ₹{data.bestMatch.savingsInr}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div style={{ fontSize: 13, color: mutedColor }}>No compatible riders found right now.</div>
-      )}
-    </div>
+    </Shell>
   );
 }
+
+const cap1 = (s: string) => s[0].toUpperCase() + s.slice(1);
