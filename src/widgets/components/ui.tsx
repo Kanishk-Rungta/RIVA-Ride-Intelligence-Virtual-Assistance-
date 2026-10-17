@@ -1,7 +1,6 @@
 'use client';
 
 import type { CSSProperties, ReactNode } from 'react';
-import { useTheme } from '@nitrostack/widgets';
 import { RIVA_CSS } from './styles';
 
 const FONTS = 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap';
@@ -25,9 +24,8 @@ const delay = (i?: number): CSSProperties | undefined => (i === undefined ? unde
 
 /** Outer frame: themed night-sky background, title block, staggered content. */
 export function Shell({ title, subtitle, children, width }: { title: string; subtitle?: ReactNode; children: ReactNode; width?: number }) {
-  const theme = useTheme();
   return (
-    <div className="riva" data-theme={theme === 'dark' ? 'dark' : 'light'} style={width ? { maxWidth: width } : undefined}>
+    <div className="riva" style={width ? { maxWidth: width } : undefined}>
       <DesignSystem />
       <div className="riva-head rise" style={delay(0)}>
         <div>
@@ -96,9 +94,8 @@ export const Note = ({ tone = 'amber', icon = '⚠', children }: { tone?: Tone; 
 
 /** Loading state: a car tracing a dashed road, then shimmering placeholder panels. */
 export function Loading({ label }: { label: string }) {
-  const theme = useTheme();
   return (
-    <div className="riva" data-theme={theme === 'dark' ? 'dark' : 'light'} role="status" aria-live="polite">
+    <div className="riva" role="status" aria-live="polite">
       <DesignSystem />
       <div className="loading">
         <svg viewBox="0 0 220 54" aria-hidden>

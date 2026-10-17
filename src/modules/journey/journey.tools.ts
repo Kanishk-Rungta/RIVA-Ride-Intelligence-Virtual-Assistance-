@@ -101,6 +101,8 @@ export class JourneyTools {
       forecastFareLow,
       forecastFareHigh,
       demandMultiplier: forecastResult.forecastMultiplier,
+      targetHour: target.hour,
+      hourlyCurve: this.forecast.dayCurve(),
       expectedAvailability,
       reason: `${forecastResult.explanation}${destinationHint}`,
       disclaimer: 'This is a heuristic time-of-day estimate, not a guaranteed fare.',

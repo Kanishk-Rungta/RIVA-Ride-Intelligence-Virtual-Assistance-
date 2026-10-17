@@ -7,10 +7,10 @@
       "description": "Compares Uber, Ola, and Rapido ride options for a search with fares, pickup ETAs, and a top recommendation",
       "examples": [
         {
-          "name": "Luggage on a budget",
-          "description": "Budget relaxed so luggage can be honoured; A* road-graph route",
+          "name": "Budget too tight",
+          "description": "No ride fits ₹200, so the budget is relaxed; A* road-graph route",
           "data": {
-            "searchId": "example-search-1",
+            "searchId": "44423a53-cce4-4291-bd37-265856bdd3ee",
             "origin": {
               "query": "Amrita University",
               "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
@@ -98,14 +98,11 @@
             "rankingMode": "best_value",
             "rankingExplanation": "Balanced utility: fare 45%, pickup ETA 35%, rating 20% (weights adapt to the rides you book).",
             "preferencesApplied": {
-              "luggageRequired": true,
-              "budgetLimit": 350
+              "budgetLimit": 200
             },
             "totalOptionsFound": 11,
             "constraints": {
-              "satisfied": [
-                "luggageRequired"
-              ],
+              "satisfied": [],
               "relaxed": [
                 "budgetLimit"
               ],
@@ -117,8 +114,143 @@
               "pickupEta": 0.35,
               "rating": 0.2
             },
-            "paretoOptimalCount": 3,
+            "paretoOptimalCount": 4,
             "options": [
+              {
+                "optionId": "rapido-bike-0",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "bike",
+                "fare": 265,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": false,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1.07,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 1,
+                "score": 0.35,
+                "scoreReason": "Balances ₹265 fare, 5 min pickup, and 4.5★ rating",
+                "paretoOptimal": true
+              },
+              {
+                "optionId": "ola-bike-0",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "bike",
+                "fare": 300,
+                "currency": "INR",
+                "pickupEtaMinutes": 6,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": false,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1,
+                "dataSource": "simulation",
+                "rank": 2,
+                "score": 0.41,
+                "scoreReason": "Balances ₹300 fare, 6 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "rapido-auto-1",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "auto",
+                "fare": 440,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.1,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.98,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 3,
+                "score": 0.45,
+                "scoreReason": "Balances ₹440 fare, 5 min pickup, and 4.1★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "uber-auto-0",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "auto",
+                "fare": 515,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.95,
+                "dataSource": "simulation",
+                "rank": 4,
+                "score": 0.46,
+                "scoreReason": "Balances ₹515 fare, 5 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "ola-mini-2",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "mini",
+                "fare": 595,
+                "currency": "INR",
+                "pickupEtaMinutes": 4,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.2,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.96,
+                "dataSource": "simulation",
+                "rank": 5,
+                "score": 0.47,
+                "scoreReason": "Balances ₹595 fare, 4 min pickup, and 4.2★ rating",
+                "paretoOptimal": true
+              },
+              {
+                "optionId": "rapido-mini-2",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "mini",
+                "fare": 585,
+                "currency": "INR",
+                "pickupEtaMinutes": 6,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.2,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1.04,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 6,
+                "score": 0.55,
+                "scoreReason": "Balances ₹585 fare, 6 min pickup, and 4.2★ rating",
+                "paretoOptimal": false
+              },
               {
                 "optionId": "uber-sedan-2",
                 "provider": "uber",
@@ -136,10 +268,54 @@
                 "luggageFriendly": true,
                 "surgeMultiplier": 1.01,
                 "dataSource": "simulation",
-                "rank": 1,
+                "rank": 7,
                 "score": 0.57,
                 "scoreReason": "Balances ₹855 fare, 4 min pickup, and 4.4★ rating",
                 "paretoOptimal": true
+              },
+              {
+                "optionId": "uber-mini-1",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "mini",
+                "fare": 770,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.2,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1.15,
+                "dataSource": "simulation",
+                "rank": 8,
+                "score": 0.59,
+                "scoreReason": "Balances ₹770 fare, 5 min pickup, and 4.2★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "ola-auto-1",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "auto",
+                "fare": 520,
+                "currency": "INR",
+                "pickupEtaMinutes": 8,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.3,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1.04,
+                "dataSource": "simulation",
+                "rank": 9,
+                "score": 0.61,
+                "scoreReason": "Balances ₹520 fare, 8 min pickup, and 4.3★ rating",
+                "paretoOptimal": false
               },
               {
                 "optionId": "ola-sedan-3",
@@ -158,10 +334,10 @@
                 "luggageFriendly": true,
                 "surgeMultiplier": 1.1,
                 "dataSource": "simulation",
-                "rank": 2,
+                "rank": 10,
                 "score": 0.75,
                 "scoreReason": "Balances ₹865 fare, 8 min pickup, and 4.5★ rating",
-                "paretoOptimal": true
+                "paretoOptimal": false
               },
               {
                 "optionId": "uber-suv-3",
@@ -180,83 +356,35 @@
                 "luggageFriendly": true,
                 "surgeMultiplier": 0.96,
                 "dataSource": "simulation",
-                "rank": 3,
+                "rank": 11,
                 "score": 0.76,
                 "scoreReason": "Balances ₹1030 fare, 7 min pickup, and 4.8★ rating",
                 "paretoOptimal": true
               }
             ],
             "recommendation": {
-              "optionId": "uber-sedan-2",
-              "provider": "uber",
-              "providerName": "Uber",
-              "vehicleType": "sedan",
-              "fare": 855,
+              "optionId": "rapido-bike-0",
+              "provider": "rapido",
+              "providerName": "Rapido",
+              "vehicleType": "bike",
+              "fare": 265,
               "currency": "INR",
-              "pickupEtaMinutes": 4,
+              "pickupEtaMinutes": 5,
               "tripDurationMinutes": 59,
               "distanceKm": 41.4,
               "availability": true,
               "isSimulated": true,
-              "rating": 4.4,
-              "hasFemaleDriverOption": true,
-              "luggageFriendly": true,
-              "surgeMultiplier": 1.01,
+              "rating": 4.5,
+              "hasFemaleDriverOption": false,
+              "luggageFriendly": false,
+              "surgeMultiplier": 1.07,
               "dataSource": "simulation",
+              "notes": "Rapido pricing is estimated currently.",
               "rank": 1,
-              "score": 0.57,
-              "scoreReason": "Balances ₹855 fare, 4 min pickup, and 4.4★ rating",
+              "score": 0.35,
+              "scoreReason": "Balances ₹265 fare, 5 min pickup, and 4.5★ rating",
               "paretoOptimal": true
             }
-          }
-        },
-        {
-          "name": "Amrita to Coimbatore Airport",
-          "description": "Ranked ride comparison for a campus-to-airport trip",
-          "data": {
-            "searchId": "example-search-1",
-            "origin": {
-              "query": "Amrita University Ettimadai",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-              "source": "estimated"
-            },
-            "destination": {
-              "query": "Coimbatore Airport",
-              "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
-            },
-            "route": {
-              "distanceKm": 14.2,
-              "durationMinutes": 32,
-              "source": "estimated"
-            },
-            "rankingMode": "best_value",
-            "rankingExplanation": "Balanced across fare, pickup ETA, and rating for the best overall value.",
-            "totalOptionsFound": 11,
-            "recommendation": null,
-            "options": [
-              {
-                "optionId": "uber-sedan-2",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "sedan",
-                "fare": 320,
-                "currency": "INR",
-                "pickupEtaMinutes": 4,
-                "tripDurationMinutes": 32,
-                "distanceKm": 14.2,
-                "availability": true,
-                "isSimulated": true,
-                "rating": 4.7,
-                "hasFemaleDriverOption": true,
-                "luggageFriendly": true,
-                "surgeMultiplier": 1.05,
-                "dataSource": "simulation",
-                "rank": 1,
-                "score": 0.21,
-                "scoreReason": "Balances ₹320 fare, 4 min pickup, and 4.7★ rating"
-              }
-            ]
           }
         }
       ],
@@ -275,34 +403,104 @@
       "examples": [
         {
           "name": "Best value pick",
-          "description": "Top recommended ride with alternatives",
+          "description": "Top ride with alternatives",
           "data": {
-            "searchId": "example-search-1",
+            "searchId": "44423a53-cce4-4291-bd37-265856bdd3ee",
             "mode": "best_value",
-            "modeExplanation": "Balanced across fare, pickup ETA, and rating for the best overall value.",
+            "modeExplanation": "Balanced utility: fare 45%, pickup ETA 35%, rating 20% (weights adapt to the rides you book).",
             "selectedRide": {
-              "optionId": "uber-sedan-2",
-              "provider": "uber",
-              "providerName": "Uber",
-              "vehicleType": "sedan",
-              "fare": 320,
+              "optionId": "rapido-bike-0",
+              "provider": "rapido",
+              "providerName": "Rapido",
+              "vehicleType": "bike",
+              "fare": 265,
               "currency": "INR",
-              "pickupEtaMinutes": 4,
-              "tripDurationMinutes": 32,
-              "distanceKm": 14.2,
+              "pickupEtaMinutes": 5,
+              "tripDurationMinutes": 59,
+              "distanceKm": 41.4,
               "availability": true,
               "isSimulated": true,
-              "rating": 4.7,
-              "hasFemaleDriverOption": true,
-              "luggageFriendly": true,
-              "surgeMultiplier": 1.05,
+              "rating": 4.5,
+              "hasFemaleDriverOption": false,
+              "luggageFriendly": false,
+              "surgeMultiplier": 1.07,
               "dataSource": "simulation",
+              "notes": "Rapido pricing is estimated currently.",
               "rank": 1,
-              "score": 0.21,
-              "scoreReason": "Balances ₹320 fare, 4 min pickup, and 4.7★ rating"
+              "score": 0.35,
+              "scoreReason": "Balances ₹265 fare, 5 min pickup, and 4.5★ rating",
+              "paretoOptimal": true
             },
-            "reasoning": "Recommended because it balances ₹320 fare, 4 min pickup, and 4.7★ rating — the strongest option for \"best_value\" among 11 available rides.",
-            "alternatives": []
+            "reasoning": "Recommended because it Balances ₹265 fare, 5 min pickup, and 4.5★ rating — the strongest option for \"best_value\" among 11 available rides.",
+            "alternatives": [
+              {
+                "optionId": "ola-bike-0",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "bike",
+                "fare": 300,
+                "currency": "INR",
+                "pickupEtaMinutes": 6,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": false,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1,
+                "dataSource": "simulation",
+                "rank": 2,
+                "score": 0.41,
+                "scoreReason": "Balances ₹300 fare, 6 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "rapido-auto-1",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "auto",
+                "fare": 440,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.1,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.98,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 3,
+                "score": 0.45,
+                "scoreReason": "Balances ₹440 fare, 5 min pickup, and 4.1★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "uber-auto-0",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "auto",
+                "fare": 515,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 59,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.95,
+                "dataSource": "simulation",
+                "rank": 4,
+                "score": 0.46,
+                "scoreReason": "Balances ₹515 fare, 5 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              }
+            ]
           }
         }
       ],
@@ -318,7 +516,7 @@
       "examples": [
         {
           "name": "Drivers around Gandhipuram",
-          "description": "14 simulated drivers within 3 km",
+          "description": "Simulated drivers within 3 km",
           "data": {
             "origin": {
               "query": "Gandhipuram",
@@ -333,126 +531,22 @@
             "radiusKm": 3,
             "driverCount": 14,
             "countsByProvider": {
-              "Uber": 5,
               "Ola": 5,
-              "Rapido": 4
+              "Rapido": 4,
+              "Uber": 5
             },
             "drivers": [
-              {
-                "driverId": "uber-driver-2",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "auto",
-                "coordinates": {
-                  "lat": 11.021145151178612,
-                  "lng": 76.96591800518614
-                },
-                "etaMinutes": 1,
-                "rating": 4.9,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "uber-driver-3",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "sedan",
-                "coordinates": {
-                  "lat": 11.017078602603378,
-                  "lng": 76.96636732370747
-                },
-                "etaMinutes": 1,
-                "rating": 4.1,
-                "isFemaleDriver": true
-              },
-              {
-                "driverId": "uber-driver-4",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "sedan",
-                "coordinates": {
-                  "lat": 11.018022639048292,
-                  "lng": 76.96299969568597
-                },
-                "etaMinutes": 1,
-                "rating": 4.1,
-                "isFemaleDriver": true
-              },
               {
                 "driverId": "ola-driver-2",
                 "provider": "ola",
                 "providerName": "Ola",
-                "vehicleType": "sedan",
-                "coordinates": {
-                  "lat": 11.020980687845944,
-                  "lng": 76.96960629607894
-                },
-                "etaMinutes": 1,
-                "rating": 4.5,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "rapido-driver-3",
-                "provider": "rapido",
-                "providerName": "Rapido",
-                "vehicleType": "mini",
-                "coordinates": {
-                  "lat": 11.02687016977119,
-                  "lng": 76.96643419268617
-                },
-                "etaMinutes": 2,
-                "rating": 4.7,
-                "isFemaleDriver": true
-              },
-              {
-                "driverId": "uber-driver-0",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "auto",
-                "coordinates": {
-                  "lat": 11.004938922231096,
-                  "lng": 76.96978773003202
-                },
-                "etaMinutes": 3,
-                "rating": 4.6,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "ola-driver-0",
-                "provider": "ola",
-                "providerName": "Ola",
-                "vehicleType": "mini",
-                "coordinates": {
-                  "lat": 11.004487452610729,
-                  "lng": 76.96586341946437
-                },
-                "etaMinutes": 3,
-                "rating": 4.3,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "ola-driver-3",
-                "provider": "ola",
-                "providerName": "Ola",
-                "vehicleType": "mini",
-                "coordinates": {
-                  "lat": 11.017837972644044,
-                  "lng": 76.95463379044124
-                },
-                "etaMinutes": 3,
-                "rating": 4.8,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "ola-driver-4",
-                "provider": "ola",
-                "providerName": "Ola",
                 "vehicleType": "bike",
                 "coordinates": {
-                  "lat": 11.00703898291282,
-                  "lng": 76.95791901106897
+                  "lat": 11.021679998974236,
+                  "lng": 76.96732051985303
                 },
-                "etaMinutes": 3,
-                "rating": 4.5,
+                "etaMinutes": 1,
+                "rating": 4.6,
                 "isFemaleDriver": false
               },
               {
@@ -461,25 +555,129 @@
                 "providerName": "Rapido",
                 "vehicleType": "bike",
                 "coordinates": {
-                  "lat": 11.00923027602332,
-                  "lng": 76.95775640397738
+                  "lat": 11.018342858796624,
+                  "lng": 76.96989290049922
                 },
-                "etaMinutes": 3,
-                "rating": 4.6,
+                "etaMinutes": 1,
+                "rating": 4.1,
                 "isFemaleDriver": false
+              },
+              {
+                "driverId": "uber-driver-0",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.009058488882426,
+                  "lng": 76.97133167399424
+                },
+                "etaMinutes": 2,
+                "rating": 4,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "uber-driver-4",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.007995165852893,
+                  "lng": 76.96704093502642
+                },
+                "etaMinutes": 2,
+                "rating": 4.3,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "ola-driver-4",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "bike",
+                "coordinates": {
+                  "lat": 11.013191886058522,
+                  "lng": 76.96166006489788
+                },
+                "etaMinutes": 2,
+                "rating": 4.5,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "rapido-driver-3",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.012635722852316,
+                  "lng": 76.96064079954137
+                },
+                "etaMinutes": 2,
+                "rating": 4.4,
+                "isFemaleDriver": true
               },
               {
                 "driverId": "uber-driver-1",
                 "provider": "uber",
                 "providerName": "Uber",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.003633929640433,
+                  "lng": 76.96582523461453
+                },
+                "etaMinutes": 3,
+                "rating": 4.7,
+                "isFemaleDriver": false
+              },
+              {
+                "driverId": "uber-driver-2",
+                "provider": "uber",
+                "providerName": "Uber",
                 "vehicleType": "suv",
                 "coordinates": {
-                  "lat": 11.026786523162798,
-                  "lng": 76.95176334026415
+                  "lat": 11.010026879919895,
+                  "lng": 76.95645482176965
+                },
+                "etaMinutes": 3,
+                "rating": 4.3,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "ola-driver-3",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "sedan",
+                "coordinates": {
+                  "lat": 11.019467388714729,
+                  "lng": 76.9814435731597
+                },
+                "etaMinutes": 3,
+                "rating": 4.3,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "uber-driver-3",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "mini",
+                "coordinates": {
+                  "lat": 11.0017560312699,
+                  "lng": 76.96237134215255
                 },
                 "etaMinutes": 4,
-                "rating": 4.5,
-                "isFemaleDriver": false
+                "rating": 4.6,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "ola-driver-1",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.004169279559555,
+                  "lng": 76.97557074654024
+                },
+                "etaMinutes": 4,
+                "rating": 4.2,
+                "isFemaleDriver": true
               },
               {
                 "driverId": "rapido-driver-1",
@@ -487,25 +685,12 @@
                 "providerName": "Rapido",
                 "vehicleType": "mini",
                 "coordinates": {
-                  "lat": 11.032175606214592,
-                  "lng": 76.97608476970387
+                  "lat": 11.008535218999004,
+                  "lng": 76.97969496640377
                 },
                 "etaMinutes": 4,
-                "rating": 4.9,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "ola-driver-1",
-                "provider": "ola",
-                "providerName": "Ola",
-                "vehicleType": "sedan",
-                "coordinates": {
-                  "lat": 11.007420078977566,
-                  "lng": 76.99268968473099
-                },
-                "etaMinutes": 6,
-                "rating": 4.2,
-                "isFemaleDriver": false
+                "rating": 4.6,
+                "isFemaleDriver": true
               },
               {
                 "driverId": "rapido-driver-0",
@@ -513,79 +698,99 @@
                 "providerName": "Rapido",
                 "vehicleType": "mini",
                 "coordinates": {
-                  "lat": 11.010195218000188,
-                  "lng": 76.9903904790874
+                  "lat": 11.020914367079765,
+                  "lng": 76.946609800144
+                },
+                "etaMinutes": 5,
+                "rating": 4.5,
+                "isFemaleDriver": true
+              },
+              {
+                "driverId": "ola-driver-0",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "auto",
+                "coordinates": {
+                  "lat": 11.013120933105636,
+                  "lng": 76.99273116841171
                 },
                 "etaMinutes": 6,
                 "rating": 4.6,
-                "isFemaleDriver": true
+                "isFemaleDriver": false
               }
             ],
             "note": "Driver positions are simulated for demonstration purposes — no real driver tracking is used."
           }
         },
         {
-          "name": "Drivers near campus",
-          "description": "Simulated nearby drivers around a pickup location",
+          "name": "Ride requests for a driver",
+          "description": "Marketplace requests ranked by net earning",
           "data": {
-            "origin": {
-              "query": "Amrita University Ettimadai",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
+            "currentLocation": {
+              "query": "Gandhipuram",
+              "formattedAddress": "Gandhipuram",
               "coordinates": {
-                "lat": 10.9046,
-                "lng": 76.8993
+                "lat": 11.0177,
+                "lng": 76.9674
               },
-              "source": "estimated"
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
-            "radiusKm": 3,
-            "driverCount": 3,
-            "countsByProvider": {
-              "Uber": 1,
-              "Ola": 1,
-              "Rapido": 1
-            },
-            "note": "Driver positions are simulated for demonstration purposes — no real driver tracking is used.",
-            "drivers": [
+            "radiusKm": 5,
+            "rideCount": 5,
+            "rides": [
               {
-                "driverId": "uber-driver-0",
-                "provider": "uber",
-                "providerName": "Uber",
-                "vehicleType": "sedan",
-                "coordinates": {
-                  "lat": 10.908,
-                  "lng": 76.902
-                },
-                "etaMinutes": 3,
-                "rating": 4.6,
-                "isFemaleDriver": false
-              },
-              {
-                "driverId": "ola-driver-0",
+                "requestId": "req-1-coimbatore_airport",
                 "provider": "ola",
-                "providerName": "Ola",
-                "vehicleType": "mini",
-                "coordinates": {
-                  "lat": 10.902,
-                  "lng": 76.897
-                },
-                "etaMinutes": 5,
-                "rating": 4.4,
-                "isFemaleDriver": true
+                "pickupZone": "Nearby pickup",
+                "pickupDistanceKm": 0.4,
+                "dropZone": "Coimbatore Airport",
+                "tripDistanceKm": 10.9,
+                "fare": 170,
+                "estimatedNetEarning": 97
               },
               {
-                "driverId": "rapido-driver-0",
+                "requestId": "req-2-singanallur",
+                "provider": "uber",
+                "pickupZone": "Nearby pickup",
+                "pickupDistanceKm": 3.4,
+                "dropZone": "Singanallur",
+                "tripDistanceKm": 9.6,
+                "fare": 155,
+                "estimatedNetEarning": 74
+              },
+              {
+                "requestId": "req-3-peelamedu_it_corridor",
+                "provider": "ola",
+                "pickupZone": "Nearby pickup",
+                "pickupDistanceKm": 2.8,
+                "dropZone": "Peelamedu IT Corridor",
+                "tripDistanceKm": 7.6,
+                "fare": 125,
+                "estimatedNetEarning": 64
+              },
+              {
+                "requestId": "req-0-coimbatore_airport",
+                "provider": "ola",
+                "pickupZone": "Nearby pickup",
+                "pickupDistanceKm": 4.6,
+                "dropZone": "Coimbatore Airport",
+                "tripDistanceKm": 10.9,
+                "fare": 145,
+                "estimatedNetEarning": 63
+              },
+              {
+                "requestId": "req-4-rs_puram",
                 "provider": "rapido",
-                "providerName": "Rapido",
-                "vehicleType": "bike",
-                "coordinates": {
-                  "lat": 10.906,
-                  "lng": 76.901
-                },
-                "etaMinutes": 2,
-                "rating": 4.8,
-                "isFemaleDriver": false
+                "pickupZone": "Nearby pickup",
+                "pickupDistanceKm": 1.8,
+                "dropZone": "RS Puram",
+                "tripDistanceKm": 3,
+                "fare": 65,
+                "estimatedNetEarning": 40
               }
-            ]
+            ],
+            "note": "Ride requests are simulated for demonstration purposes — no real ride marketplace data is used."
           }
         }
       ],
@@ -601,31 +806,157 @@
       "description": "Estimates a future return-trip fare based on time-of-day demand",
       "examples": [
         {
-          "name": "9 PM return",
-          "description": "Return-trip fare forecast for a 9 PM pickup",
+          "name": "Ride home at 9 PM",
+          "description": "Airport to campus",
           "data": {
             "origin": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "destination": {
-              "query": "Amrita University Ettimadai",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-              "source": "estimated"
+              "query": "Amrita University",
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "returnTime": "9:00 PM",
-            "demandLevel": "peak",
-            "currentFare": 320,
+            "demandLevel": "high",
+            "currentFare": 240,
             "currentBestOption": {
-              "providerName": "Uber",
-              "vehicleType": "sedan",
-              "fare": 320,
-              "pickupEtaMinutes": 4
+              "optionId": "rapido-bike-0",
+              "provider": "rapido",
+              "providerName": "Rapido",
+              "vehicleType": "bike",
+              "fare": 240,
+              "currency": "INR",
+              "pickupEtaMinutes": 3,
+              "tripDurationMinutes": 49,
+              "distanceKm": 41.4,
+              "availability": true,
+              "isSimulated": true,
+              "rating": 4.5,
+              "hasFemaleDriverOption": false,
+              "luggageFriendly": false,
+              "surgeMultiplier": 0.99,
+              "dataSource": "simulation",
+              "notes": "Rapido pricing is estimated currently.",
+              "rank": 1,
+              "score": 0.25,
+              "scoreReason": "Balances ₹240 fare, 3 min pickup, and 4.5★ rating",
+              "paretoOptimal": true
             },
-            "estimatedFutureFare": 445,
-            "forecastMultiplier": 1.4,
-            "explanation": "Evening rush hour usually sees the highest demand of the day.",
+            "estimatedFutureFare": 290,
+            "targetHour": 21,
+            "hourlyCurve": [
+              {
+                "hour": 0,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 1,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 2,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 3,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 4,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 5,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 6,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 7,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 8,
+                "multiplier": 1.35
+              },
+              {
+                "hour": 9,
+                "multiplier": 1.35
+              },
+              {
+                "hour": 10,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 11,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 12,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 13,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 14,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 15,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 16,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 17,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 18,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 19,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 20,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 21,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 22,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 23,
+                "multiplier": 1.2
+              }
+            ],
+            "forecastMultiplier": 1.2,
+            "explanation": "Late evening sees fewer drivers on the road, nudging fares up slightly.",
             "disclaimer": "This is a heuristic time-of-day estimate, not a guaranteed fare."
           }
         }
@@ -642,40 +973,50 @@
       "description": "Analyzes a prospective trip's profitability (fare, fuel cost, commission, net earning, hourly rate) and gives an ACCEPT/CONSIDER/REJECT recommendation",
       "examples": [
         {
-          "name": "Uber sedan trip to the airport",
-          "description": "Trip acceptance analysis for a driver evaluating an offered fare",
+          "name": "Uber sedan to the airport",
+          "description": "Offer from Gandhipuram",
           "data": {
             "provider": "uber",
             "vehicleType": "sedan",
             "currentLocation": {
               "query": "Gandhipuram",
-              "formattedAddress": "Gandhipuram, Coimbatore",
-              "source": "estimated"
+              "formattedAddress": "Gandhipuram",
+              "coordinates": {
+                "lat": 11.0177,
+                "lng": 76.9674
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "destination": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "totalDistanceKm": 16.3,
             "breakdown": {
               "grossEarning": 310,
-              "fuelCost": 87,
-              "fuelCostExplanation": "16.3 km ÷ 15 km/unit × 103 ₹/L ≈ ₹87 (covers 16.3 km: 2.3 km to pickup + 14 km trip)",
+              "fuelCost": 112,
+              "fuelCostExplanation": "16.3 km ÷ 15 km/unit × 103 ₹/L ≈ ₹112 (covers 16.3 km: 2.3 km to pickup + 14 km trip)",
               "platformCommission": 78,
               "platformCommissionRate": 0.25,
-              "netEarning": 145,
-              "costPerKm": 11.79,
+              "netEarning": 120,
+              "costPerKm": 13.57,
               "estimatedTripMinutes": 35,
-              "estimatedHourlyEarning": 249
+              "estimatedHourlyEarning": 206
             },
             "destinationAttractiveness": {
-              "demandLevel": "MEDIUM",
-              "returnProbability": 0.55,
-              "explanation": "Coimbatore Airport is an airport zone — demand is currently medium."
+              "demandLevel": "HIGH",
+              "returnProbability": 0.72,
+              "explanation": "Coimbatore Airport is an airport zone — demand is currently high for 6:00 PM (weekday pattern)."
             },
-            "recommendation": "CONSIDER",
-            "reason": "The fare is acceptable, but pickup distance is high and return demand is uncertain."
+            "recommendation": "ACCEPT",
+            "reason": "Net earning of ₹120 (~₹206/hr) is solid, with strong return-ride demand at the destination and a reasonable pickup distance (2.3 km)."
           }
         }
       ],
@@ -691,21 +1032,106 @@
       "description": "Shows demand zones, demand level, and recommended areas for a driver — either for a single destination or as a ranked list of next-zone suggestions",
       "examples": [
         {
-          "name": "Destination demand check",
-          "description": "Demand estimate for a single destination",
+          "name": "Airport at 6 PM",
+          "description": "Demand through the day",
           "data": {
             "destination": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "matchedZone": "Coimbatore Airport",
             "time": "6:00 PM",
             "demandLevel": "HIGH",
+            "demandScore": 67,
+            "hour": 18,
+            "hourlyScores": [
+              53,
+              54,
+              50,
+              54,
+              72,
+              83,
+              70,
+              55,
+              56,
+              43,
+              44,
+              53,
+              59,
+              54,
+              46,
+              51,
+              54,
+              63,
+              67,
+              79,
+              72,
+              68,
+              57,
+              59
+            ],
             "expectedRideAvailability": "PLENTY",
-            "expectedWaitingMinutes": 5,
-            "returnProbability": 0.62,
+            "expectedWaitingMinutes": 8,
+            "returnProbability": 0.72,
             "explanation": "Coimbatore Airport is an airport zone — demand is currently high for 6:00 PM (weekday pattern)."
+          }
+        },
+        {
+          "name": "Where to go next",
+          "description": "Zone suggestions from RS Puram",
+          "data": {
+            "currentLocation": {
+              "query": "RS Puram",
+              "formattedAddress": "RS Puram",
+              "coordinates": {
+                "lat": 11.0057,
+                "lng": 76.9498
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
+            },
+            "time": "6:00 PM",
+            "topRecommendation": {
+              "zoneName": "RS Puram",
+              "coordinates": {
+                "lat": 11.0057,
+                "lng": 76.9498
+              },
+              "distanceFromCurrentKm": 0,
+              "demandLevel": "HIGH",
+              "demandScore": 86,
+              "reasoning": "Move towards RS Puram (0 km away). Demand there is currently high for this time of day."
+            },
+            "alternatives": [
+              {
+                "zoneName": "Coimbatore Railway Station",
+                "coordinates": {
+                  "lat": 10.9966,
+                  "lng": 76.9647
+                },
+                "distanceFromCurrentKm": 2.5,
+                "demandLevel": "HIGH",
+                "demandScore": 81,
+                "reasoning": "Move towards Coimbatore Railway Station (2.5 km away). Demand there is currently high for this time of day."
+              },
+              {
+                "zoneName": "Peelamedu IT Corridor",
+                "coordinates": {
+                  "lat": 11.0296,
+                  "lng": 77.0193
+                },
+                "distanceFromCurrentKm": 10.4,
+                "demandLevel": "HIGH",
+                "demandScore": 92,
+                "reasoning": "Move towards Peelamedu IT Corridor (10.4 km away). Demand there is currently high for this time of day."
+              }
+            ]
           }
         }
       ],
@@ -721,8 +1147,8 @@
       "description": "Summarizes a driver's earnings, expenses, and net profit for a session or day, with recommendations",
       "examples": [
         {
-          "name": "End of day summary",
-          "description": "Earnings breakdown for 12 completed trips",
+          "name": "End of day",
+          "description": "12 trips",
           "data": {
             "totalEarnings": 3200,
             "expenses": {
@@ -731,9 +1157,9 @@
               "total": 1282
             },
             "netProfit": 1918,
-            "estimatedHoursWorked": 6.2,
+            "estimatedHoursWorked": 6.38,
             "hoursWorkedIsEstimated": true,
-            "averageEarningPerHour": 309,
+            "averageEarningPerHour": 301,
             "averageEarningPerTrip": 160,
             "averageEarningPerKm": 13.23,
             "recommendations": [
@@ -754,39 +1180,193 @@
       "description": "A complete journey plan built around an arrival deadline (e.g. a flight): recommended pickup time, traffic-aware buffer reasoning, and the best ride to book",
       "examples": [
         {
-          "name": "Flight departure plan",
-          "description": "Travel plan for an 8 AM flight from Amrita University",
+          "name": "8 AM flight",
+          "description": "Pickup time worked back from the deadline",
           "data": {
             "origin": {
               "query": "Amrita University",
-              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai, Coimbatore",
-              "source": "estimated"
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "destination": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "arriveByLabel": "8:00 AM tomorrow",
-            "recommendedPickupLabel": "5:45 AM tomorrow",
+            "arriveByHour": 8,
+            "recommendedPickupLabel": "6:00 AM tomorrow",
             "bufferMinutes": 60,
             "bufferReason": "Airports need extra time for check-in and security screening.",
-            "trafficAdjustedTravelMinutes": 43,
-            "trafficMultiplier": 1.0,
+            "trafficAdjustedTravelMinutes": 47,
+            "trafficMultiplier": 1,
             "route": {
-              "distanceKm": 27.3,
-              "durationMinutes": 43,
-              "source": "estimated"
+              "distanceKm": 41.4,
+              "durationMinutes": 47,
+              "source": "road_graph",
+              "polyline": [
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.8993,
+                  10.9046
+                ],
+                [
+                  76.959,
+                  10.904
+                ],
+                [
+                  76.999,
+                  10.906
+                ],
+                [
+                  77.033,
+                  10.918
+                ],
+                [
+                  77.083,
+                  10.996
+                ],
+                [
+                  77.088,
+                  11.056
+                ],
+                [
+                  77.058,
+                  11.04
+                ],
+                [
+                  77.0434,
+                  11.03
+                ],
+                [
+                  77.0434,
+                  11.03
+                ]
+              ],
+              "via": [
+                "Amrita Vishwa Vidyapeetham, Ettimadai",
+                "Madukkarai",
+                "Malumichampatti",
+                "Chettipalayam",
+                "Chintamanipudur",
+                "Neelambur",
+                "Chinniyampalayam",
+                "Coimbatore International Airport"
+              ],
+              "search": {
+                "strategy": "astar",
+                "objective": "time",
+                "hour": 6,
+                "nodesExpanded": 16,
+                "nodesGenerated": 26
+              }
             },
             "recommendation": {
-              "providerName": "Uber",
-              "vehicleType": "sedan",
-              "fare": 450,
+              "optionId": "rapido-bike-0",
+              "provider": "rapido",
+              "providerName": "Rapido",
+              "vehicleType": "bike",
+              "fare": 260,
+              "currency": "INR",
               "pickupEtaMinutes": 5,
-              "rating": 4.7
+              "tripDurationMinutes": 52,
+              "distanceKm": 41.4,
+              "availability": true,
+              "isSimulated": true,
+              "rating": 4.5,
+              "hasFemaleDriverOption": false,
+              "luggageFriendly": false,
+              "surgeMultiplier": 1.07,
+              "dataSource": "simulation",
+              "notes": "Rapido pricing is estimated currently.",
+              "rank": 1,
+              "score": 0.35,
+              "scoreReason": "Balances ₹260 fare, 5 min pickup, and 4.5★ rating",
+              "paretoOptimal": true
             },
-            "recommendationReason": "Uber sedan gives the best balance of reliability and travel time for this trip.",
-            "alternatives": []
+            "recommendationReason": "Rapido bike gives the best balance of reliability and travel time for this trip — Balances ₹260 fare, 5 min pickup, and 4.5★ rating.",
+            "alternatives": [
+              {
+                "optionId": "ola-bike-0",
+                "provider": "ola",
+                "providerName": "Ola",
+                "vehicleType": "bike",
+                "fare": 295,
+                "currency": "INR",
+                "pickupEtaMinutes": 6,
+                "tripDurationMinutes": 52,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": false,
+                "luggageFriendly": false,
+                "surgeMultiplier": 1,
+                "dataSource": "simulation",
+                "rank": 2,
+                "score": 0.41,
+                "scoreReason": "Balances ₹295 fare, 6 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "rapido-auto-1",
+                "provider": "rapido",
+                "providerName": "Rapido",
+                "vehicleType": "auto",
+                "fare": 435,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 52,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.1,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.98,
+                "dataSource": "simulation",
+                "notes": "Rapido pricing is estimated currently.",
+                "rank": 3,
+                "score": 0.45,
+                "scoreReason": "Balances ₹435 fare, 5 min pickup, and 4.1★ rating",
+                "paretoOptimal": false
+              },
+              {
+                "optionId": "uber-auto-0",
+                "provider": "uber",
+                "providerName": "Uber",
+                "vehicleType": "auto",
+                "fare": 510,
+                "currency": "INR",
+                "pickupEtaMinutes": 5,
+                "tripDurationMinutes": 52,
+                "distanceKm": 41.4,
+                "availability": true,
+                "isSimulated": true,
+                "rating": 4.5,
+                "hasFemaleDriverOption": true,
+                "luggageFriendly": false,
+                "surgeMultiplier": 0.95,
+                "dataSource": "simulation",
+                "rank": 4,
+                "score": 0.46,
+                "scoreReason": "Balances ₹510 fare, 5 min pickup, and 4.5★ rating",
+                "paretoOptimal": false
+              }
+            ]
           }
         }
       ],
@@ -913,49 +1493,6 @@
               "statesExpanded": 4
             }
           }
-        },
-        {
-          "name": "Campus to airport via Gandhipuram",
-          "description": "Multi-stop route with two legs",
-          "data": {
-            "stops": [
-              {
-                "query": "Amrita University Ettimadai",
-                "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-                "source": "estimated"
-              },
-              {
-                "query": "Gandhipuram",
-                "formattedAddress": "Gandhipuram, Coimbatore",
-                "source": "estimated"
-              },
-              {
-                "query": "Coimbatore Airport",
-                "formattedAddress": "Coimbatore International Airport",
-                "source": "estimated"
-              }
-            ],
-            "legs": [
-              {
-                "from": "Amrita University, Ettimadai, Coimbatore",
-                "to": "Gandhipuram, Coimbatore",
-                "distanceKm": 15.2,
-                "durationMinutes": 33,
-                "fare": 210
-              },
-              {
-                "from": "Gandhipuram, Coimbatore",
-                "to": "Coimbatore International Airport",
-                "distanceKm": 13.1,
-                "durationMinutes": 28,
-                "fare": 185
-              }
-            ],
-            "totalDistanceKm": 28.3,
-            "totalDurationMinutes": 61,
-            "estimatedFare": 395,
-            "routeDisplay": "Amrita University → Gandhipuram → Coimbatore Airport"
-          }
         }
       ],
       "tags": [
@@ -970,26 +1507,135 @@
       "description": "Estimated fare range for a ride at a future time, with demand multiplier and expected availability",
       "examples": [
         {
-          "name": "Tomorrow morning forecast",
-          "description": "Fare range for a 7 AM ride tomorrow",
+          "name": "Tomorrow at 7 AM",
+          "description": "Campus to airport",
           "data": {
             "origin": {
               "query": "Amrita University",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-              "source": "estimated"
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "destination": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "targetTimeLabel": "7:00 AM tomorrow",
-            "currentFare": 450,
-            "forecastFareLow": 520,
-            "forecastFareHigh": 580,
-            "demandMultiplier": 1.35,
-            "expectedAvailability": "SCARCE",
-            "reason": "Morning office-commute rush typically drives higher demand and pricing. Airport demand is expected around this time.",
+            "currentFare": 265,
+            "forecastFareLow": 275,
+            "forecastFareHigh": 315,
+            "demandMultiplier": 1.1,
+            "targetHour": 7,
+            "hourlyCurve": [
+              {
+                "hour": 0,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 1,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 2,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 3,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 4,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 5,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 6,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 7,
+                "multiplier": 1.1
+              },
+              {
+                "hour": 8,
+                "multiplier": 1.35
+              },
+              {
+                "hour": 9,
+                "multiplier": 1.35
+              },
+              {
+                "hour": 10,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 11,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 12,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 13,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 14,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 15,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 16,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 17,
+                "multiplier": 1.05
+              },
+              {
+                "hour": 18,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 19,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 20,
+                "multiplier": 1.4
+              },
+              {
+                "hour": 21,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 22,
+                "multiplier": 1.2
+              },
+              {
+                "hour": 23,
+                "multiplier": 1.2
+              }
+            ],
+            "expectedAvailability": "PLENTY",
+            "reason": "Late night/early morning has low traffic but limited driver availability. Airport demand is expected around this time.",
             "disclaimer": "This is a heuristic time-of-day estimate, not a guaranteed fare."
           }
         }
@@ -1006,29 +1652,39 @@
       "description": "Simulated carpool matching analysis: route overlap, savings, extra travel time, and a pool/do-not-pool recommendation",
       "examples": [
         {
-          "name": "Pooling match found",
-          "description": "A rider with 80% route overlap",
+          "name": "Pooling to the airport",
+          "description": "Simulated co-riders",
           "data": {
             "origin": {
               "query": "Amrita University",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-              "source": "estimated"
+              "formattedAddress": "Amrita Vishwa Vidyapeetham, Ettimadai",
+              "coordinates": {
+                "lat": 10.9046,
+                "lng": 76.8993
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "destination": {
               "query": "Coimbatore Airport",
               "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
-            "soloFare": 450,
+            "soloFare": 260,
             "bestMatch": {
-              "matchedRiderDestination": "a rider heading towards Gandhipuram",
-              "routeOverlapPercent": 80,
-              "savingsInr": 180,
-              "extraMinutes": 6
+              "matchedRiderDestination": "a rider heading towards the Race Course area",
+              "routeOverlapPercent": 56,
+              "savingsInr": 55,
+              "extraMinutes": 7
             },
             "otherMatches": [],
-            "recommendation": "POOL",
-            "reason": "80% route overlap saves ₹180 for only 6 extra minutes — a good trade."
+            "recommendation": "DO_NOT_POOL",
+            "reason": "The best match's route overlap (56%) or savings (₹55) aren't compelling enough to justify pooling."
           }
         }
       ],
@@ -1045,11 +1701,11 @@
       "examples": [
         {
           "name": "Dispatched through the marketplace",
-          "description": "Driver who accepted the offer, with learned weights",
+          "description": "A driver who accepted the offer, and the learned weights",
           "data": {
-            "bookingId": "11a5b71f-348b-4de7-8916-47fa2555f5f4",
-            "createdAt": 1792049511911,
-            "searchId": "search-1",
+            "bookingId": "4727dfa4-e28f-45b2-a765-7c5870be1e49",
+            "createdAt": 1792063009695,
+            "searchId": "27ad93e8-8987-499d-819b-9221597a07e1",
             "optionId": "uber-sedan-2",
             "provider": "uber",
             "vehicleType": "sedan",
@@ -1076,25 +1732,37 @@
             },
             "status": "DRIVER_ASSIGNED",
             "driver": {
-              "driverName": "Suresh",
+              "driverName": "Anitha",
               "vehicleType": "sedan",
-              "vehicleNumber": "TN 66 GG 2195",
-              "rating": 4.4,
-              "etaMinutes": 5
+              "vehicleNumber": "TN 66 DO 8297",
+              "rating": 4.3,
+              "etaMinutes": 2
             },
             "statusHistory": [
               {
                 "status": "SEARCHING",
-                "at": 1792049511911
+                "at": 1792063009695
               },
               {
                 "status": "DRIVER_ASSIGNED",
-                "at": 1792049511911
+                "at": 1792063009695
               }
             ],
             "dispatch": {
+              "messagesExchanged": 18,
               "driversContacted": 3,
-              "driverAcceptances": 3
+              "driverAcceptances": 2,
+              "incentiveRounds": 0,
+              "trace": [
+                "CFP provider:uber → driver:uber-driver-1: Trip offer: ₹855, 41.4 km to Coimbatore International Airport",
+                "CFP provider:uber → driver:uber-driver-7: Trip offer: ₹855, 41.4 km to Coimbatore International Airport",
+                "CFP provider:uber → driver:uber-driver-6: Trip offer: ₹855, 41.4 km to Coimbatore International Airport",
+                "PROPOSE driver:uber-driver-7 → provider:uber: Accept — nets ₹460 (~₹300/hr), 1.3 km to pickup",
+                "PROPOSE driver:uber-driver-1 → provider:uber: Accept — nets ₹462 (~₹308/hr), 0.7 km to pickup",
+                "REFUSE driver:uber-driver-6 → provider:uber: Decline — ₹249/hr is below my ₹320/hr floor",
+                "REJECT_PROPOSAL provider:uber → driver:uber-driver-7: Trip went to a closer driver",
+                "ACCEPT_PROPOSAL provider:uber → driver:uber-driver-1: Trip assigned — pickup in 2 min"
+              ]
             },
             "learning": {
               "before": {
@@ -1108,34 +1776,6 @@
                 "rating": 0.24197929667425308
               },
               "violations": 6
-            }
-          }
-        },
-        {
-          "name": "Driver assigned",
-          "description": "A confirmed booking with a driver assigned",
-          "data": {
-            "bookingId": "example-booking-1",
-            "provider": "uber",
-            "vehicleType": "sedan",
-            "fare": 320,
-            "origin": {
-              "query": "Amrita University",
-              "formattedAddress": "Amrita University, Ettimadai, Coimbatore",
-              "source": "estimated"
-            },
-            "destination": {
-              "query": "Coimbatore Airport",
-              "formattedAddress": "Coimbatore International Airport",
-              "source": "estimated"
-            },
-            "status": "DRIVER_ASSIGNED",
-            "driver": {
-              "driverName": "Karthik",
-              "vehicleType": "sedan",
-              "vehicleNumber": "TN 37 AB 1234",
-              "rating": 4.7,
-              "etaMinutes": 5
             }
           }
         }
@@ -1152,14 +1792,19 @@
       "description": "Simulated SOS emergency alert confirmation — clearly marked as a demo simulation, not a real emergency service integration",
       "examples": [
         {
-          "name": "SOS triggered",
-          "description": "Simulated emergency alert sent to contacts",
+          "name": "SOS (simulated)",
+          "description": "Alert sent to emergency contacts",
           "data": {
-            "timestamp": 1753500000000,
+            "timestamp": 1792063009738,
             "currentLocation": {
               "query": "Coimbatore Airport Road",
-              "formattedAddress": "Coimbatore Airport Road, Coimbatore",
-              "source": "estimated"
+              "formattedAddress": "Coimbatore International Airport",
+              "coordinates": {
+                "lat": 11.03,
+                "lng": 77.0434
+              },
+              "source": "estimated",
+              "estimationNote": "GEOAPIFY_API_KEY is not configured — using an approximate demo location. Set GEOAPIFY_API_KEY for exact geocoding."
             },
             "bookingId": null,
             "contactsNotified": [
@@ -2754,5 +3399,5 @@
       ]
     }
   ],
-  "generatedAt": "2026-10-15T00:00:00.000Z"
+  "generatedAt": "2026-10-15T11:16:49.747Z"
 }

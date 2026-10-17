@@ -35,8 +35,9 @@
   figcaption { font-size: 9pt; line-height: 1.3; text-align: left; margin-top: 3pt; color: #222; }
   .row { display: flex; gap: 10pt; justify-content: center; align-items: flex-start; margin: 6pt 0 8pt; }
   figure img.shot { border-radius: 10px; box-shadow: 0 2px 8px rgba(30,30,80,0.18); }
-  .row figure img { max-height: 10.2cm; width: auto !important; max-width: 100%; }
+  .row figure img { max-height: 8.8cm; width: auto !important; max-width: 100%; }
   .row figure { flex: 1; margin: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #99a8cc; word-break: break-all; }
   code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 9.4pt; }
   pre { font-family: Consolas, monospace; font-size: 8.8pt; background: #f4f4f2; border-left: 2px solid var(--rule); padding: 6pt 9pt; white-space: pre-wrap; break-inside: avoid; margin: 6pt 0 10pt; }
   .eq { text-align: center; margin: 3pt 0 5pt; font-style: italic; }
@@ -55,10 +56,10 @@
   <div class="title">RIVA: Ride Intelligence and Virtual Assistance</div>
   <div class="subtitle">A multi-agent mobility assistant with search-based routing,<br>Contract Net negotiation and MDP shift planning</div>
   <div class="sub"><strong>Submitted By</strong></div>
-  <div class="sub">Student1, CB.SC.U4CSE23XXX</div>
-  <div class="sub">Student2, CB.SC.U4CSE23XXX</div>
-  <div class="sub">Student3, CB.SC.U4CSE23XXX</div>
-  <div class="sub">Student4, CB.SC.U4CSE23XXX</div>
+  <div class="sub">Aayur Lakshmi, CB.SC.U4CSE23706</div>
+  <div class="sub">Shruti Shri A, CB.SC.U4CSE23746</div>
+  <div class="sub">Kanishk Rungta, CB.SC.U4CSE23762</div>
+  <div class="sub">Yalamanchi Kushal, CB.SC.U4CSE23766</div>
   <div class="sub" style="margin-top:26pt">in partial fulfilment of the requirements for the course of</div>
   <div class="sub"><strong>23CSE401 – Fundamentals of Artificial Intelligence</strong></div>
   <div class="sub">Academic Year 2026-27 Odd Semester</div>
@@ -79,9 +80,9 @@
     <li class="sub"><span>4.4 Decision making under uncertainty and learning</span><span class="fill"></span><span data-toc="s44">8</span></li>
     <li class="sub"><span>4.5 Requirements, tools and packages</span><span class="fill"></span><span data-toc="s45">8</span></li>
     <li><span>5 Implementation</span><span class="fill"></span><span data-toc="s5">9</span></li>
-    <li><span>6 Testing and Results</span><span class="fill"></span><span data-toc="s6">12</span></li>
-    <li><span>7 Conclusion and Limitations</span><span class="fill"></span><span data-toc="s7">17</span></li>
-    <li><span>References</span><span class="fill"></span><span data-toc="s8">17</span></li>
+    <li><span>6 Testing and Results</span><span class="fill"></span><span data-toc="s6">13</span></li>
+    <li><span>7 Conclusion and Limitations</span><span class="fill"></span><span data-toc="s7">18</span></li>
+    <li><span>References</span><span class="fill"></span><span data-toc="s8">18</span></li>
   </ul>
 </section>
 
@@ -310,6 +311,9 @@
 <!-- ============================== 5 IMPLEMENTATION ============================== -->
 <h2 id="s5">5 Implementation</h2>
 
+<p><strong>Code repository:</strong> <a href="https://github.com/Kanishk-Rungta/RIVA-Ride-Intelligence-Virtual-Assistance-">https://github.com/Kanishk-Rungta/RIVA-Ride-Intelligence-Virtual-Assistance-</a></p>
+<p>The repository holds the MCP server, the agents and search code, the tests, the benchmark and demo scripts, and the widget sources. Setup and run commands are in its README, and Table 7 below lists the layout.</p>
+
 <h3>Input representation</h3>
 <p>Every tool input is a Zod object. A ride search, for example, is <code>{ origin: string, destination: string, preferences?: { femaleDriverOnly?, budgetLimit?, luggageRequired?, excludeVehicleTypes? }, rankingMode?: 'cheapest' | 'fastest' | 'instant_pickup' | 'best_value' }</code>. Free-text times (“8 AM tomorrow”, “21:00”) are parsed into an hour and a day offset. Inside the system, a route is a <code>RouteInfo</code> (distance, duration, source, polyline, the junctions passed and the search statistics), a quote is a normalised <code>RideOption</code> with the same fields for every provider, and an agent message is an <code>AclMessage</code> with id, timestamp, sender, receiver, performative, conversation id, content and a one-line summary.</p>
 
@@ -334,25 +338,28 @@
 <tr><td><code>src/providers/</code></td><td>Uber and Ola fare-model adapters, Rapido hybrid adapter (Apify with simulation fallback).</td></tr>
 <tr><td><code>src/modules/rides</code>, <code>journey</code>, <code>driver</code>, <code>session</code></td><td>The original rider, journey and driver tools, now using the new core.</td></tr>
 <tr><td><code>src/modules/marketplace</code>, <code>routing</code></td><td>New tools: <code>simulate_ride_marketplace</code>, <code>compare_search_strategies</code>; <code>plan_driver_shift</code> lives in the driver module.</td></tr>
-<tr><td><code>src/widgets/app/*</code></td><td>16 widgets, including the new <code>agent-trace</code>, <code>search-comparison</code> and <code>shift-plan</code>.</td></tr>
-<tr><td><code>scripts/</code>, <code>tests/</code></td><td>Offline harness, narrated demo, benchmark; four test files with 42 tests.</td></tr>
+<tr><td><code>src/widgets/app/*</code></td><td>16 interactive widgets on a shared kit (<code>components/</code>: glass panels, charts, controls), including <code>agent-trace</code>, <code>search-comparison</code> and <code>shift-plan</code>.</td></tr>
+<tr><td><code>scripts/</code>, <code>tests/</code></td><td>Offline harness, narrated demo, benchmark, example generator and widget gallery; five test files with 47 tests.</td></tr>
 </tbody></table>
 
 <h3>User interface</h3>
-<p>Users interact in natural language through an MCP client, and each tool result renders as a widget inside the conversation. All 16 widgets are built from one shared component kit (<code>src/widgets/components</code>), so a fare, a route or an agent message looks the same wherever it appears. The visual language is frosted glass over a slowly drifting dusk gradient, with semi-transparent panels, background blur, a lit top edge and soft layered shadows. Colour encodes meaning rather than decoration: teal for routes, amber for money, violet for agents and reasoning, rose for refusals and risk, green for outcomes the user wants. Each widget plays one entrance sequence in which its panels rise and unblur at 75 ms intervals, and progress bars grow into place. Panels that respond to input lift and glow in their own colour on hover or keyboard focus, and the selected card stays highlighted. While a tool runs, the loading state shows a car travelling a dashed road above shimmering placeholder cards. Layouts use a two-column grid that collapses to one column below 560 px, and every animation is switched off under <code>prefers-reduced-motion</code>.</p>
-<p>Figures 2–5 show four widgets rendering real tool output, and Figure 6 shows six more. For presentations without an LLM client, <code>npm run demo</code> prints seven narrated scenarios in the terminal (Figures 10 and 14).</p>
+<p>Users interact in natural language through an MCP client, and each tool result renders as a widget inside the conversation. All 16 widgets are built from one component kit (<code>src/widgets/components</code>): glass panels, a small chart toolkit (donut, gauge, radar, area and bar charts) and form controls. The interface has one theme, dark: frosted glass over a slowly drifting night-sky gradient, with bright accents that carry meaning: teal for routes, amber for money, violet for agents and reasoning, rose for refusals and risk, green for the outcome the user wants. Each widget plays one entrance sequence in which its panels rise and unblur at 75 ms intervals; panels lift and glow in their own colour on hover or keyboard focus; and while a tool runs, a car travels a dashed road above shimmering placeholder cards. Layouts collapse to one column below 560 px, and all motion stops under <code>prefers-reduced-motion</code>.</p>
+<p>The widgets are interactive rather than static. Ride comparison plots every quote as a bubble on price against pickup wait (size shows rating), draws the cheapest-at-each-wait staircase, re-ranks on a Best value, Cheapest or Fastest toggle using the rider's learned weights, and dims rides over a budget slider. The recommendation widget overlays the top rides on a radar chart. The driver's trip analysis is a what-if calculator: dragging the fare redraws the donut and the hourly-earnings gauge and shows the break-even fare. The fare forecasts draw a 24-hour price curve with a slider for the hour, and the travel plan lets the rider widen or shrink the safety buffer and shows the new leave time. The negotiation is a sequence diagram with lanes for the rider, the three providers and the drivers that can be played back message by message, and the search comparison replays A*, uniform-cost, greedy and breadth-first search expanding junctions one at a time. The remaining views add a zone-to-zone shift chain with hourly bars, a 24-hour demand curve, a route-overlap diagram for pooling with a detour slider, a trip tracker whose car advances stage by stage, and a radar for the SOS alert.</p>
+<p><code>npm run gallery</code> serves every widget on a local page, grouped into four categories (Figure 2), with a hint on each view about what to try. The example data behind the previews is generated by <code>npm run examples</code> from the tool code itself, so the gallery and the screenshots show what the tools actually return. Figures 3–7 show widgets rendering that output. For presentations without an LLM client, <code>npm run demo</code> prints seven narrated scenarios in the terminal (Figures 11 and 15).</p>
+
+<figure><img class="shot" src="../figures/app-gallery-driver.png" style="width:56%"><figcaption><strong>Figure 2.</strong> The walkthrough app (<code>npm run gallery</code>). Four categories on the left, one tab per view, a hint about what to try, and the widget on the stage. Shown: the driver's accept-or-skip view, with the fare slider at the offered fare.</figcaption></figure>
 
 <div class="row">
-<figure style="flex:1.05"><img class="shot" src="../figures/widget-ride-comparison.png" style="width:100%"><figcaption><strong>Figure 2.</strong> <code>find_rides</code>, Amrita → airport, 9 AM, luggage and a ₹350 budget. No ride meets both, so the budget is relaxed and the widget says so; the route is A* over the road graph (13 nodes expanded).</figcaption></figure>
-<figure style="flex:1"><img class="shot" src="../figures/widget-search-comparison.png" style="width:100%"><figcaption><strong>Figure 3.</strong> <code>compare_search_strategies</code> for the same trip. A* returns the bypass route (59 min) after expanding 13 nodes; UCS needs 19; greedy best-first and BFS return routes over 90 min.</figcaption></figure>
+<figure style="flex:1.05"><img class="shot" src="../figures/widget-ride-comparison-top.png" style="width:100%"><figcaption><strong>Figure 3.</strong> <code>find_rides</code>, Amrita → airport, 9 AM, with a ₹200 budget that no ride meets, so RIVA relaxes it and says so. Each bubble is one of 11 quotes (size is rating, a dashed ring marks Pareto-optimal rides); the violet line joins the cheapest ride at each wait. The toggle and slider re-rank and dim rides live.</figcaption></figure>
+<figure style="flex:1"><img class="shot" src="../figures/widget-search-comparison.png" style="width:100%"><figcaption><strong>Figure 4.</strong> <code>compare_search_strategies</code> for the same trip. A* reaches the bypass route in 59 min after expanding 13 junctions; UCS needs 19; greedy best-first and BFS return routes over 90 min. Play replays the expansion and the slider steps through it.</figcaption></figure>
 </div>
 
 <div class="row">
-<figure style="flex:1"><img class="shot" src="../figures/widget-agent-trace-top.png" style="width:100%"><figcaption><strong>Figure 4.</strong> <code>simulate_ride_marketplace</code> (first half of the trace). Both nearby Rapido bike drivers decline the ₹265 airport trip, then decline again with a ₹40 incentive; on the third award a Rapido auto driver accepts.</figcaption></figure>
-<figure style="flex:1"><img class="shot" src="../figures/widget-shift-plan.png" style="width:100%"><figcaption><strong>Figure 5.</strong> <code>plan_driver_shift</code> for an auto driver near Tidel Park at 11 PM. The MDP moves the driver to the airport; expected net ₹306 against ₹265 for staying put.</figcaption></figure>
+<figure style="flex:1"><img class="shot" src="../figures/widget-agent-trace-top.png" style="width:100%"><figcaption><strong>Figure 5.</strong> <code>simulate_ride_marketplace</code> (upper part of the sequence diagram). Each arrow is a message, coloured by speech act. Both Rapido bike drivers decline the ₹265 airport trip, then decline again with a ₹40 incentive; the rider re-awards, and on the third award a Rapido auto driver accepts (below the crop).</figcaption></figure>
+<figure style="flex:1"><img class="shot" src="../figures/widget-shift-plan.png" style="width:100%"><figcaption><strong>Figure 6.</strong> <code>plan_driver_shift</code> for an auto driver near Tidel Park at 11 PM. The MDP moves the driver to the airport and keeps them there; expected net ₹306 against ₹265 for staying put.</figcaption></figure>
 </div>
 
-<figure><img src="../figures/ui-gallery.png" style="width:78%"><figcaption><strong>Figure 6.</strong> Six more widgets with real output: the travel concierge, a driver's trip decision, a booking dispatched through the marketplace (the assigned driver accepted the offer, and the rider's weights updated), simulated drivers around Gandhipuram, a fare forecast, and the loading state.</figcaption></figure>
+<figure><img src="../figures/ui-gallery.png" style="width:80%"><figcaption><strong>Figure 7.</strong> Six more views with real output: the travel concierge with its buffer slider, the multi-stop map, a booking tracker for a trip a driver accepted, the pooling overlap diagram, the 24-hour fare curve, and the loading state.</figcaption></figure>
 
 <!-- ============================== 6 TESTING ============================== -->
 <h2 id="s6">6 Testing and Results</h2>
@@ -361,7 +368,7 @@
 <p>Testing was done at five levels. Unit tests check single functions against hand-computed answers. Property tests check a claim over every case in a finite space instead of a few examples. Protocol tests run the marketplace on 18 scenes (six trips × three seeds) and check Contract Net invariants on every message log. Integration tests drive the full offline pipeline: geocoding, routing, provider quotes, constraints, ranking and multi-stop planning. At the system level we started the built server (<code>node dist/index.js</code>), completed the MCP handshake over stdio, listed the tools (22) and called <code>simulate_ride_marketplace</code>, <code>compare_search_strategies</code> and <code>plan_driver_shift</code>, each of which returned its widget reference; this system check was run by hand and is not part of <code>npm test</code>. Finally, <code>npm run evaluate</code> measures each agent against its performance measure over generated workloads.</p>
 
 <table>
-<caption><strong>Table 8.</strong> Automated test cases (<code>npm test</code>: 42 tests in 14 suites, all passing).</caption>
+<caption><strong>Table 8.</strong> Automated test cases (<code>npm test</code>: 47 tests in 16 suites, all passing).</caption>
 <thead><tr><th style="width:7%">ID</th><th style="width:14%">Level</th><th>What is checked</th></tr></thead>
 <tbody>
 <tr><td>T1</td><td>Property</td><td>A* path cost equals UCS path cost for all 992 ordered node pairs at 4 hours, for both objectives.</td></tr>
@@ -380,6 +387,7 @@
 <tr><td>T14</td><td>Property</td><td>Optimal shift value ≥ greedy and ≥ stay-put from all 9 zones at 6 start hours.</td></tr>
 <tr><td>T15</td><td>Unit</td><td>Net = gross − fuel − commission; fuel covers the pickup leg; a loss-making trip is rejected; time phrases parse correctly.</td></tr>
 <tr><td>T16</td><td>Integration</td><td>Coimbatore searches route via A* on the graph; off-graph places (Mumbai) fall back to the straight-line estimate; multi-stop optimisation never lengthens a trip.</td></tr>
+<tr><td>T17</td><td>Unit</td><td>Chart data agrees with the single-hour services: the 24-hour fare curve matches the forecast at every hour and peaks in the evening rush; each demand curve has 24 scores in 0–100 whose value at the requested hour equals the headline score; waiting time falls as demand rises.</td></tr>
 </tbody></table>
 
 <h3>Search</h3>
@@ -401,12 +409,12 @@
 <tr><td>A*</td><td class="n">100</td><td class="n">6.6</td><td class="n">14.1</td><td class="n">7.6</td><td class="n">0</td><td class="n">0</td></tr>
 </tbody></table>
 
-<figure><img src="../figures/fig-search.png" style="width:80%"><figcaption><strong>Figure 7.</strong> Mean nodes expanded per strategy, with the share of queries on which the returned route was optimal.</figcaption></figure>
+<figure><img src="../figures/fig-search.png" style="width:80%"><figcaption><strong>Figure 8.</strong> Mean nodes expanded per strategy, with the share of queries on which the returned route was optimal.</figcaption></figure>
 
 <p>On a 32-node graph the absolute savings are a few node expansions per query, and the run time of any strategy is well under a millisecond. The result that matters at this scale is the optimality column; the expansion counts indicate how the gap would grow on a larger graph, which we did not test.</p>
 
 <h3>Multi-stop ordering</h3>
-<p>We generated 300 random itineraries of 4–8 stops from the graph's junctions, with travel-time costs at 2 PM, and compared the order as given with the A*-optimised order (Table 10). The share of itineraries the optimiser improves rises from 42% at four stops to 100% at eight, where it saves 35% of travel time on average. Because the given orders are random, these savings are an upper bound on what a rider who already orders stops sensibly would gain. The heuristic's pruning grows with problem size: at eight stops A* expanded 39 states, UCS 186, and brute force would evaluate 720 complete orders (Figure 8).</p>
+<p>We generated 300 random itineraries of 4–8 stops from the graph's junctions, with travel-time costs at 2 PM, and compared the order as given with the A*-optimised order (Table 10). The share of itineraries the optimiser improves rises from 42% at four stops to 100% at eight, where it saves 35% of travel time on average. Because the given orders are random, these savings are an upper bound on what a rider who already orders stops sensibly would gain. The heuristic's pruning grows with problem size: at eight stops A* expanded 39 states, UCS 186, and brute force would evaluate 720 complete orders (Figure 9).</p>
 
 <table>
 <caption><strong>Table 10.</strong> Stop ordering on 300 random itineraries (60 per size).</caption>
@@ -420,8 +428,8 @@
 </tbody></table>
 
 <div class="row">
-<figure><img src="../figures/fig-tours.png" style="width:100%"><figcaption><strong>Figure 8.</strong> Work to find the best stop order, log scale. A* and UCS count expanded states; brute force counts complete orders.</figcaption></figure>
-<figure><img src="../figures/fig-market.png" style="width:100%"><figcaption><strong>Figure 9.</strong> Share of 528 ride requests that ended with an assigned driver, by protocol variant.</figcaption></figure>
+<figure><img src="../figures/fig-tours.png" style="width:100%"><figcaption><strong>Figure 9.</strong> Work to find the best stop order, log scale. A* and UCS count expanded states; brute force counts complete orders.</figcaption></figure>
+<figure><img src="../figures/fig-market.png" style="width:100%"><figcaption><strong>Figure 10.</strong> Share of 528 ride requests that ended with an assigned driver, by protocol variant.</figcaption></figure>
 </div>
 
 <h3>Multi-agent marketplace</h3>
@@ -438,10 +446,10 @@
 
 <p>The traces show why the single award fails so often. The rider's top-ranked bid is usually the cheapest two-wheeler or auto, and for longer trips that fare gives drivers a low hourly rate: in the Amrita–airport trace, the ₹265 bike trip nets the nearer driver ₹117 for about 90 minutes of work. Drivers decline such offers, or no driver with that vehicle type is within 4 km. Re-awarding lets the rider fall back to its second- or third-ranked bid. The cost is a mean utility rank of 1.89 instead of 1, together with more messages (27.0 against 15.4) and more simulated time (23.9 s against 8.7 s). Match rates also varied by hour, from 86.4% at 2 PM to 98.5% at 7 PM, which is consistent with the demand model: destination demand is higher at 7 PM, and the drivers' acceptance score rewards destination demand. These numbers characterise the simulated market. Driver reservation wages, fleet density and the 4 km radius are parameters we chose, and different values would move every column.</p>
 
-<figure><img src="../figures/demo-marketplace.png" style="width:60%"><figcaption><strong>Figure 10.</strong> <code>npm run demo</code>, scenario 4: the full 35-message negotiation for Amrita → airport at 9 AM, with simulated timestamps.</figcaption></figure>
+<figure><img src="../figures/demo-marketplace.png" style="width:60%"><figcaption><strong>Figure 11.</strong> <code>npm run demo</code>, scenario 4: the full 35-message negotiation for Amrita → airport at 9 AM, with simulated timestamps.</figcaption></figure>
 
 <h3>Driver shift planning</h3>
-<p>The shift planner was solved from every zone at every start hour (216 start states) for an auto on CNG and a sedan on diesel (Table 12, Figure 11). The optimal policy beat staying put by 3.6% on average for the auto and by up to 18.9%, with the largest gains in the late evening and before dawn, when some zones go quiet. It beat the greedy policy by only 0.18% on average (at most 6.1%), and for the sedan the two were indistinguishable. Under this model, then, repositioning helps, but looking ahead beyond the current hour adds little. A likely reason is the transition model: each hour's trips move the driver to a demand-weighted random destination, so a position chosen now has little effect two hours later. A model in which positions persist, for example with half-hour steps or longer airport queues, could show a larger gap. We did not test such variants.</p>
+<p>The shift planner was solved from every zone at every start hour (216 start states) for an auto on CNG and a sedan on diesel (Table 12, Figure 12). The optimal policy beat staying put by 3.6% on average for the auto and by up to 18.9%, with the largest gains in the late evening and before dawn, when some zones go quiet. It beat the greedy policy by only 0.18% on average (at most 6.1%), and for the sedan the two were indistinguishable. Under this model, then, repositioning helps, but looking ahead beyond the current hour adds little. A likely reason is the transition model: each hour's trips move the driver to a demand-weighted random destination, so a position chosen now has little effect two hours later. A model in which positions persist, for example with half-hour steps or longer airport queues, could show a larger gap. We did not test such variants.</p>
 
 <table>
 <caption><strong>Table 12.</strong> Expected 4-hour net earnings (₹) over 216 start states (9 zones × 24 hours).</caption>
@@ -451,10 +459,10 @@
 <tr><td>Sedan, diesel</td><td class="n">571</td><td class="n">571</td><td class="n">557</td><td class="n">2.7 / 15.6</td><td class="n">0.00 / 0.2</td><td class="n">19.0</td></tr>
 </tbody></table>
 
-<figure><img src="../figures/fig-mdp.png" style="width:72%"><figcaption><strong>Figure 11.</strong> Expected 4-hour net for an auto, averaged over the nine start zones, by shift start hour. The greedy curve lies almost on the optimal one.</figcaption></figure>
+<figure><img src="../figures/fig-mdp.png" style="width:72%"><figcaption><strong>Figure 12.</strong> Expected 4-hour net for an auto, averaged over the nine start zones, by shift start hour. The greedy curve lies almost on the optimal one.</figcaption></figure>
 
 <h3>Preference learning</h3>
-<p>To test the learner without real users we simulated 40 riders, each with hidden weights drawn at random, who each booked 15 rides from searches across 10 landmarks. Each rider always booked the option that minimised their hidden utility. Table 13 compares how often the agent's first-ranked option matched that choice, for learned weights against the fixed 45/35/20 weights. Over bookings 11–15, agreement was 91.5% with learning and 82% without. Over bookings 1–5 the two were close, 81% against 79.5%, as expected before the learner has seen many choices. The per-booking curve in Figure 12 is noisy because each point averages 40 riders on different trips, and the comparison rests on a single simulated population.</p>
+<p>To test the learner without real users we simulated 40 riders, each with hidden weights drawn at random, who each booked 15 rides from searches across 10 landmarks. Each rider always booked the option that minimised their hidden utility. Table 13 compares how often the agent's first-ranked option matched that choice, for learned weights against the fixed 45/35/20 weights. Over bookings 11–15, agreement was 91.5% with learning and 82% without. Over bookings 1–5 the two were close, 81% against 79.5%, as expected before the learner has seen many choices. The per-booking curve in Figure 13 is noisy because each point averages 40 riders on different trips, and the comparison rests on a single simulated population.</p>
 
 <table>
 <caption><strong>Table 13.</strong> Top-1 agreement with the rider's actual choice (%), 40 simulated riders.</caption>
@@ -465,11 +473,11 @@
 </tbody></table>
 
 <div class="row">
-<figure><img src="../figures/fig-learning.png" style="width:100%"><figcaption><strong>Figure 12.</strong> Top-1 agreement by booking number, learned against fixed weights.</figcaption></figure>
-<figure><img class="shot" src="../figures/widget-ride-map.png" style="width:86%"><figcaption><strong>Figure 13.</strong> <code>multi_stop_trip_planner</code> with <code>optimizeOrder</code>: four errands reordered, saving about 10 minutes at 2 PM.</figcaption></figure>
+<figure><img src="../figures/fig-learning.png" style="width:100%"><figcaption><strong>Figure 13.</strong> Top-1 agreement by booking number, learned against fixed weights.</figcaption></figure>
+<figure><img class="shot" src="../figures/widget-ride-map.png" style="width:86%"><figcaption><strong>Figure 14.</strong> <code>multi_stop_trip_planner</code> with <code>optimizeOrder</code>: four errands reordered, saving about 10 minutes at 2 PM. The toggle switches the map between the typed order (102 min) and the optimised one (92 min).</figcaption></figure>
 </div>
 
-<figure><img src="../figures/demo-search.png" style="width:72%"><figcaption><strong>Figure 14.</strong> <code>npm run demo</code>, scenarios 1–2: the ride comparison with Pareto tags, and the four search strategies on the same trip.</figcaption></figure>
+<figure><img src="../figures/demo-search.png" style="width:72%"><figcaption><strong>Figure 15.</strong> <code>npm run demo</code>, scenarios 1–2: the ride comparison with Pareto tags, and the four search strategies on the same trip.</figcaption></figure>
 
 <!-- ============================== 7 CONCLUSION ============================== -->
 <h2 id="s7">7 Conclusion and Limitations</h2>
@@ -491,7 +499,7 @@
 <li>NitroStack documentation, <span class="mono">docs.nitrostack.ai</span>; Geoapify API documentation, <span class="mono">apidocs.geoapify.com</span>.</li>
 </ol>
 
-<p class="note">Reproducing the results: <code>npm install</code>, then <code>npm test</code> (42 tests), <code>npm run demo</code>, and <code>npm run evaluate</code>, which rewrites <code>docs/results/evaluation.json</code>. All runs are offline and seeded.</p>
+<p class="note">Reproducing the results: <code>npm install</code>, then <code>npm test</code> (47 tests), <code>npm run demo</code>, and <code>npm run evaluate</code>, which rewrites <code>docs/results/evaluation.json</code>. All runs are offline and seeded.</p>
 
 </body>
 </html>

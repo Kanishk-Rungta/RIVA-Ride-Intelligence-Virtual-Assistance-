@@ -59,6 +59,11 @@ export class ForecastService {
     };
   }
 
+  /** Fare multiplier for every hour of the day — drives the forecast charts, so riders can see the best time to travel. */
+  dayCurve(): Array<{ hour: number; multiplier: number }> {
+    return Array.from({ length: 24 }, (_, hour) => ({ hour, multiplier: this.forecast(formatHourLabel(hour)).forecastMultiplier }));
+  }
+
   /**
    * Traffic-aware travel-time multiplier for a given hour (0-23) — reused
    * by travel_concierge and multi_stop_trip_planner to inflate route

@@ -79,10 +79,16 @@ everything degrades gracefully to simulation/estimates without them:
 ## Tests, demo, and benchmark (all offline and deterministic)
 
 ```bash
-npm test           # 42 tests: exhaustive A*/UCS checks, Contract Net invariants, MDP, constraints, learning
+npm test           # 47 tests: exhaustive A*/UCS checks, Contract Net invariants, MDP, constraints, learning
 npm run demo       # narrated terminal walkthrough of 7 scenarios (npm run demo -- marketplace for one)
 npm run evaluate   # benchmarks every agent against its performance measure → docs/results/evaluation.json
+npm run examples   # regenerates every widget's example data by calling the real tools
+npm run build && npm run gallery   # walkthrough of all 16 widgets at http://localhost:4321
 ```
+
+The gallery groups the widgets into four categories (find a ride, plan a journey,
+drive smarter, inside the AI), and every widget is interactive: sliders, toggles,
+hover readouts, and playback for the agent negotiation and search replay.
 
 The case-study report is `docs/report/RIVA_Case_Study_Report.pdf`
 (source `docs/report/report.html`; rebuild with `node scripts/render-report.mjs`).

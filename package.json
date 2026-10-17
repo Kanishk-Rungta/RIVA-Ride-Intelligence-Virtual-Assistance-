@@ -13,6 +13,9 @@
     "test": "npm run build:dev && node --test --test-force-exit \".build/tests/*.test.js\"",
     "demo": "npm run build:dev && node .build/scripts/demo.js",
     "evaluate": "npm run build:dev && node .build/scripts/evaluate.js",
+    "examples": "npm run build:dev && node .build/scripts/examples.js",
+    "gallery": "node scripts/gallery.mjs",
+    "site": "node scripts/build-site.mjs",
     "upgrade": "nitrostack-cli upgrade",
     "install:all": "nitrostack-cli install",
     "widget": "npm --prefix src/widgets"

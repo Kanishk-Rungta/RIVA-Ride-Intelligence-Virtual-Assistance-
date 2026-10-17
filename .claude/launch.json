@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "riva-gallery",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/gallery.mjs"],
+      "port": 4321
+    }
+  ]
+}

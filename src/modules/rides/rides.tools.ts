@@ -364,6 +364,8 @@ export class RidesTools {
       currentFare: currentBest?.fare ?? null,
       currentBestOption: currentBest ?? null,
       estimatedFutureFare: forecastedFare,
+      targetHour: forecast.hour,
+      hourlyCurve: this.forecast.dayCurve(),
       forecastMultiplier: forecast.forecastMultiplier,
       explanation: forecast.explanation,
       disclaimer: 'This is a heuristic time-of-day estimate, not a guaranteed fare.',

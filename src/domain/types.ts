@@ -219,6 +219,12 @@ export interface DestinationDemand {
   matchedZone: string | null;
   time: string;
   demandLevel: DemandLevel;
+  /** 0-100 demand score at the requested hour. */
+  demandScore: number;
+  /** Hour (0-23) the estimate is for. */
+  hour: number;
+  /** Demand score for each hour of the day (same zone category and weekday pattern). */
+  hourlyScores: number[];
   expectedRideAvailability: 'PLENTY' | 'MODERATE' | 'SCARCE';
   expectedWaitingMinutes: number;
   returnProbability: number;
